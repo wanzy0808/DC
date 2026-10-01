@@ -133,6 +133,75 @@ const sereinNative: Record<string, TemplateNativeMotion> = {
   "object:closing:names": { animation: "rise", animationDelay: .08 },
 };
 
+const pencilReverieNative: Record<string, TemplateNativeMotion> = {
+  "object:envelope:intro": { animation: "fade", animationDuration: .62 },
+  "object:envelope:illustration-group": { animation: "tilt-in", animationDuration: .78, animationDelay: .04 },
+  "object:envelope:ribbon-art": { animation: "glide-left", animationDuration: .72, animationDelay: .08 },
+  "object:envelope:ticket-art": { animation: "glide-right", animationDuration: .72, animationDelay: .12 },
+  "object:envelope:heart": { animation: "soft-scale", animationDuration: .62, animationDelay: .16 },
+
+  "object:cover:paper-sheet": { animation: "reveal-left", animationDuration: .82 },
+  "object:cover:copy-panel": { animation: "rise", animationDuration: .76, animationDelay: .05 },
+  "object:cover:personOne-name": { animation: "slide-left", animationDuration: .74, animationDelay: .08 },
+  "object:cover:ampersand-symbol": { animation: "fade", animationDuration: .6, animationDelay: .12 },
+  "object:cover:personTwo-name": { animation: "slide-right", animationDuration: .74, animationDelay: .15 },
+  "object:cover:event-name": { animation: "rise", animationDuration: .76, animationDelay: .08 },
+  "object:cover:date": { animation: "fade", animationDuration: .62, animationDelay: .18 },
+  "object:cover:ribbon-art": { animation: "glide-left", animationDuration: .75, animationDelay: .04 },
+  "object:cover:polaroid-art": { animation: "tilt-in", animationDuration: .72, animationDelay: .08 },
+  "object:cover:lamp-art": { animation: "reveal-up", animationDuration: .82, animationDelay: .1 },
+  "object:cover:couple-art": { animation: "soft-scale", animationDuration: .82, animationDelay: .13 },
+  "object:cover:ticket-art": { animation: "tilt-in", animationDuration: .72, animationDelay: .16 },
+  "object:cover:camera-art": { animation: "glide-left", animationDuration: .76, animationDelay: .18 },
+
+  "heading:greeting": { animation: "slide-left", animationDuration: .68 },
+  "object:greeting:copy-group": { animation: "rise", animationDuration: .74, animationDelay: .06 },
+  "object:greeting:theme-art": { animation: "soft-scale", animationDuration: .8, animationDelay: .08 },
+
+  "heading:identity": { animation: "rise", animationDuration: .68 },
+  "object:identity:portrait-art": { animation: "tilt-in", animationDuration: .78, animationDelay: .06 },
+  "object:identity:names": { animation: "slide-right", animationDuration: .74, animationDelay: .1 },
+  "object:identity:signature": { animation: "fade", animationDuration: .65, animationDelay: .14 },
+  "object:identity:parents-group": { animation: "rise", animationDuration: .74, animationDelay: .16 },
+  "object:identity:theme-art": { animation: "glide-right", animationDuration: .78, animationDelay: .1 },
+
+  "heading:event": { animation: "slide-right", animationDuration: .68 },
+  "object:event:details-group": { animation: "rise", animationDuration: .76, animationDelay: .06 },
+  "object:event:theme-art": { animation: "reveal-left", animationDuration: .82, animationDelay: .1 },
+
+  "heading:dateTime": { animation: "slide-left", animationDuration: .68 },
+  "object:dateTime:panel": { animation: "tilt-in", animationDuration: .78, animationDelay: .06 },
+  "object:dateTime:theme-art": { animation: "glide-right", animationDuration: .78, animationDelay: .1 },
+
+  "heading:gallery": { animation: "rise", animationDuration: .68 },
+  "object:gallery:memory-board": { animation: "rise", animationDuration: .74, animationDelay: .04 },
+
+  "heading:countdown": { animation: "fade", animationDuration: .64 },
+  "object:countdown:clock-art": { animation: "soft-scale", animationDuration: .74, animationDelay: .04 },
+  "object:countdown:grid": { animation: "rise", animationDuration: .72, animationDelay: .08 },
+  "object:countdown:theme-art": { animation: "tilt-in", animationDuration: .76, animationDelay: .12 },
+
+  "heading:location": { animation: "slide-right", animationDuration: .68 },
+  "object:location:details-group": { animation: "glide-right", animationDuration: .78, animationDelay: .06 },
+  "object:location:theme-art": { animation: "reveal-left", animationDuration: .82, animationDelay: .1 },
+
+  "heading:rsvp": { animation: "rise", animationDuration: .68 },
+  "object:rsvp:intro": { animation: "rise", animationDuration: .7, animationDelay: .04 },
+  "object:rsvp:theme-art": { animation: "soft-scale", animationDuration: .76, animationDelay: .08 },
+
+  "heading:wishes": { animation: "slide-left", animationDuration: .68 },
+  "object:wishes:theme-art": { animation: "tilt-in", animationDuration: .76, animationDelay: .08 },
+
+  "heading:gift": { animation: "rise", animationDuration: .68 },
+  "object:gift:panel": { animation: "tilt-in", animationDuration: .78, animationDelay: .05 },
+  "object:gift:theme-art": { animation: "glide-left", animationDuration: .78, animationDelay: .1 },
+
+  "heading:closing": { animation: "slide-right", animationDuration: .68 },
+  "object:closing:copy-group": { animation: "rise", animationDuration: .76, animationDelay: .06 },
+  "object:closing:names": { animation: "soft-scale", animationDuration: .74, animationDelay: .12 },
+  "object:closing:theme-art": { animation: "glide-right", animationDuration: .8, animationDelay: .1 },
+};
+
 const paperCutBotanicalNative: Record<string, TemplateNativeMotion> = {
   "object:envelope:paper-back": { animation: "paper-cut", animationDuration: .76 },
   "object:envelope:paper-middle": { animation: "paper-cut", animationDuration: .78, animationDelay: .05 },
@@ -503,6 +572,7 @@ const nativeDefaults: Record<string, Record<string, TemplateNativeMotion>> = {
   "classic-pearl": classicPearlNative,
   "golden-art-deco": goldenArtDecoNative,
   "paper-cut-botanical": paperCutBotanicalNative,
+  "pencil-reverie": pencilReverieNative,
 };
 
 export function templateHasDefaultMotion(template: string) {
