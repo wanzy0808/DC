@@ -163,6 +163,8 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   if (theme === "modern-maroon") {
     if (stage === "envelope") return (
       <section data-invitation-section="envelope" className="relative flex min-h-[760px] flex-col overflow-hidden bg-[#2d0710] px-6 py-12 text-[#fff5ee]">
+        <img src="/templates/modern-maroon/09_watercolor_bg.webp" alt="" aria-hidden="true" data-studio-native-object="object:envelope:background-art" className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-14 mix-blend-screen" />
+        <img src="/templates/modern-maroon/04_fabric_wave.webp" alt="" aria-hidden="true" data-studio-native-object="object:envelope:fabric-art" className="pointer-events-none absolute -right-24 bottom-5 w-[70%] object-contain opacity-16" />
         <div aria-hidden data-studio-native-object="object:envelope:block-left" className="absolute inset-y-0 left-0 w-[7%] bg-[#d8b98d]" />
         <div aria-hidden data-studio-native-object="object:envelope:block-right" className="absolute bottom-0 right-0 h-[33%] w-[45%] bg-[#7b1f2b]" />
         <span aria-hidden data-studio-native-object="object:envelope:monogram" className="absolute -right-4 top-5 text-[9rem] font-black leading-none text-[#fff5ee]/[.055]">M</span>
@@ -199,6 +201,9 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
       : null;
     return (
       <section className="relative min-h-[760px] overflow-hidden bg-[var(--inv-scene-bg,#4a111b)] text-[color:var(--inv-scene-ink,#fff5ee)]" data-invitation-section={stage}>
+        <img src="/templates/modern-maroon/09_watercolor_bg.webp" alt="" aria-hidden="true" data-studio-native-object="object:cover:background-art" className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-12 mix-blend-screen" />
+        <img src="/templates/modern-maroon/06_gold_curve_lines.webp" alt="" aria-hidden="true" data-studio-native-object="object:cover:gold-art" className="pointer-events-none absolute -left-20 top-[14%] w-[62%] object-contain opacity-24" />
+        <img src="/templates/modern-maroon/01_flower_cascade.webp" alt="" aria-hidden="true" data-studio-native-object="object:cover:flower-art" className="pointer-events-none absolute -left-20 bottom-[-7%] z-[1] w-[48%] object-contain opacity-24" />
         <div aria-hidden data-studio-native-object="object:cover:block-left" className="absolute inset-y-0 left-0 w-[7%] bg-[var(--inv-scene-soft,#d8b98d)]" />
         <div aria-hidden data-studio-native-object="object:cover:block-right" className="absolute bottom-0 right-0 h-[30%] w-[48%] bg-[var(--inv-scene-accent,#7b1f2b)]" />
         <span aria-hidden data-studio-native-object="object:cover:monogram" className="absolute -left-3 top-6 text-[9.5rem] font-black leading-none text-[color:var(--inv-scene-text,#fff5ee)]/[.055]">M</span>
