@@ -668,7 +668,7 @@ export default function UniversalInvitationTemplate({
                 <div data-studio-native-object="object:gallery:grid" className="mm-gallery-grid">
                   {media.gallery.map((asset, index) => (
                     <div key={asset.id} data-invitation-photo-slot="gallery" data-studio-photo-id={asset.id} className="mm-gallery-item">
-                      <img src={asset.url} alt={`Galeri foto ${index + 1}`} loading="lazy" style={photoCropStyle(media.assignment, "gallery")} />
+                      <img src={asset.url} alt={`Galeri foto ${index + 1}`} loading="lazy" />
                     </div>
                   ))}
                 </div>
