@@ -136,7 +136,7 @@ test("template-authored native objects use safe selectors and section-instance s
 });
 
 test("theme-authored decorations and special cover headings are selectable in Studio", () => {
-  const themeScenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  const themeScenes = read("components/PublicInvitation/InvitationThemeScenes.tsx") + read("components/PublicInvitation/EternalBlossomScene.tsx");
   const pencil = read("components/PublicInvitation/PencilReverieScene.tsx");
   const zen = read("components/PublicInvitation/ZenAtelierScene.tsx");
   const pencilArt = read("components/PublicInvitation/PencilReverieArtwork.tsx");
@@ -562,7 +562,7 @@ test("Botanical Ivory keeps its leaf ornament directly editable while shared gro
 });
 
 test("Eternal Blossom envelope and cover keep granular Studio targets", () => {
-  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  const scenes = read("components/PublicInvitation/EternalBlossomScene.tsx");
   assert.match(scenes, /object:envelope:flower/);
   assert.match(scenes, /object:envelope:address/);
   assert.match(scenes, /object:cover:flower-left/);
