@@ -127,7 +127,7 @@
 .pr-polaroid-tape{position:absolute;top:-9px;left:36%;height:18px;width:66px;background:color-mix(in srgb,var(--pr-rule) 72%,transparent);rotate:-9deg}
 .pr-identity-names{font:clamp(1.9rem,7.8cqw,3.25rem)/1.02 var(--inv-heading,Georgia,serif);overflow-wrap:anywhere}
 .pr-identity-signature{margin-top:14px;font:italic 15px/1.6 var(--inv-heading,Georgia,serif);color:var(--pr-rose)}
-.pr-identity-story>div:last-child{grid-column:1/-1}
+.pr-identity-parents{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;border-top:1px dashed var(--pr-rule);padding-top:20px;font-size:11px;line-height:1.8}
 
 .pr-event-story{position:relative;z-index:4;width:66%;max-width:370px;margin:4px 0 0 auto;border:0;background:var(--pr-card);padding:27px 24px;box-shadow:-8px 10px 0 color-mix(in srgb,var(--pr-rule) 42%,transparent);rotate:1deg;text-align:left}
 .pr-event-story h3{font:clamp(24px,6.6cqw,38px)/1.1 var(--inv-heading,Georgia,serif)}
