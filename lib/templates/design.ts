@@ -5,6 +5,7 @@ export const invitationPalettes = {
   rose: { name: "Rose", bg: "#fbf2f0", surface: "#fffaf8", ink: "#2d2020", accent: "#7a1c25", soft: "#e8b7b1" },
   blush: { name: "Blush", bg: "#fff4f6", surface: "#fffafb", ink: "#34242a", accent: "#a44f62", soft: "#e9a9b9" },
   sage: { name: "Sage", bg: "#f3f5ee", surface: "#fcfcf8", ink: "#273027", accent: "#65775f", soft: "#b8c9ae" },
+  gardenGlow: { name: "Garden Light", bg: "#eef0df", surface: "#fff9ec", ink: "#334437", accent: "#9a7746", soft: "#c7d1a8" },
   pencil: { name: "Pencil Reverie", bg: "#f8f2e9", surface: "#fffaf3", ink: "#3a3532", accent: "#bd7885", soft: "#ddc7ba" },
   zen: { name: "Zen Atelier", bg: "#f4f0e6", surface: "#fbf8f0", ink: "#373c34", accent: "#a9513b", soft: "#c9bda9" },
   night: { name: "Night", bg: "#171318", surface: "#211b22", ink: "#f8f2ee", accent: "#e7a9b1", soft: "#9b7079" },
