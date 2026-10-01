@@ -25,7 +25,7 @@ test("Garden Light keeps real photo slots and shared functional engines", () => 
   assert.match(catalog, /key: "garden-light"[\s\S]*usesPhotos: true[\s\S]*photoSlots: \["cover", "personOne", "personTwo", "gallery"\]/);
   assert.match(scenes, /data-invitation-photo-slot="cover"/);
   assert.match(gallery, /data-invitation-photo-slot="gallery"/);
-  assert.match(universal, /<RsvpForm[\s\S]*garden-light[\s\S]*appearance="zen"/);
+  assert.match(universal, /garden-light[\s\S]{0,500}<RsvpForm[^>]*appearance="zen"/);
   assert.match(universal, /<GuestWishes[\s\S]*garden-light[\s\S]*\? "zen" : "default"/);
   assert.match(universal, /data-studio-section-element="location:button"/);
   assert.match(universal, /data-studio-section-element="gift:button"/);
