@@ -25,6 +25,12 @@ export function availableEditableCopyFields(templateKey: string, isWedding = tru
 }
 
 export function invitationCopyDefaults(templateKey: string, eventDescription?: string | null): EditableInvitationCopy {
+  if (templateKey === "garden-light") return {
+    greeting: eventDescription?.trim() || "Menjelang senja, di antara cahaya kecil dan udara taman, kami mengundang Anda untuk hadir di hari yang kami nantikan.",
+    attendanceRequest: "Kehadiran Anda akan membuat taman ini terasa lebih hangat dan cerita hari itu menjadi lebih lengkap.",
+    prayerWish: "Semoga langkah baru ini selalu menemukan cahaya, keteduhan, dan ruang untuk tumbuh bersama.",
+    closing: "Terima kasih telah datang, mendoakan, dan berbagi cahaya pada hari yang begitu berarti bagi kami. Sampai bertemu di taman.",
+  };
   if (templateKey === "botanical-ivory") return {
     greeting: eventDescription?.trim() || "Dengan hati yang hangat, kami mengundang Anda untuk merayakan hari ketika dua cerita memilih berjalan bersama.",
     attendanceRequest: "Kehadiran Anda akan menjadi bagian hangat dari hari yang kami rayakan bersama.",
