@@ -26,14 +26,14 @@ export function ClassicPearlArt({ objectKey, asset, className = "", eager = fals
 }
 
 const sectionAsset: Partial<Record<string, ClassicPearlArtworkKey>> = {
-  greeting: "candelabra",
+  greeting: "mirror",
   event: "teaTable",
-  dateTime: "tiara",
+  dateTime: "candelabra",
   countdown: "chandelier",
   location: "carriage",
-  rsvp: "candelabra",
+  rsvp: "garland",
   wishes: "perfume",
-  gift: "perfume",
+  gift: "tiara",
   closing: "chaise",
 };
 
