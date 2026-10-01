@@ -108,12 +108,12 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
-    preset: { layout: "midnight", palette: "midnight", font: "cinzelFauna" },
+    preset: { layout: "midnight", palette: "midnightVelvet", font: "bodoniManrope" },
     name: "Midnight Romance",
-    description: "Dramatis, intimate, dan elegan untuk acara malam hari.",
-    descriptionEn: "A dramatic, intimate, and elegant direction for evening celebrations.",
+    description: "Salon malam yang intim dengan navy velvet, burgundy, cahaya lilin, detail baroque, dan foto editorial.",
+    descriptionEn: "An intimate midnight salon of navy velvet, burgundy, candlelight, baroque details, and editorial photography.",
     previewImage:
-      "/assets/demo/invitation/couple.webp",
+      "/templates/midnight-romance/04_navy_rose_wedding_arch.webp",
     assetPath: "/templates/midnight-romance",
   },
   {
