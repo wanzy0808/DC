@@ -83,9 +83,9 @@ test("Classic Pearl keeps event identity and shared functional engines protected
 });
 
 test("Classic Pearl replaces generic section icons with its themed object world", () => {
-  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && <CalendarDays/);
-  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && <MapPin/);
-  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && <Gift/);
+  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <CalendarDays/);
+  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <MapPin/);
+  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <Gift/);
 });
 
 test("Classic Pearl registers restrained asymmetric motion without animating countdown values", () => {
