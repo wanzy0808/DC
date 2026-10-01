@@ -190,9 +190,9 @@ export const invitationTemplates: InvitationTemplate[] = [
     photoSlots: [],
     preset: { layout: "midnight", palette: "night", font: "cinzelFauna" },
     name: "Celestial Ink",
-    description: "Langit malam, orbit dan bintang berilustrasi tanpa foto.",
-    descriptionEn: "An illustrated night sky of orbits and stars, designed without photos.",
-    previewImage: "/assets/landing/ornaments/legacy/flower.webp",
+    description: "Paviliun seremoni malam tanpa foto dengan indigo pekat, moon gate asimetris, folding screen, drapery, lentera, dan komposisi editorial.",
+    descriptionEn: "A photo-free moonlit ceremonial pavilion of deep indigo, an asymmetric moon gate, folding screens, drapery, lantern light, and editorial composition.",
+    previewImage: "/templates/celestial-ink/10_celestial_moon_gate.webp",
     assetPath: "/templates/celestial-ink",
   },
   {
