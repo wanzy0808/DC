@@ -64,7 +64,7 @@ export default function GoldenArtDecoScene({
           <p data-studio-native-object="object:envelope:letter-kicker" className="gd-ticket-kicker">{tr("Admit one unforgettable evening")}</p>
           {recipientLine && <p data-personal-envelope-address data-studio-native-object="object:envelope:address" className="gd-recipient">{recipientLine}</p>}
           <p data-studio-native-object="object:envelope:letter-names" className="gd-ticket-names">{names}</p>
-          <span aria-hidden="true" data-studio-native-object="object:envelope:ticket-number" className="gd-ticket-number">UNDARA · 01</span>
+          <span aria-hidden="true" data-studio-native-object="object:envelope:ticket-ornament" className="gd-ticket-number">UNDARA · 01</span>
         </div>
       </motion.div>
       <motion.span
