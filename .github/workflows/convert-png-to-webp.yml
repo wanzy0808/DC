@@ -55,7 +55,7 @@ jobs:
           echo "Remaining PNG/JPG/JPEG files under public/: $count"
           test "$count" = "0"
 
-      - name: Source regression tests
+      - name: Source regression tests after normalization
         run: pnpm test
 
       - name: Verify application build
