@@ -25,7 +25,7 @@ test("Zen Atelier opens using the direct user gesture and reuses the shared invi
 
 test("Zen envelope uses Japanese washi folds, mizuhiki knot and existing Zen artwork", () => {
   const css = readFileSync(repoFile("components/PublicInvitation/zen-atelier.css"), "utf8");
-  const envelope = scene.split('stage === "envelope" ? <>')[1]?.split("</> : <>")[0];
+  const envelope = scene.split('if (stage === "envelope") {')[1]?.split("\n  }\n\n  return (")[0];
   assert.ok(envelope, "expected distinct Zen digital envelope stage");
   assert.match(envelope, /<BlossomBranch className="zen-jp-branch"/);
   assert.match(envelope, /<EnsoSun className="zen-jp-sun"/);
