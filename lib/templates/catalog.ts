@@ -41,7 +41,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     name: "Romantic Rose",
     description: "Amplop digital, galeri foto pasangan, dan 13 bagian undangan dalam nuansa rose.",
     descriptionEn: "A digital envelope, couple photo gallery, and 13 invitation sections in a romantic rose direction.",
-    previewImage: "/assets/demo/invitation/couple.jpg",
+    previewImage: "/assets/demo/invitation/couple.webp",
     assetPath: "/templates/romantic-rose",
   },
   {
@@ -71,7 +71,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     description: "Bunga blush, potret scallop, dan album kenangan dengan gerak lembut untuk perayaanmu.",
     descriptionEn: "Blush blossoms, scalloped portraits, and a softly animated photo album for your celebration.",
     previewImage:
-      "/assets/demo/invitation/couple-03.jpg",
+      "/assets/demo/invitation/couple-03.webp",
     assetPath: "/templates/eternal-blossom",
   },
   {
@@ -85,7 +85,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     description: "Editorial modern dengan aksen berani untuk berbagai jenis acara.",
     descriptionEn: "A modern editorial direction with bold accents for many kinds of celebrations.",
     previewImage:
-      "/assets/demo/invitation/couple-02.jpg",
+      "/assets/demo/invitation/couple-02.webp",
     assetPath: "/templates/modern-maroon",
   },
   {
@@ -99,7 +99,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     description: "Botanical terang untuk acara outdoor, garden, dan daytime celebration.",
     descriptionEn: "A bright botanical direction for outdoor, garden, and daytime celebrations.",
     previewImage:
-      "/assets/demo/invitation/couple-03.jpg",
+      "/assets/demo/invitation/couple-03.webp",
     assetPath: "/templates/garden-light",
   },
   {
@@ -113,7 +113,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     description: "Dramatis, intimate, dan elegan untuk acara malam hari.",
     descriptionEn: "A dramatic, intimate, and elegant direction for evening celebrations.",
     previewImage:
-      "/assets/demo/invitation/couple.jpg",
+      "/assets/demo/invitation/couple.webp",
     assetPath: "/templates/midnight-romance",
   },
   {
@@ -127,7 +127,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     description: "Clean classic dengan kesan timeless dan fleksibel untuk banyak tema acara.",
     descriptionEn: "A clean classic theme with a timeless feel that adapts to many event styles.",
     previewImage:
-      "/assets/demo/invitation/couple-02.jpg",
+      "/assets/demo/invitation/couple-02.webp",
     assetPath: "/templates/classic-pearl",
   },
   {
@@ -205,7 +205,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     name: "Serein",
     description: "Surat bersegel, tipografi editorial, dan album foto hitam-putih di atas kertas ivory.",
     descriptionEn: "Sealed stationery, editorial typography, and a monochrome photo album on ivory paper.",
-    previewImage: "/assets/demo/invitation/couple.jpg",
+    previewImage: "/assets/demo/invitation/couple.webp",
     assetPath: "/templates/serein",
   },
 ];

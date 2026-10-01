@@ -8,7 +8,7 @@ The replacement world is an ivory stationery set with complete botanical specime
 
 Two image-first composition references were generated and inspected before implementing the scenes: a flat portrait cover and a paper envelope with an olive belly band. These are design references, **not screenshots of the implemented website**. The cover extraction is: small opening line near the top, first name left, second name indented right with an italic ampersand, centered actual date, a complete branch in the lower half, and one short caption. The heading has roughly twice the body scale hierarchy; the principal botanical is about 57% of the invitation column width. It sits in normal flow so long names push it down instead of colliding with it. The envelope extraction is: actual names/date, an isolated sprig across folded paper, an olive band and leaf seal, optional real recipient wording, and one opening action. Paper geometry is drawn in CSS; the botanical artwork is raster imagery, not a collection of hand-drawn SVG leaves.
 
-The existing Library/asset inventory was inspected. No suitable existing Botanical composition reference was found. The owner committed the generated branch and fern as `greenplant.png` and `greenplant2.png`; these originals remain untouched. The fern file is byte-identical to the inspected generated fern. The remaining sections were designed as the blueprint below; there is no claim that all 15 sections have separate approved reference images.
+The existing Library/asset inventory was inspected. No suitable existing Botanical composition reference was found. The owner committed the generated branch and fern as `greenplant.webp` and `greenplant2.webp`; these originals remain untouched. The fern file is byte-identical to the inspected generated fern. The remaining sections were designed as the blueprint below; there is no claim that all 15 sections have separate approved reference images.
 
 Default palette: background `#f7f4e9`, surface `#fffdf5`, ink `#3f4a36`, accent `#667055`, soft `#b7bea4`. Decorative raster plates blend their alpha mask with `currentColor`, preserving illustrated texture while following palette/native color changes. Normal-flow typography and illustration ratios respond to the actual invitation column (`cqw`), including the scaled Studio canvas. Selected artwork wrappers retain stable Studio native keys; internal plates own their static rotation so native transforms and entrance transforms do not erase it.
 
@@ -16,9 +16,9 @@ Default palette: background `#f7f4e9`, surface `#fffdf5`, ink `#3f4a36`, accent 
 
 | Source / shipped derivative | Dimensions | Alpha | Role and treatment |
 | --- | --- | --- | --- |
-| `public/templates/botanical-ivory/greenplant.png` | 1024 × 1536 | Yes | Owner-committed full flowering branch; preserved |
+| `public/templates/botanical-ivory/greenplant.webp` | 1024 × 1536 | Yes | Owner-committed full flowering branch; preserved |
 | `public/templates/botanical-ivory/greenplant.webp` | 768 × 1152; 211,760 bytes | Yes | Cover, envelope sprig, selected identity/section accents and first herbarium page |
-| `public/templates/botanical-ivory/greenplant2.png` | 1024 × 1536 | Yes | Owner-committed full fern; preserved |
+| `public/templates/botanical-ivory/greenplant2.webp` | 1024 × 1536 | Yes | Owner-committed full fern; preserved |
 | `public/templates/botanical-ivory/fern.webp` | 768 × 1152; 216,666 bytes | Yes | Identity, event/location accents and second herbarium page |
 
 The images were generated for this task and committed by the owner, rather than copied from another invitation designer. No third-party stock license is claimed. Derivatives use Sharp, WebP quality 84 and alpha quality 100; their transparent corners and original 2:3 ratio are regression-tested. All raster illustrations render complete with `object-fit:contain`. These public illustrations are downloadable theme assets, not private customer photos. Cover/envelope images load eagerly; other artwork loads lazily and its entrance waits for the image. No new dependency or asset-upload pipeline is introduced.

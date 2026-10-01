@@ -56,7 +56,7 @@ test("botanical motion uses real Studio targets and respects section OFF, author
 });
 
 test("actual botanical derivatives preserve source aspect ratio and transparent alpha within a mobile byte budget", async () => {
-  for (const [source, derivative] of [["greenplant.png", "greenplant.webp"], ["greenplant2.png", "fern.webp"]]) {
+  for (const [source, derivative] of [["greenplant.webp", "greenplant.webp"], ["greenplant2.webp", "fern.webp"]]) {
     const original = await sharp(new URL(`../public/templates/botanical-ivory/${source}`, import.meta.url).pathname).metadata();
     const file = sharp(new URL(`../public/templates/botanical-ivory/${derivative}`, import.meta.url).pathname);
     const meta = await file.metadata();
