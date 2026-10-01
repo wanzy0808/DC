@@ -1,5 +1,14 @@
 # Zen Atelier — Template artwork
 
+## 1 October 2026 — kakemono editorial redesign
+
+Zen Atelier now uses an **asymmetric hanging-scroll (kakemono) cover** instead of the previous centered blossom/name/mountain stack. The real `cover` photo slot sits inside the scroll and keeps Studio crop/edit behavior; a Japanese interior asset is only the decorative empty fallback. The composition layers shoji geometry, a restrained red sun, blossom branch, ink mountains, seal, vertical Japanese detail, date and names without copying the centered-cover rhythm used by other templates.
+
+The remaining invitation is treated as a Japanese editorial journey rather than a repeated floral skin: room/interior, red sun, tea still life, ink clouds, enso, mountains, bamboo and blossom assets rotate by section. These are template-owned decoration only and never replace customer photo slots or invitation data.
+
+Zen Atelier is also registered in `lib/templates/template-motion.ts` for shared Studio-native motion. Cover/gallery photo motion and section artwork use the same persisted override rules as the other redesigned templates, so a Studio-authored section animation or timeline wins over theme defaults. The old Zen-only IntersectionObserver reveal path was removed to prevent duplicate entrances. The envelope's authored mizuhiki → fold → letter sequence was shortened to finish inside the shared ~950 ms open window, with reduced-motion and Studio animation-disable paths preserved.
+
+
 This folder documents the Zen Atelier design assets; React artwork components now live in `components/PublicInvitation/ZenAtelierArtwork.tsx`, not this asset-reference folder. Neither folder is private master-image storage.
 
 - `components/PublicInvitation/ZenAtelierArtwork.tsx`: template-owned decorative React composition and gallery empty-state, using the existing public artwork files; the previous `ZenArtwork.tsx` source path here has been retired.
