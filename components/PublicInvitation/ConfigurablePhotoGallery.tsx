@@ -23,7 +23,8 @@ export default function ConfigurablePhotoGallery({
   const language = useInvitationLanguage();
   const tr = (value: string) => invitationText(language, value);
   const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [manualPaused, setManualPaused] = useState(false);
+  const [interactionPaused, setInteractionPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const touch = useRef<number | null>(null);
   const slideshow = settings.presentation === "carousel" || settings.presentation === "stack";
@@ -40,6 +41,8 @@ export default function ConfigurablePhotoGallery({
     if (active < photos.length) return;
     setActive(Math.max(0, photos.length - 1));
   }, [active, photos.length]);
+
+  const paused = manualPaused || interactionPaused;
 
   useEffect(() => {
     if (!slideshow || !settings.autoplay || paused || reducedMotion || photos.length < 2) return;
@@ -96,11 +99,11 @@ export default function ConfigurablePhotoGallery({
     data-gallery-presentation={settings.presentation}
     data-gallery-transition={settings.transition}
     style={style}
-    onMouseEnter={() => settings.autoplay && setPaused(true)}
-    onMouseLeave={() => settings.autoplay && setPaused(false)}
-    onFocusCapture={() => settings.autoplay && setPaused(true)}
+    onMouseEnter={() => settings.autoplay && setInteractionPaused(true)}
+    onMouseLeave={() => settings.autoplay && setInteractionPaused(false)}
+    onFocusCapture={() => settings.autoplay && setInteractionPaused(true)}
     onBlurCapture={(event) => {
-      if (settings.autoplay && !event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false);
+      if (settings.autoplay && !event.currentTarget.contains(event.relatedTarget as Node | null)) setInteractionPaused(false);
     }}
     onTouchStart={(event) => {
       if (event.touches.length === 1) touch.current = event.touches[0].clientX;
@@ -151,10 +154,10 @@ export default function ConfigurablePhotoGallery({
       {settings.autoplay && <button
         type="button"
         className="ugc-gallery-pause"
-        aria-label={paused ? (language === "EN" ? "Resume gallery autoplay" : "Lanjutkan autoplay galeri") : (language === "EN" ? "Pause gallery autoplay" : "Jeda autoplay galeri")}
-        aria-pressed={paused}
-        onClick={() => setPaused((value) => !value)}
-      >{paused ? <Play size={14} /> : <Pause size={14} />}</button>}
+        aria-label={manualPaused ? (language === "EN" ? "Resume gallery autoplay" : "Lanjutkan autoplay galeri") : (language === "EN" ? "Pause gallery autoplay" : "Jeda autoplay galeri")}
+        aria-pressed={manualPaused}
+        onClick={() => setManualPaused((value) => !value)}
+      >{manualPaused ? <Play size={14} /> : <Pause size={14} />}</button>}
       <button type="button" className="ugc-gallery-arrow" aria-label={tr("Foto Berikutnya")} onClick={() => move(1)}><ChevronRight size={18} /></button>
     </div>}
     <p className="ugc-gallery-counter" aria-live="polite">{active + 1} / {photos.length}</p>
