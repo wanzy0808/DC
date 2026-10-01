@@ -592,11 +592,14 @@ test("Garden Light keeps its illuminated props granular while photo content stay
   const garden = read("components/PublicInvitation/GardenLightScene.tsx");
   assert.match(garden, /object:envelope:hanging-lantern-art/);
   assert.match(garden, /object:envelope:birdcage-art/);
+  assert.match(garden, /object:envelope:fireflies/);
+  assert.match(garden, /object:cover:fireflies/);
   assert.match(garden, /object:cover:arch-art/);
   assert.match(garden, /object:cover:garland-art/);
   assert.match(garden, /object:cover:lantern-art/);
   assert.match(garden, /object:cover:photo-frame/);
   assert.match(garden, /data-invitation-photo-slot="cover"/);
+  assert.equal(nativeVisualCanHide("object:cover:fireflies"), true);
   assert.equal(nativeVisualCanHide("object:cover:arch-art"), true);
   assert.equal(nativeVisualCanHide("object:cover:garland-art"), true);
   assert.equal(nativeVisualCanHide("object:cover:lantern-art"), true);
