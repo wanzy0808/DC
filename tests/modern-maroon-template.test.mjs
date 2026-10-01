@@ -75,6 +75,6 @@ test("Modern Maroon defaults to its modern type pairing", () => {
 test("Modern Maroon viewport entrances are one-shot to prevent scroll flicker", () => {
   const nativeMotion = readFileSync(new URL("../components/PublicInvitation/use-native-visual-animations.ts", import.meta.url), "utf8");
   const photoMotion = readFileSync(new URL("../components/PublicInvitation/use-photo-animations.ts", import.meta.url), "utf8");
-  assert.match(nativeMotion, /const replay = themed && !\["modern-maroon", "garden-light"\]\.includes\(template\)/);
-  assert.match(photoMotion, /const replay = themed && !\["modern-maroon", "garden-light"\]\.includes\(theme\?\.template \?\? ""\)/);
+  assert.match(nativeMotion, /const replay = themed && !\["modern-maroon", "garden-light", "midnight-romance"\]\.includes\(template\)/);
+  assert.match(photoMotion, /const replay = themed && !\["modern-maroon", "garden-light", "midnight-romance"\]\.includes\(theme\?\.template \?\? ""\)/);
 });
