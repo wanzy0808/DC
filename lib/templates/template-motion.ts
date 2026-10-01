@@ -33,11 +33,19 @@ const gardenLightPhotos: PhotoMotionMap = {
   gallery: { animation: "tilt-in", animationDuration: .74, animationStagger: .06 },
 };
 
+const midnightRomancePhotos: PhotoMotionMap = {
+  cover: { animation: "reveal-up", animationDuration: .92, animationDelay: .08 },
+  personOne: { animation: "glide-left", animationDuration: .86 },
+  personTwo: { animation: "glide-right", animationDuration: .86, animationDelay: .08 },
+  gallery: { animation: "tilt-in", animationDuration: .76, animationStagger: .065, parallax: .03 },
+};
+
 const photoDefaults: Record<string, PhotoMotionMap> = {
   serein: sereinPhotos,
   "eternal-blossom": blossomPhotos,
   "modern-maroon": modernMaroonPhotos,
   "garden-light": gardenLightPhotos,
+  "midnight-romance": midnightRomancePhotos,
 };
 
 export function templateHasDefaultPhotoMotion(template: string) {
@@ -123,6 +131,63 @@ const sereinNative: Record<string, TemplateNativeMotion> = {
   "heading:gallery": { animation: "slide-left" },
   "heading:closing": { animation: "rise" },
   "object:closing:names": { animation: "rise", animationDelay: .08 },
+};
+
+const midnightRomanceNative: Record<string, TemplateNativeMotion> = {
+  "heading:envelope": { animation: "rise", animationDuration: .72 },
+  "object:envelope:night-glow": { animation: "fade", animationDuration: .9 },
+  "object:envelope:chandelier-art": { animation: "reveal-up", animationDuration: .92 },
+  "object:envelope:lantern-art": { animation: "glide-right", animationDuration: .84, animationDelay: .07 },
+  "object:envelope:kicker": { animation: "fade", animationDuration: .62 },
+  "object:envelope:date": { animation: "fade", animationDelay: .08 },
+  "object:envelope:card-stage": { animation: "rise", animationDuration: .86, animationDelay: .08 },
+  "object:envelope:garland-art": { animation: "fade", animationDuration: .78, animationDelay: .1 },
+  "object:envelope:seal": { animation: "soft-scale", animationDuration: .66, animationDelay: .12 },
+  "object:cover:night-glow": { animation: "fade", animationDuration: .92 },
+  "object:cover:chandelier-art": { animation: "reveal-up", animationDuration: .92 },
+  "object:cover:arch-art": { animation: "soft-scale", animationDuration: .88, animationDelay: .04 },
+  "object:cover:garland-art": { animation: "fade", animationDuration: .78, animationDelay: .08 },
+  "object:cover:media-group": { animation: "reveal-up", animationDuration: .9, animationDelay: .08 },
+  "object:cover:copy-panel": { animation: "rise", animationDuration: .82, animationDelay: .12 },
+  "object:cover:personOne-name": { animation: "slide-left", animationDuration: .8 },
+  "object:cover:personTwo-name": { animation: "slide-right", animationDuration: .8, animationDelay: .07 },
+  "object:cover:ampersand-symbol": { animation: "fade", animationDuration: .62, animationDelay: .1 },
+  "object:cover:event-name": { animation: "rise", animationDuration: .82 },
+  "object:cover:date": { animation: "fade", animationDelay: .14 },
+  "object:cover:closing-copy": { animation: "fade", animationDelay: .16 },
+  "heading:greeting": { animation: "slide-left", animationDuration: .72 },
+  "object:greeting:midnight-art": { animation: "glide-right", animationDuration: .86, animationDelay: .07 },
+  "heading:identity": { animation: "rise", animationDuration: .72 },
+  "object:identity:personOne-group": { animation: "glide-left", animationDuration: .86 },
+  "object:identity:personTwo-group": { animation: "glide-right", animationDuration: .86, animationDelay: .08 },
+  "object:identity:midnight-art": { animation: "soft-scale", animationDuration: .84, animationDelay: .1 },
+  "heading:event": { animation: "slide-left", animationDuration: .72 },
+  "object:event:details-group": { animation: "rise", animationDuration: .82, animationDelay: .08 },
+  "object:event:midnight-art": { animation: "glide-right", animationDuration: .88, animationDelay: .08 },
+  "heading:dateTime": { animation: "slide-right", animationDuration: .72 },
+  "object:dateTime:panel": { animation: "reveal-up", animationDuration: .86, animationDelay: .06 },
+  "object:dateTime:midnight-art": { animation: "fade", animationDuration: .78, animationDelay: .1 },
+  "heading:gallery": { animation: "slide-left", animationDuration: .72 },
+  "object:gallery:garland-art": { animation: "reveal-left", animationDuration: .86 },
+  "object:gallery:grid": { animation: "rise", animationDuration: .8, animationDelay: .06 },
+  "object:gallery:mirror-art": { animation: "soft-scale", animationDuration: .82, animationDelay: .1 },
+  "heading:countdown": { animation: "fade", animationDuration: .68 },
+  "object:countdown:grid": { animation: "rise", animationDuration: .74, animationDelay: .06 },
+  "object:countdown:midnight-art": { animation: "fade", animationDuration: .8, animationDelay: .1 },
+  "heading:location": { animation: "slide-right", animationDuration: .72 },
+  "object:location:details-group": { animation: "glide-right", animationDuration: .84, animationDelay: .08 },
+  "object:location:midnight-art": { animation: "glide-left", animationDuration: .88, animationDelay: .08 },
+  "heading:rsvp": { animation: "rise", animationDuration: .72 },
+  "object:rsvp:midnight-art": { animation: "fade", animationDuration: .78, animationDelay: .08 },
+  "heading:wishes": { animation: "slide-left", animationDuration: .72 },
+  "object:wishes:midnight-art": { animation: "glide-left", animationDuration: .84, animationDelay: .08 },
+  "heading:gift": { animation: "rise", animationDuration: .72 },
+  "object:gift:panel": { animation: "reveal-up", animationDuration: .84, animationDelay: .06 },
+  "object:gift:midnight-art": { animation: "fade", animationDuration: .78, animationDelay: .1 },
+  "heading:closing": { animation: "rise", animationDuration: .74 },
+  "object:closing:copy-group": { animation: "glide-right", animationDuration: .84, animationDelay: .07 },
+  "object:closing:midnight-art": { animation: "soft-scale", animationDuration: .86, animationDelay: .08 },
+  "object:closing:names": { animation: "soft-scale", animationDuration: .78, animationDelay: .12 },
 };
 
 const gardenLightNative: Record<string, TemplateNativeMotion> = {
@@ -229,6 +294,7 @@ const nativeDefaults: Record<string, Record<string, TemplateNativeMotion>> = {
   "eternal-blossom": blossomNative,
   "modern-maroon": modernMaroonNative,
   "garden-light": gardenLightNative,
+  "midnight-romance": midnightRomanceNative,
 };
 
 export function templateHasDefaultMotion(template: string) {
