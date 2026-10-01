@@ -50,7 +50,7 @@ export type PhotoAssignments = {
   focus: Record<CroppablePhotoSlot, PhotoFocus>;
   crop: Record<CroppablePhotoSlot, PhotoCrop | null>;
   motion?: PhotoMotionMap;
-  gallerySettings: GallerySettings;
+  gallerySettings?: GallerySettings;
 };
 
 export const defaultPhotoAssignments = (): PhotoAssignments => ({
@@ -181,6 +181,10 @@ export function withPhotoAssignments(designKey: string, assignments: PhotoAssign
   };
   if (JSON.stringify(normalized) === JSON.stringify(defaultPhotoAssignments())) return parts.join("::");
   return `${parts.join("::")}::photos=${encodeURIComponent(JSON.stringify(normalized))}`;
+}
+
+export function resolveGallerySettings(assignments: Pick<PhotoAssignments, "gallerySettings">): GallerySettings {
+  return sanitizeGallerySettings(assignments.gallerySettings);
 }
 
 export function resolvePhotoCrop(
