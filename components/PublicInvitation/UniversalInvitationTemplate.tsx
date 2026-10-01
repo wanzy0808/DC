@@ -702,7 +702,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ) : (
             <div data-studio-native-object="object:dateTime:panel" className={key === "pencil-reverie" ? "pr-date-scrap" : `mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-5 py-7 ${panel}`}>
-              {key !== "botanical-ivory" && <CalendarDays data-studio-native-object="object:dateTime:calendar-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />}
+              {key !== "botanical-ivory" && key !== "midnight-romance" && <CalendarDays data-studio-native-object="object:dateTime:calendar-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />}
               <p data-studio-native-object="object:dateTime:date" className="mt-4 text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{date}</p>
               {invitation.ceremonyTime && <p data-studio-native-object="object:dateTime:start" className="mt-3 text-sm">{tr("Mulai")} · {invitation.ceremonyTime}</p>}
               {invitation.receptionTime && <p data-studio-native-object="object:dateTime:end" className="mt-1 text-sm">{tr("Selesai")} · {invitation.receptionTime === "END" ? tr("Selesai acara") : invitation.receptionTime}</p>}
@@ -796,7 +796,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ) : (
             <div data-studio-native-object="object:location:details-group" className="mx-auto max-w-sm space-y-4">
-              {key !== "botanical-ivory" && <MapPin aria-hidden data-studio-native-object="object:location:map-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" />}
+              {key !== "botanical-ivory" && key !== "midnight-romance" && <MapPin aria-hidden data-studio-native-object="object:location:map-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" />}
               <p data-studio-native-object="object:location:venue" className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.venue || tr("Lokasi belum ditentukan")}</p>
               {invitation.address && <p data-studio-native-object="object:location:address" className="text-sm leading-7 opacity-75">{invitation.address}</p>}
               {maps && <a data-studio-section-element="location:button" style={sectionElementStyleCss(sectionElementStyles, "location", "button")} href={maps} target="_blank" rel="noopener noreferrer" onClick={preview ? (event) => event.preventDefault() : undefined} className={key === "midnight-romance" ? "mr-action" : key === "garden-light" ? "gl-action" : key === "botanical-ivory" ? "bi-action" : key === "eternal-blossom" ? "eb-action" : key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-[var(--undara-control-radius)] bg-[var(--inv-accent)] px-6 text-sm text-white"}>{tr("Lihat Lokasi")}</a>}
@@ -824,7 +824,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ) : (
             <div data-studio-native-object="object:gift:panel" className={`mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-6 py-7 text-sm ${key === "pencil-reverie" ? "pr-gift-panel" : panel}`}>
-              {key !== "botanical-ivory" && <Gift data-studio-native-object="object:gift:gift-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />}
+              {key !== "botanical-ivory" && key !== "midnight-romance" && <Gift data-studio-native-object="object:gift:gift-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />}
               <p data-studio-native-object="object:gift:bank-name" className="mt-4 text-xs opacity-70">{invitation.giftBankName}</p>
               {invitation.giftAccountName && <p data-studio-native-object="object:gift:account-name" className="mt-2 font-semibold">{invitation.giftAccountName}</p>}
               <p data-studio-native-object="object:gift:account-number" className="mt-2 break-all text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.giftAccountNumber}</p>
