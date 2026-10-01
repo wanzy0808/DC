@@ -75,8 +75,8 @@ test("Midnight Romance uses its velvet palette and Bodoni editorial pairing", ()
 test("Midnight Romance entrances are one-shot and wait for artwork", () => {
   const nativeHook = read("components/PublicInvitation/use-native-visual-animations.ts");
   const photoHook = read("components/PublicInvitation/use-photo-animations.ts");
-  assert.match(nativeHook, /!\["modern-maroon", "garden-light", "midnight-romance"\]\.includes\(template\)/);
-  assert.match(photoHook, /!\["modern-maroon", "garden-light", "midnight-romance"\]\.includes\(theme\?\.template \?\? ""\)/);
+  assert.match(nativeHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl"\]\.includes\(template\)/);
+  assert.match(photoHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl"\]\.includes\(theme\?\.template \?\? ""\)/);
   assert.match(nativeHook, /waitForImages:[^\n]*midnight-romance/);
   assert.match(universal, /key === "midnight-romance"[\s\S]{0,250}sectionStyles\.envelope\?\.animation === "none"/);
 });
