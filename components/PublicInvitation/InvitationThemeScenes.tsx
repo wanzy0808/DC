@@ -88,7 +88,6 @@ type EnvelopeVisual = {
 };
 const envelopeVisuals: Record<string, EnvelopeVisual> = {
   "modern-maroon": { backdrop: "#380b19", surface: "#721d30", flap: "#a54c56", border: "#d9a29a", ink: "#ffe5df", symbol: "M.", effect: "rounded-none", photoPosition: "rotate-[5deg]" },
-  "garden-light": { backdrop: "#e8f0d9", surface: "#fcfdf0", flap: "#adbf98", border: "#6a8458", ink: "#405a3e", symbol: "❧", effect: "rounded-t-[95px] rounded-b-[14px]", photoPosition: "rotate-[-3deg]" },
   "midnight-romance": { backdrop: "#080e22", surface: "#18213c", flap: "#263452", border: "#cdb986", ink: "#f5e8c9", symbol: "✦", effect: "rounded-t-[130px] rounded-b-[22px]", photoPosition: "rotate-[4deg]" },
   "botanical-ivory": { backdrop: "#f0efde", surface: "#fffdf2", flap: "#cbd6ba", border: "#849878", ink: "#50634d", symbol: "❧", effect: "rounded-[9px]" },
   "classic-pearl": { backdrop: "#efebe1", surface: "#fffdf6", flap: "#dcd0b8", border: "#b3a181", ink: "#534a3d", symbol: "◇", effect: "rounded-t-[140px] rounded-b-[14px]" },
@@ -107,11 +106,11 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,allowEn
     border: `var(--inv-scene-accent, ${original.border})`,
     ink: `var(--inv-scene-ink, ${original.ink})`,
   };
-  const usesPhoto = ["modern-maroon","garden-light","midnight-romance"].includes(theme);
+  const usesPhoto = ["modern-maroon","midnight-romance"].includes(theme);
   return (
     <section data-invitation-section="envelope" className={`${center} relative`} style={{backgroundColor:style.backdrop,color:style.ink}}>
       <div aria-hidden data-studio-native-object="object:envelope:frame-border" className="pointer-events-none absolute inset-5 border opacity-30" style={{borderColor:style.border}}/>
-      {theme === "garden-light" || theme === "botanical-ivory" || theme === "paper-cut-botanical" ? <>
+      {theme === "botanical-ivory" || theme === "paper-cut-botanical" ? <>
         <BotanicalSprig studioObject="object:envelope:sprig-left"/><BotanicalSprig mirrored studioObject="object:envelope:sprig-right"/>
       </> : theme === "celestial-ink" || theme === "midnight-romance" ? <>
         <div aria-hidden data-studio-native-object="object:envelope:starfield" className="pointer-events-none absolute inset-0 opacity-55" style={{backgroundImage:"radial-gradient(circle,currentColor 1px,transparent 2px)",backgroundSize:"39px 56px"}}/>
@@ -237,20 +236,6 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     ? <StudioPhotoCropOverlay crop={crop} onChange={onCropChange} onDone={onFinishCrop} locale={locale} />
     : null;
   const content = tr("The Celebration");
-  if (theme === "garden-light") return <section className={`${center} bg-[var(--inv-scene-bg,#ecf0de)] text-[color:var(--inv-scene-ink,#465c3a)]`} data-invitation-section={stage}>
-    <div aria-hidden data-studio-native-object="object:cover:ring-left" className="absolute -left-24 top-20 h-72 w-72 rounded-full border-[18px] border-[var(--inv-scene-accent,#a6be92)]/40" />
-    <div aria-hidden data-studio-native-object="object:cover:ring-right" className="absolute -right-28 bottom-20 h-80 w-80 rounded-full border-[18px] border-[var(--inv-scene-accent,#acc89b)]/40" />
-    <BotanicalSprig studioObject="object:cover:sprig-left" /><BotanicalSprig mirrored studioObject="object:cover:sprig-right" />
-    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-6 text-[color:var(--inv-scene-text,#68855d)]`}>{tr("In full bloom")}</p>
-    <div data-studio-native-object="object:cover:photo-frame" className="relative mt-9 w-[min(73vw,290px)] rounded-t-[180px] rounded-b-[16px] border-[12px] border-[var(--inv-scene-accent,#f8faed)] bg-[var(--inv-scene-soft,#e1ebd9)] p-1 shadow-[0_20px_48px_#41593733]">
-      <div data-studio-native-object="object:cover:photo-window" className="relative h-[320px] overflow-hidden rounded-t-[165px] rounded-b-[8px]"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
-      <span aria-hidden data-studio-native-object="object:cover:seal" className="absolute -bottom-7 left-1/2 grid h-14 w-14 -translate-x-1/2 place-items-center rounded-full border-4 border-[var(--inv-scene-accent,#ecf0de)] bg-[var(--inv-scene-soft,#607c52)] text-white"><Leaf className="h-6 w-6" /></span>
-    </div>
-    <Names className="relative mt-14 text-3xl italic">{names}</Names>
-    <p data-studio-native-object="object:cover:date" className="mt-3 text-xs tracking-[.2em]">{date}</p>
-    <Lines studioObject="object:cover:ornament" className="mt-7"><Leaf className="h-5 w-5"/></Lines>
-  </section>;
-
   if (theme === "midnight-romance") return <section className={`${center} bg-[var(--inv-scene-bg,#080d20)] text-[color:var(--inv-scene-ink,#f4e7d0)]`} data-invitation-section={stage}>
     <div aria-hidden data-studio-native-object="object:cover:starfield" className="pointer-events-none absolute inset-0 opacity-60" style={{backgroundImage:"radial-gradient(circle at 20% 20%,#e1d5ab 1px,transparent 2px),radial-gradient(circle at 80% 60%,#e1d5ab 1px,transparent 2px)",backgroundSize:"43px 61px,79px 97px"}} />
     <Moon aria-hidden data-studio-native-object="object:cover:moon" className="absolute right-7 top-14 h-20 w-20 text-[color:var(--inv-scene-text,#e5d09e)]/45" strokeWidth={0.6} />
