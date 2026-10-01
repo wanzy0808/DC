@@ -52,6 +52,8 @@ test("Garden Light has template-owned photo and native motion with reduced-motio
   assert.match(motion, /const gardenLightPhotos/);
   assert.match(motion, /"garden-light": gardenLightPhotos/);
   assert.match(motion, /const gardenLightNative/);
+  assert.match(motion, /"object:envelope:fireflies": \{ animation: "fade"/);
+  assert.match(motion, /"object:cover:fireflies": \{ animation: "fade"/);
   assert.match(motion, /"garden-light": gardenLightNative/);
   assert.match(motion, /gallery: \{ animation: "tilt-in"/);
   assert.doesNotMatch(motion, /object:countdown:[^"]*-value/);
