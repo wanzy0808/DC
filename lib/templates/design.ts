@@ -1,6 +1,6 @@
 export const invitationPalettes = {
   blossom: { name: "Eternal Blossom", bg: "#f7edea", surface: "#fff9f3", ink: "#673f4d", accent: "#99566b", soft: "#dfb8bd" },
-  botanical: { name: "Botanical Ivory", bg: "#f7f4e9", surface: "#fffdf5", ink: "#3f4a36", accent: "#667055", soft: "#b7bea4" },
+  botanical: { name: "Botanical Ivory", bg: "#f6f1e7", surface: "#fffaf1", ink: "#38342d", accent: "#6f725d", soft: "#c8c1ad" },
   serein: { name: "Serein", bg: "#f4eee5", surface: "#fcf8f1", ink: "#442936", accent: "#442936", soft: "#cab6a2" },
   rose: { name: "Rose", bg: "#fbf2f0", surface: "#fffaf8", ink: "#2d2020", accent: "#7a1c25", soft: "#e8b7b1" },
   blush: { name: "Blush", bg: "#fff4f6", surface: "#fffafb", ink: "#34242a", accent: "#a44f62", soft: "#e9a9b9" },
