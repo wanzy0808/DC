@@ -396,7 +396,7 @@
   width: 100%;
   opacity: .78;
 }
-.cp-keepsake-tiara { transform: rotate(-3deg); }
+.cp-keepsake-tiara { rotate: -3deg; }
 .cp-keepsake-perfume { width: 82%; margin-left: auto; }
 .cp-keepsake-title {
   max-width: 10ch;
