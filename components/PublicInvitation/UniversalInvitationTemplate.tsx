@@ -393,6 +393,8 @@ export default function UniversalInvitationTemplate({
   };
 
   const section = (keyName: keyof typeof headings, children: ReactNode, index: number, after?: (instanceId: string) => ReactNode) => {
+    const sectionKey = keyName;
+    const sectionHasPremiumTimeline = Boolean(sectionStyles[sectionKey]?.timeline);
     const left = key === "modern-maroon" || key === "golden-art-deco";
     const paper = key === "paper-cut-botanical";
     const celestial = key === "celestial-ink";
@@ -498,7 +500,7 @@ export default function UniversalInvitationTemplate({
       : botanical || blossom ? readableInk(sectionStyles[keyName]?.background || (keyName === "countdown" ? palette.accent : ["greeting", "wishes", "gallery"].includes(keyName) ? palette.surface : palette.bg), palette.ink) : customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
     return renderSectionInstances(keyName, (instanceId) => (
       <>
-      <section data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : serein ? "serein-section" : botanical ? "bi-section" : blossom ? "eb-section" : garden ? "gl-section" : midnight ? "mr-section" : classic ? "cp-section" : golden ? "gd-section" : paper ? "pcb-section" : modern ? `mm-section mm-${keyName}` : "py-16"} ${left || pencil || serein || botanical || blossom || garden || midnight || classic || golden || paper || modern ? "text-left" : "text-center"}`}
+      <section data-invitation-section={keyName} data-premium-timeline={sectionHasPremiumTimeline ? "true" : undefined} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : serein ? "serein-section" : botanical ? "bi-section" : blossom ? "eb-section" : garden ? "gl-section" : midnight ? "mr-section" : classic ? "cp-section" : golden ? "gd-section" : paper ? "pcb-section" : modern ? `mm-section mm-${keyName}` : "py-16"} ${left || pencil || serein || botanical || blossom || garden || midnight || classic || golden || paper || modern ? "text-left" : "text-center"}`}
         style={{ backgroundColor: backdrop, color, backgroundImage: zen ? "radial-gradient(circle at 10% 40%,rgba(112,100,81,.055),transparent 42%)" : undefined, ...invitationSectionStyleCss(sectionStyles[keyName]) }}
       >
         {botanical && <BotanicalSectionArt section={keyName} />}
