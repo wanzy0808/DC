@@ -72,8 +72,10 @@ export default function ConfigurablePhotoGallery({
     return <div className="ugc-gallery-shell" data-gallery-presentation="masonry">
       {preview && onEdit && <button type="button" className="ugc-gallery-edit" onClick={onEdit}>{tr("Atur Foto Galeri")}</button>}
       <div data-studio-native-object="object:gallery:grid" className="ugc-gallery-masonry">
-        {photos.map((photo, index) => <figure key={photo.id} data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} className="ugc-gallery-masonry-item">
-          <img src={photo.url} alt={photo.title || `${tr("Galeri foto")} ${index + 1}`} loading="lazy" decoding="async" />
+        {photos.map((photo, index) => <figure key={photo.id} className="ugc-gallery-masonry-item">
+          <span data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} className="ugc-gallery-photo-motion">
+            <img src={photo.url} alt={photo.title || `${tr("Galeri foto")} ${index + 1}`} loading="lazy" decoding="async" />
+          </span>
         </figure>)}
       </div>
     </div>;
@@ -83,8 +85,10 @@ export default function ConfigurablePhotoGallery({
     return <div className="ugc-gallery-shell" data-gallery-presentation="filmstrip">
       {preview && onEdit && <button type="button" className="ugc-gallery-edit" onClick={onEdit}>{tr("Atur Foto Galeri")}</button>}
       <div data-studio-native-object="object:gallery:grid" className="ugc-gallery-filmstrip" role="list">
-        {photos.map((photo, index) => <figure key={photo.id} role="listitem" data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} className="ugc-gallery-filmstrip-item">
-          <img src={photo.url} alt={photo.title || `${tr("Galeri foto")} ${index + 1}`} loading="lazy" decoding="async" />
+        {photos.map((photo, index) => <figure key={photo.id} role="listitem" className="ugc-gallery-filmstrip-item">
+          <span data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} className="ugc-gallery-photo-motion">
+            <img src={photo.url} alt={photo.title || `${tr("Galeri foto")} ${index + 1}`} loading="lazy" decoding="async" />
+          </span>
           <figcaption>{String(index + 1).padStart(2, "0")}</figcaption>
         </figure>)}
       </div>
@@ -128,14 +132,14 @@ export default function ConfigurablePhotoGallery({
         const stackPosition = index === active ? "active" : index === previous ? "previous" : index === next ? "next" : "hidden";
         return <figure
           key={photo.id}
-          data-invitation-photo-slot="gallery"
-          data-studio-photo-id={photo.id}
           data-active={index === active ? "true" : "false"}
           data-stack-position={stackPosition}
           aria-hidden={index === active ? undefined : true}
           className="ugc-gallery-slide"
         >
-          <img src={photo.url} alt={photo.title || `${tr("Galeri foto")} ${index + 1}`} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+          <span data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} className="ugc-gallery-photo-motion">
+            <img src={photo.url} alt={photo.title || `${tr("Galeri foto")} ${index + 1}`} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+          </span>
         </figure>;
       })}
     </div>
