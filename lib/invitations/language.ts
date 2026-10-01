@@ -7,6 +7,13 @@ export type InvitationLanguage = "ID" | "EN";
 const english: Record<string, string> = {
   "Sebuah Undangan Untuk Anda": "An Invitation For You",
   "Kami Mengundang Anda": "You Are Invited",
+  "Setelah cahaya terakhir": "After the Last Light",
+  "Malam menyimpan cahaya yang hanya kita berdua mengerti.": "The night holds a light only the two of us understand.",
+  "Beberapa malam terlalu indah untuk dibiarkan berlalu tanpa dikenang.": "Some nights are too beautiful to pass without being remembered.",
+  "Saat malam turun dan cahaya menjadi lebih pelan, kami mengundang Anda untuk hadir di satu perayaan yang kami simpan dekat di hati.": "As night falls and the light grows softer, we invite you to a celebration we hold close to our hearts.",
+  "Kehadiran Anda akan menjadi bagian hangat dari malam yang ingin kami kenang selamanya.": "Your presence will be a warm part of the night we hope to remember forever.",
+  "Semoga perjalanan baru ini selalu menemukan cahaya, bahkan pada malam yang paling sunyi.": "May this new journey always find light, even on the quietest nights.",
+  "Terima kasih telah hadir, mendoakan, dan tinggal sejenak bersama kami di malam yang berarti ini. Sampai bertemu.": "Thank you for being present, for your wishes, and for sharing this meaningful night with us. We look forward to seeing you.",
   "Senja di taman": "An Evening in the Garden",
   "Di bawah cahaya hangat, sebuah hari baru akan dimulai.": "Beneath the warm lights, a new chapter is about to begin.",
   "Cahaya kecil, tawa panjang, dan kenangan yang ingin kami simpan.": "Small lights, long laughter, and memories we want to keep.",
