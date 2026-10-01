@@ -60,7 +60,7 @@ export function InkMountains({ className = "", style, studioObject }: ArtworkPro
 
 function ArtShell({ section, children }: { section: string; children: ReactNode }) {
   return (
-    <div aria-hidden="true" className={`zen-section-art zen-section-art-${section}`}>
+    <div aria-hidden="true" data-studio-native-object={`object:${section}:theme-art`} className={`zen-section-art zen-section-art-${section}`}>
       {children}
     </div>
   );
