@@ -2342,3 +2342,9 @@ Mobile retains normal document flow for the title and controls, while desktop us
 
 **Validation:** source guards confirm the dedicated Modern Maroon section layouts, shared RSVP/Wishes/Gift wiring, canonical asset references, default motion registration, reduced-motion CSS, modern font preset and palette-aware section surfaces. The repository's raster-normalization workflow is scoped to public image changes and does not run for these code-only commits; no full GitHub `pnpm build` result is claimed here.
 
+### 1 October 2026 — Modern Maroon motion flicker fix
+
+Modern Maroon default native-object and photo entrance motion is now one-shot per mounted element. The shared entrance runtime still supports replay for themes that intentionally use it, but Modern Maroon no longer clears its played state or cancels active presentation when an element leaves the viewport. This prevents cover/section photos and artwork from flashing back to their entrance state while scrolling the tall preview modal. Explicit Studio motion replay events remain supported.
+
+Files: `components/PublicInvitation/use-native-visual-animations.ts`, `components/PublicInvitation/use-photo-animations.ts`, `tests/modern-maroon-template.test.mjs`.
+
