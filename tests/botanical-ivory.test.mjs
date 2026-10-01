@@ -42,7 +42,7 @@ test("botanical motion uses real Studio targets and respects section OFF, author
   assert.equal(nativeVisualCanHide("object:gallery:specimenTwo-group"), false, "The scroll page is structural");
   assert.equal(nativeVisualCanHide("object:gallery:specimen-fern-art"), true, "Its illustration remains independently removable");
   assert.equal(templateNativeMotionForKey("botanical-ivory", key).animation, "tilt-in");
-  for (const authored of [{ animation: "none" }, { animation: "fade" }, { timeline: "herbarium-sequence" }]) {
+  for (const authored of [{ animation: "none" }, { animation: "fade" }, { timeline: "keepsake-sequence" }]) {
     assert.equal(templateNativeMotionForKey("botanical-ivory", key, { gallery: authored }), undefined);
   }
   const stored = withNativeVisualTransforms("botanical-ivory::botanical::rufinaAverage", {
@@ -88,7 +88,7 @@ test("identity renders actual long names/parents and does not fabricate a couple
   assert.doesNotMatch(single, /personOne-name|personTwo-name/);
 });
 
-test("English gallery has named controls and real artwork, while optional Our Story stays customer-owned", () => {
+test("English keepsake gallery stays romantic and photo-free, while optional Our Story stays customer-owned", () => {
   const inEnglish = (child) => React.createElement(InvitationLanguageProvider, { language: "EN" }, child);
   // tsx's CommonJS interop wraps default TSX exports in this ESM test runner.
   const Gallery = BotanicalIvoryGallery.default ?? BotanicalIvoryGallery;
@@ -97,18 +97,19 @@ test("English gallery has named controls and real artwork, while optional Our St
   for (const key of ["object:gallery:specimenOne-group", "object:gallery:specimenTwo-group"]) {
     assert.ok(gallery.includes(`data-studio-native-object="${key}"`), "The real page owns its default motion target");
   }
-  assert.match(gallery, /aria-label="Botanical Gallery"/);
-  assert.match(gallery, /aria-label="Previous Illustration" disabled/);
-  assert.match(gallery, /aria-label="Next Illustration"/);
-  assert.match(gallery, /<figcaption[^>]*>A Flowering Branch<\/figcaption>/);
-  assert.match(gallery, /<figcaption[^>]*>A Young Fern<\/figcaption>/);
+  assert.match(gallery, /aria-label="Story Gallery"/);
+  assert.match(gallery, /aria-label="Previous Story" disabled/);
+  assert.match(gallery, /aria-label="Next Story"/);
+  assert.match(gallery, /Two Hearts, One Promise/);
+  assert.match(gallery, /One Day, One Forever/);
+  assert.doesNotMatch(gallery, /greenplant|fern\.webp|data-invitation-photo-slot/);
   assert.equal(renderToStaticMarkup(React.createElement(Story, { theme: "botanical-ivory" })), "");
   const story = renderToStaticMarkup(inEnglish(React.createElement(Story, { theme: "botanical-ivory", story: "Bertemu di perpustakaan.\nKemudian tumbuh bersama." })));
   assert.match(story, /Bertemu di perpustakaan/);
   assert.doesNotMatch(story, /our-story-kicker|our-story-divider/);
   const copy = localizedEditableCopy("botanical-ivory", "botanical-ivory", null, "EN");
-  assert.equal(copy.greeting, "With warm hearts, we invite you to celebrate a special day.");
-  assert.equal(invitationText("EN", "Sebuah hari untuk bertumbuh bersama."), "A day to grow together.");
+  assert.equal(copy.greeting, "With warm hearts, we invite you to celebrate the day when two stories choose to walk together.");
+  assert.equal(invitationText("EN", "Dua hati, satu cerita yang tumbuh pelan menuju selamanya."), "Two hearts, one story gently growing toward forever.");
   const customer = withEditableCopy("botanical-ivory", { greeting: "Teks pribadi kami." });
   assert.equal(localizedEditableCopy(customer, "botanical-ivory", null, "EN").greeting, "Teks pribadi kami.");
 });
