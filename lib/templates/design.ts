@@ -19,6 +19,7 @@ export const invitationPalettes = {
   monochrome: { name: "Monochrome", bg: "#f4f3f1", surface: "#ffffff", ink: "#202020", accent: "#3d3d3d", soft: "#bdbdbd" },
   maroon: { name: "Maroon", bg: "#4a111b", surface: "#fff7f2", ink: "#3a1118", accent: "#7b1f2b", soft: "#d5a59b" },
   midnight: { name: "Midnight", bg: "#11131a", surface: "#f9f4ee", ink: "#141720", accent: "#8f7b9d", soft: "#c5b9cb" },
+  midnightVelvet: { name: "Midnight Romance", bg: "#080b18", surface: "#12182b", ink: "#f3e8d8", accent: "#b58a56", soft: "#642b43" },
 } as const;
 
 export const invitationFonts = {
@@ -63,6 +64,7 @@ export const invitationFonts = {
   yellowtailRethink: { name: "Yellowtail + Rethink Sans", heading: "Yellowtail", body: "Rethink Sans" },
   yesevaJosefin: { name: "Yeseva One + Josefin Sans", heading: "Yeseva One", body: "Josefin Sans" },
   youngInstrument: { name: "Young Serif + Instrument Sans", heading: "Young Serif", body: "Instrument Sans" },
+  bodoniManrope: { name: "Bodoni Moda + Manrope", heading: "Bodoni Moda", body: "Manrope" },
 } as const;
 
 export type PaletteKey = keyof typeof invitationPalettes;
