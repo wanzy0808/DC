@@ -103,7 +103,7 @@ export function isNativeVisualKey(key: string) {
   return false;
 }
 
-const removableNativeDecorationId = /(?:^|[-_])(?:art|artwork|atmosphere|block|blossom|border|branch|deco|diamond|divider|flourish|flower|fold|firefly|fireflies|gem|glow|heart|illustration|pearl|leaf|line|lines|mizuhiki|monogram|moon|mountain|mountains|orbit|ornament|paper|ring|seal|shoji|sparkle|sprig|star|starfield|sun|symbol|theme-art)(?:$|[-_])/i;
+const removableNativeDecorationId = /(?:^|[-_])(?:art|artwork|atmosphere|block|blossom|border|branch|deco|diamond|divider|flourish|flower|fold|firefly|fireflies|gem|glow|heart|illustration|pearl|leaf|line|lines|mizuhiki|rail|steps|monogram|moon|mountain|mountains|orbit|ornament|paper|ring|seal|shoji|sparkle|sprig|star|starfield|sun|symbol|theme-art)(?:$|[-_])/i;
 
 /** Delete/Backspace may hide decorative artwork, never business data or functional controls. */
 export function nativeVisualCanHide(key: string) {
