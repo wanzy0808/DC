@@ -66,10 +66,10 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
-    preset: { layout: "editorial", palette: "blush", font: "playfairLora" },
+    preset: { layout: "editorial", palette: "blossom", font: "playfairLora" },
     name: "Eternal Blossom",
-    description: "Floral editorial yang lembut untuk perayaan personal dan intimate.",
-    descriptionEn: "A soft editorial floral theme for personal and intimate celebrations.",
+    description: "Bunga blush, potret scallop, dan album kenangan dengan gerak lembut untuk perayaanmu.",
+    descriptionEn: "Blush blossoms, scalloped portraits, and a softly animated photo album for your celebration.",
     previewImage:
       "/assets/demo/invitation/couple-03.jpg",
     assetPath: "/templates/eternal-blossom",

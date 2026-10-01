@@ -2,7 +2,7 @@
 
 import { useEffect, type RefObject } from "react";
 import type { PhotoAssignments, PhotoMotionMap, PhotoSlot } from "@/lib/templates/photo-slots";
-import { templatePhotoMotion } from "@/lib/templates/template-motion";
+import { templateHasDefaultPhotoMotion, templatePhotoMotion } from "@/lib/templates/template-motion";
 import type { InvitationSectionStyles } from "@/lib/templates/section-styles";
 import { observeInvitationEntranceRoot } from "@/components/PublicInvitation/entrance-animation-runtime";
 import { observePhotoParallax } from "@/components/PublicInvitation/photo-parallax-runtime";
@@ -18,7 +18,7 @@ export function useInvitationPhotoAnimations(
 ) {
   const motionKey = JSON.stringify(templatePhotoMotion(theme?.template ?? "", assignments.motion, theme?.sectionStyles));
 
-  const themed = theme?.template === "serein";
+  const themed = templateHasDefaultPhotoMotion(theme?.template ?? "");
 
   useEffect(() => {
     const root = rootRef.current;

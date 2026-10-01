@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
-import { ArrowUpRight, Flower2, Gem, Heart, Leaf, Moon, Sparkles, Sun, Star } from "lucide-react";
+import { ArrowUpRight, Gem, Heart, Leaf, Moon, Sparkles, Sun, Star } from "lucide-react";
 import type { PhotoCrop } from "@/lib/templates/photo-slots";
 import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
 import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
@@ -21,7 +21,7 @@ type SceneProps = {
   onFinishCrop?: () => void;
   locale?: string;
   stage: "envelope" | "cover";
-  onOpen: () => void;
+  onOpen: (immediate?: boolean) => void;
   onEditPhoto?: () => void;
   preview?: boolean;
   allowEnvelopeOpen?: boolean;
@@ -87,7 +87,6 @@ type EnvelopeVisual = {
   photoPosition?: string;
 };
 const envelopeVisuals: Record<string, EnvelopeVisual> = {
-  "eternal-blossom": { backdrop: "#fbe5ed", surface: "#fff6f8", flap: "#df9eb8", border: "#bd6e8e", ink: "#67334b", symbol: "❀", effect: "rounded-[30px]", photoPosition: "rotate-[-5deg]" },
   "modern-maroon": { backdrop: "#380b19", surface: "#721d30", flap: "#a54c56", border: "#d9a29a", ink: "#ffe5df", symbol: "M.", effect: "rounded-none", photoPosition: "rotate-[5deg]" },
   "garden-light": { backdrop: "#e8f0d9", surface: "#fcfdf0", flap: "#adbf98", border: "#6a8458", ink: "#405a3e", symbol: "❧", effect: "rounded-t-[95px] rounded-b-[14px]", photoPosition: "rotate-[-3deg]" },
   "midnight-romance": { backdrop: "#080e22", surface: "#18213c", flap: "#263452", border: "#cdb986", ink: "#f5e8c9", symbol: "✦", effect: "rounded-t-[130px] rounded-b-[22px]", photoPosition: "rotate-[4deg]" },
@@ -108,7 +107,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,allowEn
     border: `var(--inv-scene-accent, ${original.border})`,
     ink: `var(--inv-scene-ink, ${original.ink})`,
   };
-  const usesPhoto = ["eternal-blossom","modern-maroon","garden-light","midnight-romance"].includes(theme);
+  const usesPhoto = ["modern-maroon","garden-light","midnight-romance"].includes(theme);
   return (
     <section data-invitation-section="envelope" className={`${center} relative`} style={{backgroundColor:style.backdrop,color:style.ink}}>
       <div aria-hidden data-studio-native-object="object:envelope:frame-border" className="pointer-events-none absolute inset-5 border opacity-30" style={{borderColor:style.border}}/>
@@ -117,7 +116,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,allowEn
       </> : theme === "celestial-ink" || theme === "midnight-romance" ? <>
         <div aria-hidden data-studio-native-object="object:envelope:starfield" className="pointer-events-none absolute inset-0 opacity-55" style={{backgroundImage:"radial-gradient(circle,currentColor 1px,transparent 2px)",backgroundSize:"39px 56px"}}/>
         <Moon aria-hidden data-studio-native-object="object:envelope:moon" className="absolute right-9 top-10 h-11 w-11 opacity-50"/>
-      </> : theme === "golden-art-deco" ? <div aria-hidden data-studio-native-object="object:envelope:deco-diamond" className="pointer-events-none absolute top-[-120px] h-64 w-64 rotate-45 border opacity-50" style={{borderColor:style.border}}/> : theme === "eternal-blossom" ? <Flower2 aria-hidden data-studio-native-object="object:envelope:flower" className="absolute -left-12 top-5 h-44 w-44 -rotate-12 opacity-20" strokeWidth={0.7}/> : null}
+      </> : theme === "golden-art-deco" ? <div aria-hidden data-studio-native-object="object:envelope:deco-diamond" className="pointer-events-none absolute top-[-120px] h-64 w-64 rotate-45 border opacity-50" style={{borderColor:style.border}}/> : null}
       <p data-studio-native-object="object:envelope:kicker" className={`${caption} relative mb-9 opacity-80`}>{tr("A personal invitation")}</p>
       <div data-studio-native-object="object:envelope:card-stage" className="relative w-[min(74vw,310px)] pt-11">
         {usesPhoto && <div data-studio-native-object="object:envelope:photo-frame" className={`absolute left-1/2 top-[-26px] h-52 w-[67%] -translate-x-1/2 overflow-hidden border-[6px] shadow-lg ${style.photoPosition || ""}`} style={{borderColor:style.border,backgroundColor:style.surface}}>
@@ -141,6 +140,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,allowEn
 const PencilReverieScene = dynamic(() => import("@/components/PublicInvitation/PencilReverieScene"));
 const ZenAtelierScene = dynamic(() => import("@/components/PublicInvitation/ZenAtelierScene"));
 const SereinScene = dynamic(() => import("@/components/PublicInvitation/SereinScene"));
+const EternalBlossomScene = dynamic(() => import("@/components/PublicInvitation/EternalBlossomScene"));
 const BotanicalIvoryScene = dynamic(() => import("@/components/PublicInvitation/BotanicalIvoryScene"));
 
 export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,allowEnvelopeOpen,isWedding,couple,hashtag,recipientLine,motionEnabled}: SceneProps) {
@@ -158,25 +158,13 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   if (theme === "pencil-reverie") return <PencilReverieScene stage={stage} names={names} date={date} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} isWedding={isWedding} hashtag={hashtag} recipientLine={recipientLine} />;
   if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} isWedding={isWedding} hashtag={hashtag} recipientLine={recipientLine} />;
   if (theme === "serein") return <SereinScene names={names} date={date} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} stage={stage} onOpen={onOpen} onEditPhoto={onEditPhoto} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} isWedding={isWedding} couple={couple} recipientLine={recipientLine} />;
+  if (theme === "eternal-blossom") return <EternalBlossomScene names={names} date={date} couple={couple} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} onEditPhoto={onEditPhoto} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "botanical-ivory") return <BotanicalIvoryScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} couple={couple} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} crop={crop} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} />;
   const cropEditor = cropEditing && crop && onCropChange && onFinishCrop
     ? <StudioPhotoCropOverlay crop={crop} onChange={onCropChange} onDone={onFinishCrop} locale={locale} />
     : null;
   const content = tr("The Celebration");
-  if (theme === "eternal-blossom") return <section className={`${center} bg-[var(--inv-scene-bg,#ffedf0)] text-[color:var(--inv-scene-ink,#622a43)]`} data-invitation-section={stage}>
-    <div aria-hidden data-studio-native-object="object:cover:glow" className="absolute inset-x-0 top-0 h-[240px] bg-[radial-gradient(circle_at_50%_0%,#f4b9c9,transparent_70%)]" />
-    <Flower2 aria-hidden data-studio-native-object="object:cover:flower-left" className="absolute -left-12 top-14 h-48 w-48 -rotate-[32deg] text-[color:var(--inv-scene-text,#cd7390)]/50" strokeWidth={0.6} />
-    <Flower2 aria-hidden data-studio-native-object="object:cover:flower-right" className="absolute -right-12 bottom-24 h-52 w-52 rotate-[20deg] text-[color:var(--inv-scene-text,#c45c7e)]/40" strokeWidth={0.6} />
-    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mb-6 text-[color:var(--inv-scene-text,#a45c75)]`}>Eternal Blossom</p>
-    <div data-studio-native-object="object:cover:photo-frame" className="relative w-[min(70vw,290px)] rotate-[-4deg] rounded-t-full rounded-b-[100px] border-8 border-white bg-white p-2 shadow-[20px_20px_0_#dd9caf]">
-      <div data-studio-native-object="object:cover:photo-window" className="relative h-[320px] overflow-hidden rounded-t-full rounded-b-[95px]"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
-    </div>
-    <Names className="z-10 mt-9 text-3xl">{names}</Names>
-    <p data-studio-native-object="object:cover:date" className="relative mt-3 text-xs tracking-[.25em]">{date}</p>
-    <Lines studioObject="object:cover:ornament" className="mt-8"><Flower2 className="h-5 w-5"/></Lines>
-  </section>;
-
   if (theme === "modern-maroon") return <section className={`${center} bg-[var(--inv-scene-bg,#4b0f1e)] text-[color:var(--inv-scene-ink,#ffe4dd)]`} data-invitation-section={stage}>
     <div aria-hidden data-studio-native-object="object:cover:block-left" className="absolute left-0 top-0 h-full w-[20%] bg-[var(--inv-scene-soft,#d77e6d)]" />
     <div aria-hidden data-studio-native-object="object:cover:block-right" className="absolute right-0 top-0 h-full w-[12%] bg-[var(--inv-scene-soft,#7d2030)]" />

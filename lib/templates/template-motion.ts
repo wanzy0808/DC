@@ -12,6 +12,49 @@ const sereinPhotos: PhotoMotionMap = {
   gallery: { animation: "rise", animationDuration: .75, animationStagger: .07 },
 };
 
+const blossomPhotos: PhotoMotionMap = {
+  cover: { animation: "reveal-up", animationDuration: .85, animationDelay: .1 },
+  personOne: { animation: "glide-left", animationDuration: .8 },
+  personTwo: { animation: "glide-right", animationDuration: .8, animationDelay: .07 },
+  gallery: { animation: "tilt-in", animationDuration: .75, animationStagger: .07 },
+};
+
+const photoDefaults: Record<string, PhotoMotionMap> = { serein: sereinPhotos, "eternal-blossom": blossomPhotos };
+
+export function templateHasDefaultPhotoMotion(template: string) {
+  return Object.hasOwn(photoDefaults, template);
+}
+
+const blossomNative: Record<string, TemplateNativeMotion> = {
+  "heading:envelope": { animation: "rise", animationDuration: .7 },
+  "object:envelope:date": { animation: "fade", animationDelay: .07 },
+  "object:envelope:flower": { animation: "glide-left", animationDuration: .85 },
+  "object:envelope:flower-right": { animation: "glide-right", animationDuration: .85, animationDelay: .07 },
+  "object:cover:flower-left": { animation: "glide-left", animationDuration: .9 },
+  "object:cover:flower-right": { animation: "glide-right", animationDuration: .9, animationDelay: .07 },
+  "object:cover:personOne-name": { animation: "slide-left", animationDuration: .8 },
+  "object:cover:personTwo-name": { animation: "slide-right", animationDuration: .8, animationDelay: .07 },
+  "object:cover:ampersand-symbol": { animation: "fade", animationDelay: .07 },
+  "object:cover:event-name": { animation: "rise", animationDuration: .8 },
+  "object:cover:date": { animation: "rise", animationDelay: .14 },
+  "heading:greeting": { animation: "rise" },
+  "object:greeting:flower-art": { animation: "soft-scale", animationDuration: .8 },
+  "heading:identity": { animation: "rise" },
+  "object:identity:personOne-name": { animation: "slide-left" },
+  "object:identity:personTwo-name": { animation: "slide-right", animationDelay: .07 },
+  "heading:event": { animation: "slide-left" },
+  "heading:dateTime": { animation: "rise" },
+  "heading:gallery": { animation: "slide-left" },
+  "heading:countdown": { animation: "fade" },
+  "heading:location": { animation: "rise" },
+  "heading:rsvp": { animation: "rise" },
+  "heading:wishes": { animation: "rise" },
+  "heading:gift": { animation: "rise" },
+  "heading:closing": { animation: "rise" },
+  "object:closing:flower-art": { animation: "soft-scale", animationDuration: .85 },
+  "object:closing:names": { animation: "rise", animationDelay: .07 },
+};
+
 const sereinNative: Record<string, TemplateNativeMotion> = {
   "object:cover:personOne-name": { animation: "slide-left", animationDuration: .8 },
   "object:cover:personTwo-name": { animation: "slide-right", animationDuration: .8, animationDelay: .08 },
@@ -68,6 +111,7 @@ const botanicalNative: Record<string, TemplateNativeMotion> = {
 const nativeDefaults: Record<string, Record<string, TemplateNativeMotion>> = {
   serein: sereinNative,
   "botanical-ivory": botanicalNative,
+  "eternal-blossom": blossomNative,
 };
 
 export function templateHasDefaultMotion(template: string) {
@@ -79,12 +123,13 @@ export function templateNativeMotion(template: string) {
 }
 
 export function templatePhotoMotion(template: string, overrides: PhotoMotionMap = {}, styles: InvitationSectionStyles = {}): PhotoMotionMap {
-  if (template !== "serein") return overrides;
+  const defaults = photoDefaults[template];
+  if (!defaults) return overrides;
   const result: PhotoMotionMap = {};
-  for (const slot of Object.keys(sereinPhotos) as PhotoSlot[]) {
+  for (const slot of Object.keys(defaults) as PhotoSlot[]) {
     const section = slot === "cover" ? "cover" : slot === "gallery" ? "gallery" : "identity";
     const authoredSection = styles[section]?.animation !== undefined || Boolean(styles[section]?.timeline);
-    const base = authoredSection ? {} : sereinPhotos[slot];
+    const base = authoredSection ? {} : defaults[slot];
     result[slot] = { ...base, ...overrides[slot] };
   }
   return result;
