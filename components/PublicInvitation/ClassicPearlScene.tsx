@@ -52,8 +52,7 @@ export default function ClassicPearlScene({
       <motion.div
         className="cp-envelope-letter-motion"
         animate={{
-          y: opening && !still ? -56 : 0,
-          rotate: opening && !still ? -1.3 : 0,
+          transform: opening && !still ? "translateY(-56px) rotate(-1.3deg)" : "translateY(0px) rotate(0deg)",
           opacity: opening ? 0 : 1,
         }}
         transition={{ duration: still ? 0 : .68, delay: still ? 0 : .12, ease }}
@@ -69,7 +68,7 @@ export default function ClassicPearlScene({
         aria-hidden="true"
         data-studio-native-object="object:envelope:seal"
         className="cp-envelope-seal"
-        animate={{ scale: opening && !still ? .86 : 1, opacity: opening ? 0 : 1 }}
+        animate={{ transform: opening && !still ? "scale(.92)" : "scale(1)", opacity: opening ? 0 : 1 }}
         transition={{ duration: still ? 0 : .26, ease }}
       >P</motion.span>
     </div>
@@ -95,24 +94,26 @@ export default function ClassicPearlScene({
   </section>;
 
   return <section className="cp-cover" data-classic-pearl-stage="cover">
+    <span aria-hidden="true" data-studio-native-object="object:cover:ledger-line" className="cp-cover-ledger" />
     <ClassicPearlArt objectKey="object:cover:chandelier-art" asset="chandelier" className="cp-cover-chandelier" eager />
     <ClassicPearlArt objectKey="object:cover:arch-art" asset="arch" className="cp-cover-arch" eager />
     <ClassicPearlArt objectKey="object:cover:garland-art" asset="garland" className="cp-cover-garland" eager />
     <ClassicPearlArt objectKey="object:cover:tiara-art" asset="tiara" className="cp-cover-tiara" eager />
 
-    <p data-studio-native-object="object:cover:kicker" className="cp-cover-kicker">{tr("Sebuah perayaan yang abadi")}</p>
-
     <div data-studio-native-object="object:cover:copy-panel" className="cp-cover-copy">
       <h1 data-studio-native-heading="" className={`cp-cover-names ${paired ? "" : "cp-cover-single"}`}>
         {paired ? <>
-          <span data-studio-native-object="object:cover:personOne-name">{first}</span>
+          <span data-studio-native-object="object:cover:personOne-name" className="cp-cover-name-first">{first}</span>
           <em data-studio-native-object="object:cover:ampersand-symbol">&amp;</em>
-          <span data-studio-native-object="object:cover:personTwo-name">{second}</span>
+          <span data-studio-native-object="object:cover:personTwo-name" className="cp-cover-name-second">{second}</span>
         </> : <span data-studio-native-object="object:cover:event-name">{names}</span>}
       </h1>
-      <span aria-hidden="true" data-studio-native-object="object:cover:pearl-rule" className="cp-pearl-rule"><i /><i /><i /></span>
       <p data-studio-native-object="object:cover:date" className="cp-cover-date">{date}</p>
       <p data-studio-native-object="object:cover:closing-copy" className="cp-cover-caption">{tr("Kisah yang lembut, janji yang tinggal lebih lama dari waktu.")}</p>
     </div>
+
+    <span aria-hidden="true" data-studio-native-object="object:cover:pearl-trail" className="cp-cover-pearl-trail">
+      <i /><i /><i /><i /><i />
+    </span>
   </section>;
 }
