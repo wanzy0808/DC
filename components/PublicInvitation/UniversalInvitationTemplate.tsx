@@ -450,7 +450,7 @@ export default function UniversalInvitationTemplate({
     const backdrop = modern ? (modernBackdrop[keyName] ?? "var(--inv-bg)") : garden ? (gardenBackdrop[keyName] ?? "var(--inv-bg)") : botanical || blossom ? keyName === "countdown" ? "var(--inv-accent)" : ["greeting", "wishes", "gallery"].includes(keyName) ? "var(--inv-surface)" : "var(--inv-bg)" : contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
     const color = modern
       ? readableInk(modernDarkSection ? palette.bg : modernSoftSection ? palette.surface : palette.surface, palette.ink)
-      : garden ? readableInk(sectionStyles[keyName]?.background || (gardenBackdrop[keyName] ?? palette.bg), palette.ink)
+      : garden ? (sectionStyles[keyName]?.background ? readableInk(sectionStyles[keyName].background, palette.ink) : palette.ink)
       : botanical || blossom ? readableInk(sectionStyles[keyName]?.background || (keyName === "countdown" ? palette.accent : ["greeting", "wishes", "gallery"].includes(keyName) ? palette.surface : palette.bg), palette.ink) : customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
     return renderSectionInstances(keyName, (instanceId) => (
       <>
