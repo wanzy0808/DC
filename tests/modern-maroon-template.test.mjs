@@ -46,6 +46,12 @@ test("Modern Maroon envelope and Cover are independently art-directed and editab
 test("Modern Maroon uses the shared ornament asset and its own motion choreography", () => {
   assert.match(css, /branch-05\.webp/);
   assert.match(css, /mm-gallery-item:nth-child/);
+  assert.match(universal, /ModernMaroonSectionArt section=\{keyName\}/);
+  assert.match(scenes, /\/templates\/modern-maroon\/09_watercolor_bg\.webp/);
+  assert.match(scenes, /\/templates\/modern-maroon\/06_gold_curve_lines\.webp/);
+  for (const asset of ["01_flower_cascade.webp", "02_flower_cluster.webp", "04_fabric_wave.webp", "05_petal_fall.webp", "06_gold_curve_lines.webp", "08_minimal_divider.webp", "10_leaf_branch.webp"]) {
+    assert.match(css + universal + scenes + readFileSync(new URL("../components/PublicInvitation/ModernMaroonArtwork.tsx", import.meta.url), "utf8"), new RegExp(asset.replace(".", "\\.")));
+  }
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(motion, /const modernMaroonPhotos/);
   assert.match(motion, /"modern-maroon": modernMaroonPhotos/);
