@@ -40,7 +40,10 @@ test("Pencil Reverie remains a photo-free illustrated template and uses every sh
 test("Pencil Reverie Cover is an asymmetric memory journal rather than a full background poster", () => {
   for (const marker of [
     "object:cover:paper-sheet",
+    "object:cover:heading-group",
     "object:cover:copy-panel",
+    "object:cover:illustration-group",
+    "object:cover:main-art",
     "object:cover:couple-art",
     "object:cover:lamp-art",
     "object:cover:camera-art",
@@ -52,8 +55,8 @@ test("Pencil Reverie Cover is an asymmetric memory journal rather than a full ba
 
   assert.doesNotMatch(scene, /PaperIllustration file="bungaandlampbg\.webp"/);
   assert.match(styles, /\.pr-cover-sheet\{[\s\S]*?left:8%;[\s\S]*?top:8%;[\s\S]*?width:76%;[\s\S]*?rotate:-2\.6deg/);
-  assert.match(styles, /\.pr-cover-copy\{[\s\S]*?left:13%;[\s\S]*?top:14%;[\s\S]*?width:54%;[\s\S]*?text-align:left/);
-  assert.match(styles, /\.pr-cover-couple\{[\s\S]*?right:4%;[\s\S]*?bottom:8%;[\s\S]*?width:46%/);
+  assert.match(styles, /\.pr-cover-heading-group\{[\s\S]*?left:13%;[\s\S]*?top:14%;[\s\S]*?width:54%/);
+  assert.match(styles, /\.pr-cover-main-art\{[\s\S]*?right:4%;[\s\S]*?bottom:8%;[\s\S]*?width:46%/);
   assert.match(styles, /\.pr-cover-lamp\{[\s\S]*?right:-7%;[\s\S]*?top:9%/);
 });
 
@@ -65,7 +68,8 @@ test("Pencil Reverie shared sections remain data-backed while art stays theme-ow
   assert.match(renderer, /object:event:details-group/);
   assert.match(renderer, /data-studio-section-element="location:button"/);
   assert.match(renderer, /data-studio-section-element="gift:button"/);
-  assert.match(renderer, /key === "pencil-reverie"[\s\S]{0,450}<RsvpForm[^>]*appearance="zen"/);
+  assert.match(renderer, /sections\.rsvp && section\("rsvp", key === "pencil-reverie"/);
+  assert.match(renderer, /<RsvpForm slug=\{invitation\.slug\} appearance="zen"/);
   assert.match(renderer, /<GuestWishes[\s\S]*appearance=\{key === "pencil-reverie"[\s\S]*\? "zen" : "default"\}/);
   assert.match(renderer, /key === "pencil-reverie" \? "pr-footer"/);
   assert.match(renderer, /object:footer:pencil-mark/);
@@ -78,7 +82,7 @@ test("Pencil Reverie opening is gesture-driven and honors Studio motion OFF and 
   assert.match(scene, /data-pr-motion=\{still \? "off" : "on"\}/);
   assert.match(scene, /Buka Undangan/);
   assert.ok(!scene.includes("setTimeout(onOpen"), "opening callback must remain on the user gesture for music");
-  assert.match(renderer, /key === "pencil-reverie"[\s\S]{0,420}sectionStyles\.envelope\?\.animation === "none"/);
+  assert.match(renderer, /key === "pencil-reverie"[\s\S]{0,500}sectionStyles\.envelope\?\.animation === "none"/);
   assert.match(styles, /prefers-reduced-motion:reduce/);
 });
 
@@ -95,14 +99,14 @@ test("Pencil Reverie uses native one-shot section choreography without moving co
   assert.match(block, /"object:gallery:memory-board": \{ animation: "rise"/);
   assert.match(block, /"object:countdown:clock-art": \{ animation: "soft-scale"/);
   assert.doesNotMatch(block, /object:countdown:[^"]*-value/);
-  assert.match(nativeHook, /!\["pencil-reverie", "modern-maroon"/);
+  assert.match(nativeHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco"\]\.includes\(template\)[^;]*template !== "pencil-reverie"/);
   assert.match(nativeHook, /waitForImages:[^\n]*pencil-reverie/);
   assert.doesNotMatch(renderer, /data\.prVisible/);
 });
 
 test("Pencil Reverie preserves complete artwork geometry and the full lantern object", async () => {
   assert.match(artwork, /location:\s*\["lamp", "bicycle"\]/);
-  assert.match(styles, /pr-section-whole-image/);
+  assert.match(styles, /\.pr-section-whole-image\{/);
   assert.match(styles, /object-fit:contain!important/);
   assert.doesNotMatch(styles.replace(/\/\*[\s\S]*?\*\//g, ""), /object-fit:\s*cover/i);
   assert.match(styles, /\.pr-section-art\{position:absolute/);
@@ -115,6 +119,8 @@ test("Pencil Reverie preserves complete artwork geometry and the full lantern ob
 test("Pencil Reverie Gallery stays an illustration memory board with accessible lightbox controls", () => {
   assert.match(artwork, /object:gallery:memory-board/);
   assert.match(artwork, /object:gallery:memory-\$\{i \+ 1\}/);
+  assert.match(artwork, /if \(preview\) \{ e\.preventDefault\(\); return; \}/);
+  assert.match(artwork, /!preview && index!==null/);
   assert.match(artwork, /event\.key === "Escape"/);
   assert.match(artwork, /event\.key === "ArrowRight"/);
   assert.match(artwork, /event\.key === "ArrowLeft"/);
