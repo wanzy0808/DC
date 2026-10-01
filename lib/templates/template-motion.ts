@@ -581,7 +581,7 @@ const zenAtelierNative: Record<string, TemplateNativeMotion> = {
   "object:cover:paper-shadow": { animation: "fade", animationDuration: .68 },
   "object:cover:shoji": { animation: "reveal-left", animationDuration: .72, animationDelay: .03 },
   "object:cover:sun": { animation: "soft-scale", animationDuration: .76, animationDelay: .05 },
-  "object:cover:branch": { animation: "glide-left", animationDuration: .78, animationDelay: .07 },
+  "object:cover:blossom": { animation: "glide-left", animationDuration: .78, animationDelay: .07 },
   "object:cover:scroll-group": { animation: "reveal-up", animationDuration: .82, animationDelay: .08 },
   "object:cover:copy-group": { animation: "rise", animationDuration: .74, animationDelay: .12 },
   "object:cover:seal": { animation: "soft-scale", animationDuration: .62, animationDelay: .15 },
