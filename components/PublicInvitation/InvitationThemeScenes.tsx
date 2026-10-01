@@ -89,7 +89,6 @@ type EnvelopeVisual = {
 const envelopeVisuals: Record<string, EnvelopeVisual> = {
   "modern-maroon": { backdrop: "#380b19", surface: "#721d30", flap: "#a54c56", border: "#d9a29a", ink: "#ffe5df", symbol: "M.", effect: "rounded-none", photoPosition: "rotate-[5deg]" },
   "botanical-ivory": { backdrop: "#f0efde", surface: "#fffdf2", flap: "#cbd6ba", border: "#849878", ink: "#50634d", symbol: "❧", effect: "rounded-[9px]" },
-  "golden-art-deco": { backdrop: "#171912", surface: "#23271d", flap: "#a48b49", border: "#dfc482", ink: "#f1d99f", symbol: "◆", effect: "rounded-none" },
   "paper-cut-botanical": { backdrop: "#e7ead4", surface: "#f9faea", flap: "#aec39e", border: "#829b72", ink: "#465b42", symbol: "❦", effect: "rounded-[40px] -rotate-[3deg]" },
   "celestial-ink": { backdrop: "#0d1830", surface: "#1d304a", flap: "#365071", border: "#9bbfdf", ink: "#d5e5f0", symbol: "☾", effect: "rounded-t-[130px] rounded-b-[10px]" },
 };
@@ -113,7 +112,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,allowEn
       </> : theme === "celestial-ink" ? <>
         <div aria-hidden data-studio-native-object="object:envelope:starfield" className="pointer-events-none absolute inset-0 opacity-55" style={{backgroundImage:"radial-gradient(circle,currentColor 1px,transparent 2px)",backgroundSize:"39px 56px"}}/>
         <Moon aria-hidden data-studio-native-object="object:envelope:moon" className="absolute right-9 top-10 h-11 w-11 opacity-50"/>
-      </> : theme === "golden-art-deco" ? <div aria-hidden data-studio-native-object="object:envelope:deco-diamond" className="pointer-events-none absolute top-[-120px] h-64 w-64 rotate-45 border opacity-50" style={{borderColor:style.border}}/> : null}
+      </> : null}
       <p data-studio-native-object="object:envelope:kicker" className={`${caption} relative mb-9 opacity-80`}>{tr("A personal invitation")}</p>
       <div data-studio-native-object="object:envelope:card-stage" className="relative w-[min(74vw,310px)] pt-11">
         {usesPhoto && <div data-studio-native-object="object:envelope:photo-frame" className={`absolute left-1/2 top-[-26px] h-52 w-[67%] -translate-x-1/2 overflow-hidden border-[6px] shadow-lg ${style.photoPosition || ""}`} style={{borderColor:style.border,backgroundColor:style.surface}}>
@@ -130,7 +129,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,allowEn
           </div>
         </div>
       </div>
-      <Open studioObject="object:envelope:open-button" onClick={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} dark={theme === "modern-maroon" || theme === "golden-art-deco" || theme === "celestial-ink"}>{tr("Buka Undangan")}</Open>
+      <Open studioObject="object:envelope:open-button" onClick={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} dark={theme === "modern-maroon" || theme === "celestial-ink"}>{tr("Buka Undangan")}</Open>
     </section>
   );
 }
@@ -142,6 +141,7 @@ const BotanicalIvoryScene = dynamic(() => import("@/components/PublicInvitation/
 const GardenLightScene = dynamic(() => import("@/components/PublicInvitation/GardenLightScene"));
 const MidnightRomanceScene = dynamic(() => import("@/components/PublicInvitation/MidnightRomanceScene"));
 const ClassicPearlScene = dynamic(() => import("@/components/PublicInvitation/ClassicPearlScene"));
+const GoldenArtDecoScene = dynamic(() => import("@/components/PublicInvitation/GoldenArtDecoScene"));
 
 export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,allowEnvelopeOpen,isWedding,couple,hashtag,recipientLine,motionEnabled}: SceneProps) {
   const language = useInvitationLanguage();
@@ -163,6 +163,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   if (theme === "garden-light") return <GardenLightScene names={names} date={date} couple={couple} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} onEditPhoto={onEditPhoto} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "midnight-romance") return <MidnightRomanceScene names={names} date={date} couple={couple} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} onEditPhoto={onEditPhoto} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "classic-pearl") return <ClassicPearlScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
+  if (theme === "golden-art-deco") return <GoldenArtDecoScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "modern-maroon") {
     if (stage === "envelope") return (
       <section data-invitation-section="envelope" className="relative flex min-h-[760px] flex-col overflow-hidden bg-[#2d0710] px-6 py-12 text-[#fff5ee]">
@@ -238,22 +239,6 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     ? <StudioPhotoCropOverlay crop={crop} onChange={onCropChange} onDone={onFinishCrop} locale={locale} />
     : null;
   const content = tr("The Celebration");
-  if (theme === "golden-art-deco") return <section className={`${center} bg-[var(--inv-scene-bg,#191b17)] text-[color:var(--inv-scene-ink,#e4c888)]`} data-invitation-section={stage}>
-    <div aria-hidden data-studio-native-object="object:cover:border-outer" className="absolute inset-4 border border-[var(--inv-scene-accent,#ba9a55)]/65" />
-    <div aria-hidden data-studio-native-object="object:cover:border-inner" className="absolute inset-8 border border-[var(--inv-scene-accent,#ba9a55)]/30" />
-    <div aria-hidden data-studio-native-object="object:cover:diamond-main" className="absolute left-1/2 top-0 h-52 w-52 -translate-x-1/2 rotate-45 border border-[var(--inv-scene-accent,#bd9e59)]/70" />
-    <div aria-hidden data-studio-native-object="object:cover:diamond-top" className="absolute left-1/2 top-[-80px] h-52 w-52 -translate-x-1/2 rotate-45 border border-[var(--inv-scene-accent,#bd9e59)]/40" />
-    <div aria-hidden data-studio-native-object="object:cover:diamond-bottom" className="absolute bottom-[-105px] left-1/2 h-64 w-64 -translate-x-1/2 rotate-45 border border-[var(--inv-scene-accent,#bd9e59)]/40" />
-    <div data-studio-native-object="object:cover:content-group" className="relative flex flex-col items-center">
-      <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-20`}>{tr("A gilded celebration")}</p>
-      <div aria-hidden data-studio-native-object="object:cover:deco-bars" className="relative mt-10 flex items-center gap-2">{[0,1,2,3,4].map(i=><span key={i} data-studio-native-object={`object:cover:deco-bar-${i}`} className="h-8 w-4 border-x border-t border-[var(--inv-scene-accent,#bf9c4b)]" style={{height:`${33+Math.abs(2-i)*19}px`}}/>)}</div>
-      <Names className="relative mt-14 max-w-xs text-3xl tracking-[.09em]">{names}</Names>
-      <div aria-hidden data-studio-native-object="object:cover:deco-gem" className="relative mt-10 flex gap-3"><span data-studio-native-object="object:cover:gem-ray-left" className="h-14 w-px -rotate-45 bg-[var(--inv-scene-soft,#bf9c4b)]"/><Gem data-studio-native-object="object:cover:gem-icon" className="h-7 w-7"/><span data-studio-native-object="object:cover:gem-ray-right" className="h-14 w-px rotate-45 bg-[var(--inv-scene-soft,#bf9c4b)]"/></div>
-      <p data-studio-native-object="object:cover:date" className="relative mt-5 text-xs tracking-[.23em]">{date}</p>
-      <Lines studioObject="object:cover:ornament" className="mt-8"><Gem className="h-4 w-4"/></Lines>
-    </div>
-  </section>;
-
   if (theme === "paper-cut-botanical") return <section className={`${center} bg-[var(--inv-scene-bg,#e9ead7)] text-[color:var(--inv-scene-ink,#435e45)]`} data-invitation-section={stage}>
     <div aria-hidden data-studio-native-object="object:cover:paper-left" className="absolute -left-20 -top-10 h-[400px] w-64 rotate-[-32deg] rounded-full border-[55px] border-[var(--inv-scene-accent,#aebf96)] bg-[var(--inv-scene-soft,#dce1c2)] shadow-[15px_15px_0_#d1dcad]" />
     <div aria-hidden data-studio-native-object="object:cover:paper-right" className="absolute -right-20 bottom-[-95px] h-[440px] w-72 rotate-[23deg] rounded-full border-[50px] border-[var(--inv-scene-accent,#9aaf88)] bg-[var(--inv-scene-soft,#c6d0aa)] shadow-[-15px_-15px_0_#d4dab4]" />
