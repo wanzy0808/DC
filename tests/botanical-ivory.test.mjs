@@ -31,7 +31,7 @@ test("Botanical keeps its photo-free identity and accepts saved palette/font cho
 
 test("botanical motion uses real Studio targets and respects section OFF, authored sequences and native OFF", () => {
   assert.equal(templateHasDefaultMotion("botanical-ivory"), true);
-  assert.equal(templateHasDefaultMotion("classic-pearl"), false);
+  assert.equal(templateHasDefaultMotion("celestial-ink"), false);
   const defaults = templateNativeMotion("botanical-ivory");
   for (const [key, motion] of Object.entries(defaults)) {
     assert.ok(nativeVisualSupportsAnimation(key), key);
