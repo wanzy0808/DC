@@ -27,6 +27,7 @@ export function GardenLightArt({ objectKey, asset, className = "", eager = false
 
 const sectionAsset: Partial<Record<string, GardenLightArtworkKey>> = {
   greeting: "hangingLantern",
+  identity: "swing",
   event: "teaTable",
   dateTime: "birdcage",
   countdown: "fountain",
