@@ -7,7 +7,7 @@ export const invitationPalettes = {
   paperMeadow: { name: "Paper Cut Botanical", bg: "#eee8d8", surface: "#fffaf0", ink: "#344139", accent: "#72835f", soft: "#d4c8ad" },
   sage: { name: "Sage", bg: "#f3f5ee", surface: "#fcfcf8", ink: "#273027", accent: "#65775f", soft: "#b8c9ae" },
   gardenGlow: { name: "Garden Light", bg: "#eef0df", surface: "#fff9ec", ink: "#334437", accent: "#9a7746", soft: "#c7d1a8" },
-  pencil: { name: "Pencil Reverie", bg: "#f8f2e9", surface: "#fffaf3", ink: "#3a3532", accent: "#bd7885", soft: "#ddc7ba" },
+  pencil: { name: "Pencil Reverie", bg: "#f2e9dd", surface: "#fffaf2", ink: "#302c2a", accent: "#b96f7e", soft: "#d4bfb3" },
   zen: { name: "Zen Atelier", bg: "#f4f0e6", surface: "#fbf8f0", ink: "#373c34", accent: "#a9513b", soft: "#c9bda9" },
   night: { name: "Night", bg: "#171318", surface: "#211b22", ink: "#f8f2ee", accent: "#e7a9b1", soft: "#9b7079" },
   pearl: { name: "Pearl", bg: "#f5f1ea", surface: "#fffdf8", ink: "#292522", accent: "#806a5a", soft: "#cdbba8" },
