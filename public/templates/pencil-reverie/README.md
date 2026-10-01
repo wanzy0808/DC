@@ -48,4 +48,10 @@ Theme artwork is exposed through `data-studio-native-object` targets for the exi
 
 ## Validation
 
-Regression coverage lives in `tests/pencil-reverie.test.mjs`. Update this section only with observed CI/build results; do not infer browser, authenticated Studio round-trip or deployment status from source inspection alone.
+Observed on GitHub Actions **Build Validation** run `36872046484` for code HEAD `7447b4246d630f7150e2c60f0ecd4d4bbf869de7`:
+
+- `pnpm test`: **324/324 passed, 0 failed**.
+- Next.js **16.3.3** production build: **compiled successfully**.
+- Static generation: **72/72 pages generated**.
+
+This establishes the source regression suite and production build for the redesign. A rendered screenshot review, physical mobile interaction, authenticated Studio save/reload/public round-trip and deployment were not exercised by that workflow and are not claimed here.
