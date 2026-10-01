@@ -61,6 +61,12 @@ export function invitationCopyDefaults(templateKey: string, eventDescription?: s
     prayerWish: "Semoga langkah baru ini selalu dipenuhi kasih, ketenangan, dan doa yang baik.",
     closing: "Terima kasih telah hadir, mendoakan, dan menjadi bagian dari awal yang kami pilih bersama. Sampai bertemu.",
   };
+  if (templateKey === "pencil-reverie") return {
+    greeting: eventDescription?.trim() || "Di antara garis pensil, catatan kecil, dan benda-benda yang kami simpan, ada satu cerita yang akhirnya sampai pada hari ini.",
+    attendanceRequest: "Kami ingin menambahkan kehadiran Anda pada halaman yang paling ingin kami kenang.",
+    prayerWish: "Semoga halaman-halaman setelah hari ini selalu penuh kasih, tawa, dan keberanian untuk terus berjalan bersama.",
+    closing: "Terima kasih sudah berhenti sejenak di halaman ini, mendoakan, dan menjadi bagian dari cerita yang kami bawa ke bab berikutnya.",
+  };
   if (templateKey === "serein") return {
     greeting: eventDescription?.trim() || "Di antara hari-hari yang datang dan pergi, ada satu yang ingin kami rayakan bersama Anda.",
     attendanceRequest: "Kami mengundang Anda untuk berbagi waktu, cerita, dan kebahagiaan pada hari istimewa ini.",
