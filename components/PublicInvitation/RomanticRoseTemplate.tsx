@@ -35,6 +35,7 @@ import { useInvitationNativeVisualAnimations } from "@/components/PublicInvitati
 import InvitationLayerTextContent from "@/components/PublicInvitation/InvitationLayerTextContent";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
+import ConfigurablePhotoGallery from "@/components/PublicInvitation/ConfigurablePhotoGallery";
 
 export const romanticRoseManifest = {
   key: "romantic-rose",
@@ -438,7 +439,14 @@ export default function RomanticRoseTemplate({
                         {objectOverlay("gallery", instanceId)}
                           <RoseHeading section="gallery" eyebrow="Our memories" align="left">{tr("Galeri Foto")}</RoseHeading>
                           {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 w-full rounded-[var(--undara-control-radius)] border border-[#dab0be] py-2 text-xs font-medium text-[#a65e69]">Atur foto galeri</button>}
-                          {gallery.length ? <div data-studio-native-object="object:gallery:grid" className="grid auto-rows-[78px] grid-cols-12 grid-flow-dense gap-3">
+                          {assignment.gallerySettings.presentation !== "template" ? (
+                            <ConfigurablePhotoGallery
+                              photos={gallery}
+                              settings={assignment.gallerySettings}
+                              preview={preview}
+                              onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined}
+                            />
+                          ) : gallery.length ? <div data-studio-native-object="object:gallery:grid" className="grid auto-rows-[78px] grid-cols-12 grid-flow-dense gap-3">
                             {gallery.map((photo, index) => (
                               <div key={photo.id} data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} className={index === 0 ? "col-span-7 row-span-5 overflow-hidden rounded-[18px]" : index % 3 === 1 ? "col-span-5 row-span-3 overflow-hidden rounded-[18px]" : index % 3 === 2 ? "col-span-5 row-span-4 overflow-hidden rounded-[18px]" : "col-span-7 row-span-3 overflow-hidden rounded-[18px]"}>
                                 <RosePhoto url={photo.url} alt={"Foto pasangan " + (index + 1)} className="h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-[1.035]" />
