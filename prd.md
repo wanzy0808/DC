@@ -2386,3 +2386,11 @@ Files: `components/PublicInvitation/use-native-visual-animations.ts`, `component
 
 **Not established:** the GitHub connector environment does not provide a local checkout/browser build runner here, and no GitHub Actions status/workflow run was observed for the redesign commits during this pass. Therefore no full Node test suite, TypeScript check, production build, browser screenshot, physical-touch test, authenticated Studio save/reload/public round-trip, deployment or rendered pixel-quality PASS is claimed.
 
+### 1 October 2026 — Garden Light post-redesign hardening
+
+A follow-up source audit after the twilight redesign fixed two integration details without changing the approved art direction or shared business behavior. Garden Light section ink no longer passes CSS expressions such as `var(...)` or `color-mix(...)` into the hex-only contrast helper; default sections now keep the active palette ink, while an explicit section background still uses `readableInk` against that concrete saved color. This preserves custom palette behavior instead of silently falling back to black.
+
+The decorative firefly atmosphere on Envelope and Cover is now owned by `object:envelope:fireflies` and `object:cover:fireflies`. The generic native-decoration whitelist recognizes `firefly/fireflies`, so Studio Delete/Backspace can hide those decorations without touching protected content. Their template default is a single fade entrance; there is no continuous twinkle loop. English photo semantics were also completed for `Foto` and `Galeri foto`.
+
+Follow-up commits include `8c64ee0eb259f1f9bf6644b8948fc004e16f3f20`, `6672a84638e3cd317d3fec06cb55747623101ab5`, `14fe7f2bd60490db8894131fa4821cb3a72c3526`, `447e5ac5ac368e78fca3f89308948e9134a15521`, `fffee5e9a5fc490e91d3aae63ccc792d157234a7`, `ab640e86eef9b0859239b576b2cee366607776d6`, `c6aebe7c2c1b24dd7115c498ca48c2836e50e357`, and `0214e78293a302812ae63d32434757bf4065cce4`.
+

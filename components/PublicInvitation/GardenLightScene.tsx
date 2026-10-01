@@ -32,7 +32,7 @@ export default function GardenLightScene({ names, date, couple, cover, focus, cr
   const photoStyle = crop ? { objectPosition: `${crop.x}% ${crop.y}%`, transform: crop.zoom === 1 ? undefined : `scale(${crop.zoom})`, transformOrigin: `${crop.x}% ${crop.y}%` } : { objectPosition: `center ${focus}` };
 
   if (stage === "envelope") return <section className="gl-envelope" data-garden-light-stage="envelope">
-    <div aria-hidden="true" className="gl-fireflies gl-fireflies-envelope" />
+    <div aria-hidden="true" data-studio-native-object="object:envelope:fireflies" className="gl-fireflies gl-fireflies-envelope" />
     <GardenLightArt objectKey="object:envelope:hanging-lantern-art" asset="hangingLantern" className="gl-envelope-hanging" eager />
     <p data-studio-native-object="object:envelope:kicker" className="gl-envelope-kicker">{tr("Sebuah Undangan Untuk Anda")}</p>
     <h1 data-studio-native-heading="" className="gl-envelope-names">{names}</h1>
@@ -58,7 +58,7 @@ export default function GardenLightScene({ names, date, couple, cover, focus, cr
   </section>;
 
   return <section className="gl-cover" data-garden-light-stage="cover">
-    <div aria-hidden="true" className="gl-fireflies" />
+    <div aria-hidden="true" data-studio-native-object="object:cover:fireflies" className="gl-fireflies" />
     <GardenLightArt objectKey="object:cover:arch-art" asset="arch" className="gl-cover-arch" eager />
     <GardenLightArt objectKey="object:cover:garland-art" asset="garland" className="gl-cover-garland" eager />
     <p data-studio-native-object="object:cover:kicker" className="gl-cover-kicker">{tr("Senja di taman")}</p>

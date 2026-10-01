@@ -128,11 +128,13 @@ const sereinNative: Record<string, TemplateNativeMotion> = {
 const gardenLightNative: Record<string, TemplateNativeMotion> = {
   "heading:envelope": { animation: "rise", animationDuration: .7 },
   "object:envelope:kicker": { animation: "fade", animationDuration: .62 },
+  "object:envelope:fireflies": { animation: "fade", animationDuration: .9 },
   "object:envelope:date": { animation: "fade", animationDelay: .08 },
   "object:envelope:hanging-lantern-art": { animation: "glide-right", animationDuration: .86 },
   "object:envelope:birdcage-art": { animation: "rise", animationDuration: .88, animationDelay: .05 },
   "object:envelope:card-stage": { animation: "rise", animationDuration: .84, animationDelay: .08 },
   "object:envelope:seal": { animation: "soft-scale", animationDuration: .68, animationDelay: .12 },
+  "object:cover:fireflies": { animation: "fade", animationDuration: .9 },
   "object:cover:arch-art": { animation: "reveal-up", animationDuration: .9 },
   "object:cover:garland-art": { animation: "fade", animationDuration: .76, animationDelay: .05 },
   "object:cover:media-group": { animation: "soft-scale", animationDuration: .82, animationDelay: .08 },

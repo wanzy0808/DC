@@ -41,6 +41,8 @@ const english: Record<string, string> = {
   "Terima kasih telah hadir, mendoakan, dan menjadi bagian dari awal yang kami pilih bersama. Sampai bertemu.": "Thank you for being present, for your wishes, and for sharing in the beginning we have chosen together. We look forward to seeing you.",
   "Pernikahan Kami": "Our Wedding",
   "Hari Istimewa": "A Special Day",
+  "Foto": "Photo",
+  "Galeri foto": "Gallery photo",
   "Pilih Foto": "Select Photo",
   "Buka Foto": "Open Photo",
   "Tutup Foto": "Close Photo",

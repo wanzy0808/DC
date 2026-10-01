@@ -52,6 +52,8 @@ test("Garden Light has template-owned photo and native motion with reduced-motio
   assert.match(motion, /const gardenLightPhotos/);
   assert.match(motion, /"garden-light": gardenLightPhotos/);
   assert.match(motion, /const gardenLightNative/);
+  assert.match(motion, /"object:envelope:fireflies": \{ animation: "fade"/);
+  assert.match(motion, /"object:cover:fireflies": \{ animation: "fade"/);
   assert.match(motion, /"garden-light": gardenLightNative/);
   assert.match(motion, /gallery: \{ animation: "tilt-in"/);
   assert.doesNotMatch(motion, /object:countdown:[^"]*-value/);
@@ -71,4 +73,10 @@ test("Garden Light viewport entrances are one-shot while explicit Studio replay 
   assert.match(nativeMotion, /!\["modern-maroon", "garden-light"\]\.includes\(template\)/);
   assert.match(photoMotion, /!\["modern-maroon", "garden-light"\]\.includes\(theme\?\.template \?\? ""\)/);
   assert.match(nativeMotion, /waitForImages:[^\n]*garden-light/);
+});
+
+
+test("Garden Light section ink stays palette-aware instead of feeding CSS expressions into hex contrast math", () => {
+  assert.match(universal, /garden \? \(sectionStyles\[keyName\]\?\.background \? readableInk\(sectionStyles\[keyName\]\.background, palette\.ink\) : palette\.ink\)/);
+  assert.doesNotMatch(universal, /garden \? readableInk\(sectionStyles\[keyName\]\?\.background \|\| \(gardenBackdrop\[keyName\]/);
 });
