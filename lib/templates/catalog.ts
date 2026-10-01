@@ -94,12 +94,12 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
-    preset: { layout: "garden", palette: "sage", font: "playfairLora" },
+    preset: { layout: "garden", palette: "gardenGlow", font: "youngInstrument" },
     name: "Garden Light",
-    description: "Botanical terang untuk acara outdoor, garden, dan daytime celebration.",
-    descriptionEn: "A bright botanical direction for outdoor, garden, and daytime celebrations.",
+    description: "Pesta taman saat golden hour menuju senja, dengan wedding arch bercahaya, lantern, swing, fountain, dan foto editorial.",
+    descriptionEn: "A golden-hour-to-twilight garden celebration with a glowing wedding arch, lanterns, swing, fountain, and editorial photography.",
     previewImage:
-      "/assets/demo/invitation/couple-03.webp",
+      "/templates/garden-light/10_romantic_lit_wedding_arch.webp",
     assetPath: "/templates/garden-light",
   },
   {
