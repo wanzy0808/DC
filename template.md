@@ -27,6 +27,16 @@ Targetnya adalah **semua elemen visual penting dapat dipilih atau diatur melalui
 
 Setiap template harus punya identitas visual yang berbeda: pilihan komposisi, ritme ruang kosong, karakter tipografi, gaya foto/ilustrasi, ornamen, amplop, susunan galeri, dan motion. Jangan membuat semua tema sebagai satu kerangka identik yang hanya berbeda warna/font. Contoh Zen Atelier adalah referensi **hanya untuk Zen Atelier**; tema baru memakai brief dan moodboard yang disetujui untuk tema itu.
 
+### Kualitas visual wajib menyeluruh — bukan cover-only
+
+**Jangan menaruh hampir seluruh effort desain di Amplop/Cover lalu membiarkan section isi terlihat seperti komponen default tanpa art direction.** Cover memang boleh menjadi hero terkuat, tetapi Greeting, Identity, Event Detail, Date & Time, Gallery, Countdown, Location, RSVP, Wishes, Gift, Closing, dan Footer tetap harus terasa sebagai bagian dari tema yang sama dan memiliki kualitas visual yang disengaja.
+
+Setiap section tidak wajib penuh aset atau dekorasi. “Didisain” dapat diwujudkan lewat komposisi, hierarchy tipografi, ritme whitespace, treatment background/surface, framing foto, divider, ornament kecil, ilustrasi yang relevan, bentuk panel, alignment yang khas, atau motion yang sesuai. Untuk section fungsional seperti RSVP, Maps, Gift, Countdown dan Wishes, fungsi shared engine tetap dipertahankan tetapi presentation-nya harus dipoles agar menyatu dengan tema—jangan dibiarkan terlihat seperti form/card generik yang ditempel setelah cover.
+
+Saat review template, cek **seluruh perjalanan scroll**, bukan screenshot cover saja. Tidak boleh ada pola “cover cantik → halaman berikutnya kosong/generik”. Section isi harus memiliki variasi ritme dan focal point yang cukup agar pengguna tetap merasakan art direction sampai Closing/Footer. Namun jangan menyelesaikan masalah ini dengan menumpuk banyak asset: hindari ornament yang saling bertabrakan, asset yang sama diulang di setiap section, atau dekorasi yang mengganggu teks/form. Targetnya adalah **cohesive richness**, bukan keramaian.
+
+Template belum boleh disebut selesai bila cover sudah polished tetapi mayoritas section isi masih memakai tampilan shared/default tanpa adaptasi visual yang nyata sesuai tema.
+
 ### Font dan warna template tidak wajib mengikuti brand website
 
 **Template undangan adalah dunia visualnya sendiri.** Font dan warna setiap template **tidak wajib sama dengan website/aplikasi Undara**. Font brand Undara (mis. DM Serif Display + Roboto), warna brand utama, serta palette Light/Dark aplikasi berlaku untuk chrome produk seperti landing page, marketing page, Dashboard, Studio UI, navigasi, dan kontrol global; aturan itu **bukan preset visual wajib untuk isi template undangan**.
