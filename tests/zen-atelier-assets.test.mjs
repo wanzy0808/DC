@@ -120,3 +120,23 @@ test("Zen Atelier cover is an asymmetric kakemono photo composition with Studio-
   assert.match(motion, /"object:rsvp:bamboo-art": \{ animation: "glide-left"/);
   assert.doesNotMatch(universal, /key !== "zen-atelier"[\s\S]*?IntersectionObserver/);
 });
+
+
+test("Zen closing keeps independent copy slots without overlap and uses one motion engine", () => {
+  const universal = readFileSync(repoFile("components/PublicInvitation/UniversalInvitationTemplate.tsx"), "utf8");
+  const gallery = readFileSync(repoFile("components/PublicInvitation/ZenAtelierGallery.tsx"), "utf8");
+  const css = readFileSync(repoFile("components/PublicInvitation/zen-atelier.css"), "utf8");
+
+  assert.match(universal, /zen-closing-message/);
+  assert.match(universal, /zen-closing-prayer/);
+  assert.match(universal, /zen-closing-quote/);
+  assert.match(css, /grid-template-areas:[\s\S]*"message quote"[\s\S]*"names quote"[\s\S]*"prayer quote"/);
+  assert.doesNotMatch(css, /\.zen-closing-copy \.zen-quote \{ grid-column:2; grid-row:1 \/ 3/);
+  assert.doesNotMatch(gallery, /IntersectionObserver|classList\.toggle\("zen-reveal"/);
+});
+
+test("Zen couple names keep the same first-person then second-person order as other templates", () => {
+  const universal = readFileSync(repoFile("components/PublicInvitation/UniversalInvitationTemplate.tsx"), "utf8");
+  assert.match(universal, /const names = couple\s*\? \[displayTitleCase\(invitation\.groomName\), displayTitleCase\(invitation\.brideName\)\]/);
+  assert.doesNotMatch(universal, /key === "zen-atelier" \? \[displayTitleCase\(invitation\.brideName\), displayTitleCase\(invitation\.groomName\)\]/);
+});
