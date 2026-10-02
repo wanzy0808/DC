@@ -593,6 +593,31 @@
 .vh-gallery-card-6 { right:5%; top:282px; transform:rotate(3deg); }
 .vh-gallery-card-7 { left:2%; top:330px; transform:rotate(-3deg); }
 .vh-gallery-card-8 { left:34%; top:366px; transform:rotate(2deg); }
+.vh-gallery-more {
+  position:relative;
+  z-index:4;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin-top:10px;
+}
+.vh-gallery-more-card {
+  margin:0;
+  overflow:hidden;
+  border:1px solid color-mix(in srgb,var(--vh-dust) 48%,transparent);
+  border-radius:12px;
+  background:var(--vh-cream);
+  padding:5px;
+  box-shadow:0 10px 22px color-mix(in srgb,var(--vh-ink) 7%,transparent);
+}
+.vh-gallery-more-card img {
+  display:block;
+  width:100%;
+  aspect-ratio:4/3;
+  border-radius:8px;
+  object-fit:cover;
+  filter:saturate(.84) sepia(.04);
+}
 .vh-gallery-empty {
   position:relative;
   z-index:3;
@@ -630,6 +655,14 @@
   border-top:1px solid color-mix(in srgb,var(--vh-dust) 48%,transparent);
   background:linear-gradient(180deg,var(--vh-cream),var(--vh-paper));
   padding:22px 28px;
+}
+.vh-footer-signature {
+  margin-left:12px;
+  color:color-mix(in srgb,var(--vh-ink) 66%,transparent);
+  font-size:10px;
+  font-weight:650;
+  letter-spacing:.22em;
+  text-transform:uppercase;
 }
 .vh-footer::before {
   content:"VH";
