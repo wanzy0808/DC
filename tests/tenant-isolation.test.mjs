@@ -67,3 +67,13 @@ test("core account and invitation mutations reject untrusted origins", () => {
     assert.match(source, /Origin permintaan tidak valid/);
   }
 });
+
+
+test("legacy package activation is explicitly bound to the owned event", () => {
+  const source = read("app/api/packages/route.ts");
+  assert.match(source, /const invitationId = String\(body\.invitationId/);
+  assert.match(source, /where: \{ id: invitationId, ownerId: user\.id \}/);
+  assert.match(source, /isTrustedMutationOrigin\(request\)/);
+  assert.doesNotMatch(source, /orderBy: \{ createdAt: "asc" \}/);
+  assert.doesNotMatch(source, /prisma\.invitation\.create/);
+});
