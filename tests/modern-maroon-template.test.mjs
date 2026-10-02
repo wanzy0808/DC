@@ -76,5 +76,5 @@ test("Modern Maroon viewport entrances are one-shot to prevent scroll flicker", 
   const nativeMotion = readFileSync(new URL("../components/PublicInvitation/use-native-visual-animations.ts", import.meta.url), "utf8");
   const photoMotion = readFileSync(new URL("../components/PublicInvitation/use-photo-animations.ts", import.meta.url), "utf8");
   assert.match(nativeMotion, /const replay = themed && !\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "velvet-horizon"\]\.includes\(template\)/);
-  assert.match(photoMotion, /const replay = themed && !\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco"\]\.includes\(theme\?\.template \?\? ""\)/);
+  assert.match(photoMotion, /const replay = themed && !\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "velvet-horizon"\]\.includes\(theme\?\.template \?\? ""\)/);
 });
