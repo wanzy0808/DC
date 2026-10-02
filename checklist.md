@@ -15,7 +15,7 @@ Kerjakan satu batch kecil → verifikasi → commit sebelum membuka batch beriku
 
 - [x] Cek prioritas canonical pada `prd.md`: brand Undara, general-event, tanpa limit 3 event, publish/entitlement server-authoritative dan event-scoped, serta private `UNDARA_DATA_DIR`. Ini audit prioritas handoff, bukan klaim seluruh Markdown bebas kontradiksi.
 - [x] Music Asset Library Studio: 14 lagu bundled dari registry bersama, cari judul/artis, dengarkan tanpa mengganti pilihan, radio pilihan aktif/default, upload event terpisah, dan event playback bersama. Jalur Save lama tetap dipakai.
-- [x] Regression suite akhir batch musik: 366/366; TypeScript dan build produksi lokal 72/72 halaman lulus. QA browser dan CI remote dicatat terpisah setelah benar-benar diamati.
+- [x] Batch musik `1d77985`: 366/366 regression tests, TypeScript dan build produksi 72/72 halaman lulus lokal dan pada GitHub Actions [Build Validation](https://github.com/wanzy0808/Undara/actions/runs/37078220318). [Orphan Audit](https://github.com/wanzy0808/Undara/actions/runs/37078220311) juga success. QA browser terautentikasi tetap terbuka.
 - [ ] Uji browser musik: browse → play/pause → pilih → Simpan → reload → preview/public, ID/EN, ganti template, upload/delete, panel ditutup, tab tersembunyi, dan tidak ada dua player berbunyi. Gunakan akun/event yang benar.
 - [ ] Production storage: verifikasi volume `UNDARA_DATA_DIR`, dry-run migrasi file legacy, review hasil sebelum apply pada server target.
 - [ ] Backup/restore: uji pemulihan PostgreSQL + private media pada environment terpisah; catat hasil nyata sebelum sign-off.
@@ -135,12 +135,14 @@ Important gaps found in the initial audit:
 - [x] Session cookie is Secure in production.
 - [x] Session cookie uses SameSite=Lax.
 - [x] Session expiry is enforced server-side.
-- [ ] **BLOCKER:** Integrate real transactional email delivery for verification emails.
-- [ ] **BLOCKER:** Ensure verification tokens are never logged in production.
-- [ ] **BLOCKER:** Implement/verify forgot-password request flow.
-- [ ] **BLOCKER:** Implement/verify one-time password reset token with expiry and invalidation.
-- [ ] **BLOCKER:** Invalidate appropriate sessions after password reset/change.
-- [ ] **BLOCKER:** Add/verify rate limiting for login, registration, verification resend, forgot-password, and password-reset endpoints.
+- [x] Verification/resend and password-reset email delivery use the shared Resend sender in source.
+- [x] Verification/reset token logging is guarded to non-production environments in source.
+- [x] Forgot-password request flow creates an expiring hashed token and uses a uniform known/unknown-email response.
+- [x] Password-reset success updates the password and invalidates reset tokens and sessions in a database transaction.
+- [x] Login, registration, verification resend, forgot-password and reset-password have process-local rate-limit guards in source.
+- [ ] **BLOCKER:** Verify actual verification/resend/reset email delivery and APP_URL/provider configuration on the target environment.
+- [ ] **BLOCKER:** Test password-reset expiry, reuse, concurrent requests, session revocation and subsequent login against PostgreSQL; verify session behavior after profile password changes too.
+- [ ] **BLOCKER:** Verify auth rate limits behind the production proxy and define distributed enforcement if deployment uses multiple processes/instances.
 - [ ] Verify registration validates Terms/Privacy consent server-side as required by `prd.md`.
 - [ ] Verify email format and normalization consistently on registration/login/reset flows.
 - [ ] Verify duplicate registration race is safely handled by DB uniqueness, not only pre-check logic.
