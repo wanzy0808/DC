@@ -1,8 +1,4 @@
 export const velvetHorizonArtwork = {
-  blossom: "/templates/velvet-horizon/01_sakura_branch.webp",
-  horizon: "/templates/velvet-horizon/03_ink_mountain_landscape.webp",
-  cloudBand: "/templates/velvet-horizon/06_japanese_cloud_band.webp",
-  sunsetDisc: "/templates/velvet-horizon/08_red_sun_clouds.webp",
   drape: "/templates/modern-maroon/04_fabric_wave.webp",
   arch: "/templates/garden-light/10_romantic_lit_wedding_arch.webp",
   lanterns: "/templates/garden-light/03_romantic_lantern_arrangement.webp",
@@ -40,38 +36,30 @@ export function VelvetHorizonArt({
   );
 }
 
-const sectionAssets: Partial<Record<string, [VelvetHorizonArtworkKey, VelvetHorizonArtworkKey?]>> = {
-  greeting: ["blossom", "sunsetDisc"],
-  identity: ["horizon", "blossom"],
-  event: ["garland", "lanterns"],
-  dateTime: ["sunsetDisc", "cloudBand"],
-  gallery: ["horizon", "blossom"],
-  countdown: ["teaTable", "cloudBand"],
-  location: ["arch", "fountain"],
-  rsvp: ["blossom", "garland"],
-  wishes: ["lanterns", "blossom"],
-  gift: ["garland", "sunsetDisc"],
-  closing: ["arch", "lanterns"],
+const sectionAssets: Partial<Record<string, VelvetHorizonArtworkKey>> = {
+  greeting: "garland",
+  identity: "arch",
+  event: "lanterns",
+  dateTime: "drape",
+  gallery: "garland",
+  countdown: "teaTable",
+  location: "fountain",
+  rsvp: "garland",
+  wishes: "lanterns",
+  gift: "garland",
+  closing: "arch",
 };
 
 export function VelvetHorizonSectionArt({ section }: { section: string }) {
-  const assets = sectionAssets[section];
-  if (!assets) return null;
-  const [primary, secondary] = assets;
+  const asset = sectionAssets[section];
+  if (!asset) return null;
   return (
     <div aria-hidden="true" className={`vh-section-art vh-section-art-${section}`}>
       <VelvetHorizonArt
         objectKey={`object:${section}:velvet-art`}
-        asset={primary}
+        asset={asset}
         className="vh-section-primary"
       />
-      {secondary && (
-        <VelvetHorizonArt
-          objectKey={`object:${section}:velvet-secondary-art`}
-          asset={secondary}
-          className="vh-section-secondary"
-        />
-      )}
     </div>
   );
 }
