@@ -37,16 +37,14 @@ export function VelvetHorizonArt({
 }
 
 const sectionAssets: Partial<Record<string, VelvetHorizonArtworkKey>> = {
+  // Keep decorative art only where the section has enough negative space.
+  // Dense sections (date/time, gallery, RSVP, wishes, gift) stay clean so
+  // artwork never competes with cards, forms, or the gallery's own accent.
   greeting: "garland",
   identity: "arch",
   event: "lanterns",
-  dateTime: "drape",
-  gallery: "garland",
   countdown: "teaTable",
   location: "fountain",
-  rsvp: "garland",
-  wishes: "lanterns",
-  gift: "garland",
   closing: "arch",
 };
 
