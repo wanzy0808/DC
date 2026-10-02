@@ -40,7 +40,14 @@ export async function GET(request: Request) {
   if (reviewScope) {
     if (!reviewer) return NextResponse.json({ error: "Hanya Owner/Admin yang dapat membuka antrean review." }, { status: 403 });
     const templates = await prisma.designerTemplate.findMany({
-      where: { status: "REVIEW" },
+      where: author.role === "OWNER"
+        ? {
+            OR: [
+              { status: "REVIEW" },
+              { status: "DRAFT", designerId: author.id },
+            ],
+          }
+        : { status: "REVIEW" },
       orderBy: { updatedAt: "asc" },
       include: {
         designer: { select: { id: true, firstName: true, lastName: true, email: true } },
