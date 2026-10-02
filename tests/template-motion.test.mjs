@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 import { templateHasDefaultMotion, templateNativeMotion, templatePhotoMotion, templateNativeMotionForKey } from "../lib/templates/template-motion.ts";
 import { invitationTemplates } from "../lib/templates/catalog.ts";
 import { defaultPhotoAssignments, withPhotoAssignments, parsePhotoAssignments } from "../lib/templates/photo-slots.ts";
@@ -28,10 +29,12 @@ test("every active template carries motion beyond the cover through the final se
     for (const section of requiredSections) {
       assert.ok(motion[`heading:${section}`], `${template.key} is missing ${section} heading motion`);
     }
-    for (const key of ["object:rsvp:form-group", "object:wishes:form-group", "object:footer:motion-group"]) {
+    for (const key of ["object:rsvp:form-group", "object:wishes:form-group"]) {
       assert.ok(motion[key], `${template.key} is missing shared continuation target ${key}`);
     }
   }
+  const sectionHook = readFileSync(new URL("../components/PublicInvitation/use-section-animations.ts", import.meta.url), "utf8");
+  assert.match(sectionHook, /key === "footer" \? "fade"/, "Footer keeps a final one-shot entrance without wrapping themed footer layouts");
 });
 
 test("section OFF and authored timelines suppress photo defaults while explicit photo choices remain authoritative", () => {
