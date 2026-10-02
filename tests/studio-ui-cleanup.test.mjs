@@ -796,7 +796,7 @@ test("Studio element layers reuse the shared animation catalog and persist timin
 
 test("Section and element entrance animations share one playback runtime", () => {
   const sectionHook = read("components/PublicInvitation/use-section-animations.ts");
-  assert.match(sectionHook, /observeInvitationEntranceRoot\(root, collect\)/);
+  assert.match(sectionHook, /observeInvitationEntranceRoot\(root, collect, \{ preservePresentation: true \}\)/);
   assert.match(layerAnimationHook, /observeInvitationEntrances\(\[\{/);
   assert.match(entranceAnimationRuntime, /const animations = new Set<Animation>\(\)/);
   assert.match(entranceAnimationRuntime, /duration: Math\.round\(\(config\.duration \?\? preset\.duration\) \* 1000\)/);
@@ -970,7 +970,7 @@ test("Premium section timelines lazy-load GSAP only for supported storytelling s
   assert.match(premiumTimelineHook, /clearProps: "opacity,transform,filter,clipPath"/);
   assert.match(premiumTimelineHook, /revision/);
 
-  assert.match(sectionAnimationHook, /config\?\.timeline \|\| !config\?\.animation/);
+  assert.match(sectionAnimationHook, /config\?\.timeline \|\| config\?\.animation === "none"/);\n  assert.match(sectionAnimationHook, /key === "footer" \? "fade"/);
   assert.match(universalTemplate, /usePremiumSectionTimelines\(rootRef, sectionStyles, String\(opened\)\)/);
   assert.match(romanticTemplate, /usePremiumSectionTimelines\(rootRef, sectionStyles, String\(opened\)\)/);
   assert.match(universalTemplate, /sectionStyles\[sectionKey\]\?\.timeline/);
