@@ -127,8 +127,8 @@ test("Golden Art Deco has restrained one-shot motion without animating countdown
 
   const nativeHook = read("components/PublicInvitation/use-native-visual-animations.ts");
   const photoHook = read("components/PublicInvitation/use-photo-animations.ts");
-  assert.match(nativeHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "velvet-horizon"\]\.includes\(template\)/);
-  assert.match(photoHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "velvet-horizon"\]\.includes\(theme\?\.template \?\? ""\)/);
+  assert.match(nativeHook, /const replay = false;/);
+  assert.match(photoHook, /const replay = false;/);
   assert.match(nativeHook, /waitForImages:[^\n]*golden-art-deco/);
   assert.match(universal, /golden-art-deco"[\s\S]{0,420}sectionStyles\.envelope\?\.animation === "none"/);
 });
