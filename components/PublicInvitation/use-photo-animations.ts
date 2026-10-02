@@ -48,7 +48,8 @@ export function useInvitationPhotoAnimations(
       )).map((node) => ({ node, strength }));
     }).slice(0, MAX_PHOTO_PARALLAX_TARGETS);
 
-    const replay = themed && !["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "velvet-horizon"].includes(theme?.template ?? "") && theme?.template !== "zen-atelier";
+    // Keep photo entrances one-shot in public scroll; Studio can still replay them explicitly.
+    const replay = false;
     const stopEntrance = observeInvitationEntranceRoot(root, collect, {
       replay,
       preservePresentation: themed,
