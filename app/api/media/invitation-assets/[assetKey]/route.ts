@@ -217,10 +217,16 @@ async function serve(
 
   headers.set("Content-Length", String(body.byteLength));
 
-  return new NextResponse(
-    headOnly ? null : new Uint8Array(body.buffer, body.byteOffset, body.byteLength),
-    { status, headers },
-  );
+  let responseBody: ArrayBuffer | null = null;
+  if (!headOnly) {
+    // Copy into an ArrayBuffer-backed view so NextResponse receives a standard
+    // BodyInit even when Node's Buffer is typed with ArrayBufferLike.
+    const responseBytes = new Uint8Array(body.byteLength);
+    responseBytes.set(body);
+    responseBody = responseBytes.buffer;
+  }
+
+  return new NextResponse(responseBody, { status, headers });
 }
 
 export async function GET(
