@@ -12,7 +12,8 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "storage:migrate-invitation-media": "tsx scripts/migrate-invitation-media.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

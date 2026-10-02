@@ -1,4 +1,4 @@
-import { mkdir, unlink, writeFile } from "node:fs/promises";
+import { unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
@@ -7,6 +7,11 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 import { audioUploadError, hasAudioSignature, MAX_AUDIO_FILES } from "@/lib/invitations/audio-limits";
+import {
+  buildPrivateInvitationAssetKey,
+  ensurePrivateInvitationAssetDirectory,
+  privateInvitationAssetUrl,
+} from "@/lib/storage/private-media";
 
 class AssetLimitError extends Error {}
 const maxImageSize = 15 * 1024 * 1024;
@@ -61,11 +66,12 @@ export async function POST(request: Request) {
     if (type === "AUDIO" && !hasAudioSignature(originalBuffer, file.type)) {
       return NextResponse.json({ error: "Isi file musik tidak sesuai format MP3, WAV, OGG, AAC, atau M4A." }, { status: 400 });
     }
+
     let outputBuffer: Buffer;
-    let fileName: string;
-    let uploadDirectory: string;
-    let url: string;
     let title = file.name;
+    const assetId = randomUUID();
+    const assetKey = buildPrivateInvitationAssetKey(assetId, type, file.type);
+    const url = privateInvitationAssetUrl(assetKey);
 
     if (type === "IMAGE") {
       // Decode and transcode actual image bytes; never just rename an uploaded file.
@@ -74,23 +80,15 @@ export async function POST(request: Request) {
         .resize({ width: 2000, height: 2000, fit: "inside", withoutEnlargement: true })
         .webp({ quality: 82, effort: 4 })
         .toBuffer();
-      fileName = `${randomUUID()}.webp`;
-      // Keep new user uploads event-scoped; legacy URLs continue to work.
-      uploadDirectory = path.join(process.cwd(), "public", "uploads", "images", invitation.id);
-      savedPath = path.join(uploadDirectory, fileName);
-      url = `/uploads/images/${invitation.id}/${fileName}`;
       title = path.basename(file.name, path.extname(file.name)) + ".webp";
     } else {
       outputBuffer = originalBuffer;
-      const extension = ({ "audio/mpeg": ".mp3", "audio/mp3": ".mp3", "audio/wav": ".wav", "audio/ogg": ".ogg", "audio/aac": ".aac", "audio/mp4": ".m4a", "audio/x-m4a": ".m4a" } as Record<string, string>)[file.type];
-      fileName = `${randomUUID()}${extension}`;
-      uploadDirectory = path.join(process.cwd(), "public", "uploads", "music");
-      savedPath = path.join(process.cwd(), "public", "uploads", "music", fileName);
-      url = `/uploads/music/${fileName}`;
     }
 
-    await mkdir(uploadDirectory, { recursive: true });
-    await writeFile(savedPath, outputBuffer);
+    // Customer binaries live outside Next.js public/. In production this path must
+    // point to persistent VPS/disk storage through UNDARA_DATA_DIR.
+    savedPath = await ensurePrivateInvitationAssetDirectory(invitation.id, assetKey);
+    await writeFile(savedPath, outputBuffer, { flag: "wx", mode: 0o600 });
 
     try {
       const asset = await prisma.$transaction(async (tx) => {
@@ -101,7 +99,9 @@ export async function POST(request: Request) {
         if (count >= limit) throw new AssetLimitError(type === "AUDIO"
           ? "Maksimal 2 musik per undangan. Hapus salah satu untuk menggantinya."
           : `Maksimal ${maxImages} foto per undangan.`);
-        return tx.invitationAsset.create({ data: { invitationId, ownerId: user.id, type, url, title } });
+        return tx.invitationAsset.create({
+          data: { id: assetId, invitationId, ownerId: user.id, type, url, title },
+        });
       });
       return NextResponse.json({ asset, optimized: type === "IMAGE", bytes: outputBuffer.byteLength }, { status: 201 });
     } catch (error) {
@@ -112,6 +112,7 @@ export async function POST(request: Request) {
   } catch (error) {
     if (savedPath) await unlink(savedPath).catch(() => undefined);
     if (error instanceof AssetLimitError) return NextResponse.json({ error: error.message }, { status: 400 });
+    console.error("POST /api/invitations/assets/upload failed", error);
     return NextResponse.json({ error: "File belum dapat diunggah." }, { status: 500 });
   }
 }

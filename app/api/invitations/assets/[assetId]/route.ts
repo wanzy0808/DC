@@ -3,6 +3,10 @@ import path from "node:path";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import {
+  parsePrivateInvitationAssetUrl,
+  privateInvitationAssetPath,
+} from "@/lib/storage/private-media";
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ assetId: string }> }) {
   const user = await getCurrentUser();
@@ -23,12 +27,26 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
     return result;
   });
   if (!deleted.count) return NextResponse.json({ error: "Asset tidak ditemukan." }, { status: 404 });
+
+  const privateAssetKey = parsePrivateInvitationAssetUrl(asset.url);
+  if (privateAssetKey) {
+    try {
+      await unlink(privateInvitationAssetPath(asset.invitationId, privateAssetKey)).catch(() => undefined);
+    } catch (error) {
+      // The DB row is already gone, so the private binary is no longer reachable
+      // through the media endpoint. Keep deletion successful and surface cleanup
+      // failures only to server logs for operations.
+      console.error("Private invitation asset cleanup failed", error);
+    }
+    return NextResponse.json({ ok: true });
+  }
+
+  // Legacy compatibility: old customer uploads may still point into public/uploads
+  // until the one-time migration script is run on the deployment that owns them.
   const imagePrefix = `/uploads/images/${asset.invitationId}/`;
   const isEventOwnedImage = asset.type === "IMAGE"
     && asset.url.startsWith(imagePrefix)
     && /^[0-9a-f-]{36}\.webp$/.test(asset.url.slice(imagePrefix.length));
-  // Only remove generated files in the verified event folder; never unlink
-  // arbitrary URLs/legacy assets on behalf of an incoming client request.
   if ((asset.type === "AUDIO" && /^\/uploads\/music\/[0-9a-f-]{36}\.(mp3|wav|ogg|aac|m4a|mp4)$/.test(asset.url)) || isEventOwnedImage) {
     await unlink(path.join(process.cwd(), "public", asset.url.slice(1))).catch(() => undefined);
   }

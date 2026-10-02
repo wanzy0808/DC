@@ -49,3 +49,7 @@ next-env.d.ts
 
 # local Impeccable design-review runtime/cache
 .impeccable/
+
+# private/runtime media (customer uploads must never enter Git/web root)
+/.undara-data/
+/public/uploads/
