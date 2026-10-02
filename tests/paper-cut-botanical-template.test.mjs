@@ -104,7 +104,7 @@ test("Paper Cut Botanical uses restrained one-shot native motion without animati
   assert.match(block, /"object:cover:couple-art": \{ animation: "soft-scale"/);
   assert.match(block, /"object:gallery:keepsake-group": \{ animation: "tilt-in"/);
   assert.doesNotMatch(block, /object:countdown:[^"]*-value/);
-  assert.match(nativeHook, /template !== "paper-cut-botanical"/);
+  assert.match(nativeHook, /const replay = false;/);
   assert.match(nativeHook, /waitForImages:[^\n]*paper-cut-botanical/);
   assert.match(css, /@media \(prefers-reduced-motion:reduce\)/);
 });
