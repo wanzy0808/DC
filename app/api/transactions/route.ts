@@ -7,7 +7,7 @@ export async function GET() {
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
   const orders = await prisma.paymentOrder.findMany({
-    where: { userId: user.id },
+    where: { userId: user.id, invitation: { ownerId: user.id } },
     include: {
       invitation: { select: { title: true, groomName: true, brideName: true } },
     },

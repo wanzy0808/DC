@@ -11,7 +11,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
   const { id } = await params;
-  const order = await prisma.paymentOrder.findFirst({ where: { id, userId: user.id }, include: { invitation: { select: { title: true, groomName: true, brideName: true } } } });
+  const order = await prisma.paymentOrder.findFirst({
+    where: { id, userId: user.id, invitation: { ownerId: user.id } },
+    include: { invitation: { select: { title: true, groomName: true, brideName: true } } },
+  });
   if (!order) return NextResponse.json({ error: "Invoice tidak ditemukan." }, { status: 404 });
   return NextResponse.json({ order });
 }
@@ -21,7 +24,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
   if (!isTrustedMutationOrigin(request)) return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
   const { id } = await params;
-  const order = await prisma.paymentOrder.findFirst({ where: { id, userId: user.id } });
+  const order = await prisma.paymentOrder.findFirst({
+    where: { id, userId: user.id, invitation: { ownerId: user.id } },
+  });
   if (!order) return NextResponse.json({ error: "Invoice tidak ditemukan." }, { status: 404 });
   if (order.status !== "PENDING") return NextResponse.json({ error: "Invoice ini sudah tidak menunggu pembayaran." }, { status: 409 });
 

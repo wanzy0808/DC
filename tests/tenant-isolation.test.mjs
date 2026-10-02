@@ -77,3 +77,15 @@ test("legacy package activation is explicitly bound to the owned event", () => {
   assert.doesNotMatch(source, /orderBy: \{ createdAt: "asc" \}/);
   assert.doesNotMatch(source, /prisma\.invitation\.create/);
 });
+
+
+test("payment and invoice reads cannot cross the event owner boundary", () => {
+  const order = read("app/api/orders/[id]/route.ts");
+  const transactions = read("app/api/transactions/route.ts");
+  const adminPayments = read("app/api/admin/payments/route.ts");
+
+  assert.match(order, /userId: user\.id, invitation: \{ ownerId: user\.id \}/);
+  assert.match(transactions, /userId: user\.id, invitation: \{ ownerId: user\.id \}/);
+  assert.match(adminPayments, /order\.userId !== order\.invitation\.ownerId/);
+  assert.match(adminPayments, /Aktivasi diblokir/);
+});

@@ -57,8 +57,17 @@ export async function PATCH(request: Request) {
     const body = await request.json();
     const orderId = String(body.orderId ?? "");
     const action = body.action === "ACTIVATE" ? "ACTIVATE" : "REJECT";
-    const order = await prisma.paymentOrder.findUnique({ where: { id: orderId } });
+    const order = await prisma.paymentOrder.findUnique({
+      where: { id: orderId },
+      include: { invitation: { select: { ownerId: true } } },
+    });
     if (!order) return NextResponse.json({ error: "Order tidak ditemukan." }, { status: 404 });
+    if (order.userId !== order.invitation.ownerId) {
+      return NextResponse.json(
+        { error: "Order tidak konsisten dengan pemilik acara. Aktivasi diblokir." },
+        { status: 409 },
+      );
+    }
     if (order.status !== "PENDING") return NextResponse.json({ error: "Order ini sudah diproses." }, { status: 409 });
 
     if (action === "REJECT") {
