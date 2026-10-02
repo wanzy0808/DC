@@ -823,8 +823,6 @@ const sharedSectionNative: Record<string, TemplateNativeMotion> = {
   "heading:closing": { animation: "rise", animationDuration: .66 },
   "object:closing:copy-group": { animation: "rise", animationDuration: .72, animationDelay: .05 },
   "object:closing:names": { animation: "soft-scale", animationDuration: .7, animationDelay: .1 },
-
-  "object:footer:motion-group": { animation: "fade", animationDuration: .58, animationDelay: .02 },
 };
 
 const romanticRoseNative: Record<string, TemplateNativeMotion> = {
@@ -878,8 +876,6 @@ const romanticRoseNative: Record<string, TemplateNativeMotion> = {
   "object:closing:heart": { animation: "soft-scale", animationDuration: .64, animationDelay: .04 },
   "object:closing:copy-group": { animation: "rise", animationDuration: .72, animationDelay: .06 },
   "object:closing:names": { animation: "soft-scale", animationDuration: .7, animationDelay: .11 },
-
-  "object:footer:motion-group": { animation: "fade", animationDuration: .58 },
 };
 
 const nativeDefaults: Record<string, Record<string, TemplateNativeMotion>> = {
