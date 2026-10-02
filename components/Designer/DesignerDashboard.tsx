@@ -76,7 +76,7 @@ export default function DesignerDashboard() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Draft belum dapat dikirim untuk review.");
       await load();
-      setMessage("Draft dikirim ke Owner/Admin untuk review.");
+      setMessage("Draft dikirim ke Owner untuk review atau diberikan ke user yang request.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Draft belum dapat dikirim untuk review.");
     } finally {
@@ -94,7 +94,7 @@ export default function DesignerDashboard() {
         <div>
           <p className="font-[family-name:var(--font-undara-mono)] text-xs uppercase tracking-[.2em] text-primary">Designer Dashboard</p>
           <h1 className="mt-2 font-[family-name:var(--font-undara-heading)] text-3xl font-semibold">Template Studio</h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Kelola template dan lihat berapa banyak template kamu dipakai pada transaksi yang sudah PAID.</p>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Kelola template publik maupun custom request. Draft custom dapat dikirim ke Owner untuk dikonfirmasi ke user yang meminta.</p>
         </div>
         <Button asChild><Link href="/designer/studio">Buka Template Studio</Link></Button>
       </header>
@@ -169,12 +169,12 @@ export default function DesignerDashboard() {
                               disabled={busyId === item.id}
                               onClick={() => void submitForReview(item.id)}
                             >
-                              {busyId === item.id ? "Mengirim..." : "Kirim Review"}
+                              {busyId === item.id ? "Mengirim..." : "Kirim ke Owner"}
                             </Button>
                           </>
                         )}
                         {item.status === "REVIEW" && (
-                          <span className="text-xs text-muted-foreground">Menunggu review Owner/Admin</span>
+                          <span className="text-xs text-muted-foreground">Menunggu konfirmasi Owner</span>
                         )}
                       </div>
                     )}
