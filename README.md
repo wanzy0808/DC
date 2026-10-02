@@ -213,7 +213,7 @@ Legacy `/invite/[slug]` routes remain for internal routing/backward-compatible b
 - `components/PublicInvitation/` — real template scenes, shared RSVP/Wishes/music/asset rendering; `UniversalInvitationTemplate.tsx` and `RomanticRoseTemplate.tsx` retain their visual identity while sharing `lib/invitations/countdown.ts`. Theme-specific rendered React artwork, such as `ZenAtelierArtwork.tsx`, lives next to the renderer; `assets/templates/zen-atelier/README.md` remains an asset reference, not a runtime code module.
 - `components/Usher/`, `components/Payments/` — operational check-in and package/checkout UI.
 - `data/services/`, `data/templates/preview-invitation.ts` — static marketing service content and **demo-only** invitation fixture. Active template discovery uses `lib/templates/catalog.ts` and `lib/templates/use-template-catalog.ts`; do not restore deleted `data/templates/showcase.ts` or parallel template lists.
-- `lib/` — reusable feature/domain code, authentication, guest identity, invitation parsing, template registry, security and API helpers; `prisma/` — database schema and **retained** ordered migrations; `public/` — browser-accessible media whose old URLs may still be saved by customers; `tests/` — source and domain regression tests; `.github/workflows/` — build and orphan-reference audit.
+- `lib/` — reusable feature/domain code, authentication, guest identity, invitation parsing, template registry, security, private-media storage helpers and API helpers; `prisma/` — database schema and **retained** ordered migrations; `public/` — intentional browser-public app/template assets plus legacy customer URLs during migration only; new customer `InvitationAsset` binaries live outside the web root under `UNDARA_DATA_DIR`; `tests/` — source and domain regression tests; `.github/workflows/` — build and orphan-reference audit.
 
 Naming rule: prefer existing semantic modules. Refactor only when a genuine boundary improves maintenance; do not create `V2`/`V3` or new database models for existing event/guest information. Feature `.tsx` filenames use descriptive PascalCase; `app/` route filenames and shadcn `components/ui/` primitives retain framework conventions. Run `tests/repo-file-naming.test.mjs` for the naming guard. Do not rename existing `public/` assets or customer-facing URLs merely for prettier names.
 
@@ -239,6 +239,30 @@ pnpm db:deploy
 ```
 
 `pnpm build` / GitHub Build Validation does **not** apply PostgreSQL migrations. A deployment that updates Prisma schema-dependent application code must run `pnpm db:deploy` against the target production `DATABASE_URL` before the updated app is relied on. If the application returns a database-schema synchronization error while saving/loading events, apply the pending migrations on the server first.
+
+### Private invitation media on a VPS
+
+Customer photo/music uploads do **not** belong in `public/`. Local development may leave `UNDARA_DATA_DIR` blank and uses `.undara-data`. Production must set it to an absolute, persistent path outside the repository/web root, for example:
+
+```env
+UNDARA_DATA_DIR="/var/lib/undara"
+```
+
+Create that directory on the target VPS/volume with ownership limited to the application account and include it in the same operational backup/restore plan as PostgreSQL. A redeploy or fresh Git checkout must not delete this directory.
+
+For an existing deployment that still owns legacy `public/uploads/images` or `public/uploads/music` files, first back up both PostgreSQL and those files, then inspect the migration without changing data:
+
+```bash
+pnpm storage:migrate-invitation-media
+```
+
+If every expected file is found, apply it:
+
+```bash
+pnpm storage:migrate-invitation-media -- --apply
+```
+
+The apply run moves the database URLs to the authorized media endpoint and removes migrated binaries from the old public web root. Treat any non-zero exit, missing file, or leftover customer binary in `public/uploads` as incomplete migration; investigate before production sign-off.
 
 
 ## Documentation Governance

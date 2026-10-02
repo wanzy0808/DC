@@ -47,7 +47,7 @@ Ringkasan ini memperbarui pembacaan snapshot 17 September di bawah; checkbox lam
 | --- | --- | --- |
 | Akun | Resend email verifikasi, reset password, invalidasi sesi reset, pembatasan request per proses; Build Validation `7356c351` lulus. | Konfigurasi `APP_URL`/Resend, pengiriman email nyata, alur klik dan rate limit terdistribusi pada multi-instance. |
 | Pembayaran | Invoice `PaymentOrder`, aktivasi server, klaim `PENDING` atomik untuk mencegah aktivasi/kuota ganda; Build Validation `da8e1c25` lulus. | Uji konkurensi PostgreSQL nyata, rekonsiliasi dan pemeriksaan manual end-to-end; bukti transfer masih URL/data di database. |
-| Media | Gambar ditranscode WebP; musik kini memeriksa header byte dasar dan tes lulus pada `dc0d3679`. | Penyimpanan tahan deploy/backup, validasi codec penuh dan playback browser. |
+| Media | Upload `InvitationAsset` baru keluar dari `public/`: source memakai private `UNDARA_DATA_DIR`, authorized media endpoint, Sharp WebP, audio signature/range, dan Build Validation `36983861514` lulus pada `abadc44a`. | Konfigurasi persistent volume production, dry-run/apply migrasi legacy `public/uploads`, backup+restore nyata, dan browser playback/password/personal E2E. |
 | Studio | Perbaikan seleksi layer terkunci/overlap `ab1a9de0`; Build Validation lulus. | QA gestur pointer/touch, gambar transparan bertumpuk dan kesetaraan renderer publik. |
 
 Urutan kerja aktif: uji alur akun/pembayaran dengan PostgreSQL dan email nyata, pindahkan media ke penyimpanan persisten, lakukan audit otorisasi lintas akun, lalu E2E serta backup/restore sebelum sign-off.
@@ -82,6 +82,7 @@ Current repository evidence already shows:
 - [x] RSVP is event/slug scoped and checks configured + published + entitlement state.
 - [x] Public RSVP has basic rate limiting.
 - [x] Upload API validates ownership, MIME family, size, count limits, and optimizes images.
+- [x] New customer InvitationAsset binaries are stored outside the public web root and served through an authorization-aware media endpoint; legacy public files require deployment migration.
 - [x] GitHub Actions performs install, Prisma client generation, and production build validation.
 - [x] Production migration command (`pnpm db:deploy`) is documented.
 
@@ -90,7 +91,7 @@ Important gaps found in the initial audit:
 - [ ] **BLOCKER — real email delivery is not production-ready.** Registration currently creates a verification token but prints the verification URL to server logs with a `[DEV]` message. Integrate a transactional email provider and never depend on logs for verification links.
 - [ ] **BLOCKER — password reset / forgot-password flow needs production implementation and verification.** No reset flow was confirmed during this audit.
 - [ ] **BLOCKER — payment is currently manual proof-of-transfer + admin confirmation, not a payment-gateway/webhook flow.** Decide whether manual transfer is intentionally the launch payment model. If yes, fully harden and document that operational flow. If moving to a gateway, implement signed webhook verification, idempotency, pending/paid/failed/expired handling, and event-scoped entitlement activation.
-- [ ] **BLOCKER — uploads currently write to `public/uploads` on the application filesystem.** This is fragile for redeploys, horizontal scaling, backup, and immutable/container deployments. Move customer assets to durable object storage or explicitly design persistent VPS storage + backup before launch.
+- [ ] **BLOCKER — source-level private persistent VPS storage is implemented, tetapi production migration/restore belum sign-off.** Upload `InvitationAsset` baru tidak lagi ditulis ke `public/uploads`; production wajib mengisi absolute `UNDARA_DATA_DIR` pada volume persisten, menjalankan migrasi legacy hingga file publik lama terhapus, lalu membuktikan backup + restore dan browser playback. Object storage eksternal bersifat opsional, bukan kewajiban.
 - [ ] **BLOCKER — production backup + tested restore procedure not verified.** Database backup is not complete until a restore has actually been tested.
 - [ ] **BLOCKER — production deployment/rollback workflow not verified.** Current GitHub Actions evidence is build validation, not production deployment.
 - [ ] **BLOCKER — full authorization audit across every API route is still required.** Important routes already use ownership checks, but launch sign-off requires checking all nested resources (guests, tables, personal invitations, assets, payments, WA Blast, usher/check-in, admin/designer/owner routes).

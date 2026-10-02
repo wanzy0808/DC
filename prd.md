@@ -581,6 +581,14 @@ Unggahan musik dibatasi **2 aset AUDIO per undangan, masing-masing maksimal 3 MB
 
 Foto tetap melalui Sharp: decode, orientasi otomatis, resize maksimal 2000×2000 tanpa pembesaran, encode WebP quality 82, simpan event-scoped. Batas foto tetap 30 file dan input maksimal 15 MB. **Wishes sekarang memakai shared API dan model GuestWish event-scoped**, bukan placeholder; tetap jangan mengklaim fitur berfungsi pada database target sebelum migrasi GuestWish telah diterapkan dan alur submit publik diuji.
 
+### 7.2.1c Penyimpanan media customer privat di VPS (2 Oktober 2026)
+
+Binary `InvitationAsset` customer untuk **IMAGE** dan **AUDIO** baru tidak boleh ditulis ke `public/` atau mempunyai static-file URL yang melewati authorization. Penyimpanan lokal tetap diperbolehkan tanpa object-storage pihak ketiga: development memakai fallback `.undara-data`, sedangkan production wajib mengisi `UNDARA_DATA_DIR` dengan **absolute path pada disk/volume VPS yang persisten di luar repository dan web root** (contoh operasional `/var/lib/undara`). File disimpan event-scoped di `invitation-assets/<invitationId>/<assetId>.<ext>` dengan nama opaque; database menyimpan URL endpoint `/api/media/invitation-assets/<assetId>.<ext>`, bukan path filesystem.
+
+Endpoint media harus memverifikasi record `InvitationAsset` dan relasinya. Pemilik yang login boleh melihat aset draft miliknya; selain pemilik, media hanya diberikan untuk invitation yang configured, published, dan mempunyai entitlement Undangan Digital yang valid. Invitation ber-password tetap membutuhkan signed access cookie yang sudah dipakai renderer publik; personal invitation mengikuti guest token/published/password access yang sudah ada. Request yang tidak berhak tidak boleh membocorkan keberadaan aset dan dikembalikan sebagai not-found. Audio tetap mendukung byte-range agar seek/playback browser berfungsi. Artwork template/demo yang memang merupakan bagian publik aplikasi tetap berada di `public/` dan tidak mengikuti aturan customer media ini.
+
+URL customer lama `/uploads/images/...` dan `/uploads/music/...` adalah **legacy compatibility saja**. Deployment yang masih memiliki binary lama wajib menjalankan dry-run `pnpm storage:migrate-invitation-media`, lalu setelah backup menjalankan `pnpm storage:migrate-invitation-media -- --apply`; migrasi dianggap selesai hanya bila command sukses dan sumber lama di web root sudah terhapus. Persistent local storage bukan pengganti backup: `UNDARA_DATA_DIR` harus dibackup bersama PostgreSQL dan restore nyata tetap wajib diuji sebelum production sign-off.
+
 ### 7.2.1f Ucapan Tamu aktif di undangan publik, bukan placeholder (24 September 2026)
 
 **Perbaikan owner:** label toggle Studio cukup `Ucapan Tamu`, tanpa keterangan menempel `Pengiriman ucapan belum tersedia.` yang membuat label sulit dibaca dan tidak sesuai kondisi fitur. Bagian `wishes` di `UniversalInvitationTemplate.tsx` (termasuk Zen Atelier) dan `RomanticRoseTemplate.tsx` menampilkan satu komponen reusable `GuestWishes.tsx`, bukan teks placeholder. Tamu pada undangan publik yang aktif dapat menulis nama (maksimum 80 karakter) dan ucapan/doa (maksimum 600 karakter), mengirim melalui `POST /api/invite/[slug]/wishes` dan melihat maksimal 30 pesan terbaru dari `GET`. Pesan baru ditampilkan sebagai teks biasa, bukan HTML atau dummy. Identitas penulis pesan adalah **nama yang ditulisnya sendiri**, bukan bukti bahwa ia pemilik suatu record Guest atau sudah RSVP.
@@ -2514,3 +2522,19 @@ Follow-up commits include `8c64ee0eb259f1f9bf6644b8948fc004e16f3f20`, `6672a8463
 
 **Not established:** that CI run does not prove rendered visual comparison, physical mobile interaction, authenticated Studio save/reload/public round-trip or deployment. Those are not claimed as PASS.
 
+
+### 2 Oktober 2026 — customer invitation media dipindah dari public web root ke private persistent VPS storage
+
+**Owner request:** benahi risiko foto/musik customer yang sebelumnya tersimpan di `public/uploads` sehingga siapa pun yang mengetahui static URL dapat membukanya, tanpa mewajibkan storage eksternal seperti R2/S3.
+
+**Implementation:** upload `InvitationAsset` baru sekarang membuat asset ID opaque, tetap mendecode/mentranscode gambar dengan Sharp ke WebP, lalu menulis binary ke private data root di luar `public/`. Development fallback berada di `.undara-data`; production fail-closed bila `UNDARA_DATA_DIR` tidak diisi absolute path. Database menyimpan authorized media URL `/api/media/invitation-assets/<assetKey>`. Endpoint media memeriksa asset row + owner; akses non-owner membutuhkan invitation configured + published + paid, dan proteksi password memakai signed cookie yang sama dengan public renderer. Jalur personal invitation dapat memakai published personal token/access yang sudah ada. Audio melayani byte ranges. Delete customer asset menghapus private file; legacy static URL masih dapat dihapus dengan guard lama selama transisi.
+
+**Legacy/deployment:** `.gitignore` kini mengecualikan `.undara-data/` dan `public/uploads/`. Script `scripts/migrate-invitation-media.ts` menyediakan dry-run secara default dan `--apply` untuk menyalin legacy binary ke private storage, memperbarui `InvitationAsset.url`/active `musicUrl`, lalu menghapus file publik. Template artwork di `public/templates` sengaja tidak dipindah karena memang bagian renderer publik. Production tetap belum dianggap selesai sampai persistent volume dikonfigurasi, legacy media dimigrasikan, backup/restore diuji, dan playback/browser E2E diverifikasi pada server target.
+
+**Affected areas:** `lib/storage/private-media.ts`, `app/api/invitations/assets/{upload,[assetId]}/route.ts`, `app/api/media/invitation-assets/[assetKey]/route.ts`, `scripts/migrate-invitation-media.ts`, `.env.example`, `.gitignore`, `package.json`, dan regression tests.
+
+**Representative commits:** `e6355b9c8bf31c078244c707d979b041284eda25`, `8fd0c1debd9deec28bf8c9bcbc6f14a075cbdb76`, dan `abadc44aa1a31aae94e1ea19106addd8e3cfa0e0`.
+
+**Observed validation:** GitHub Actions **Build Validation** run `36983861514` pada code HEAD `abadc44aa1a31aae94e1ea19106addd8e3cfa0e0` selesai **success**: Prisma generate, seluruh source regression tests, dan Next.js production build lulus. **Orphan Audit** run `36983861573` juga selesai **success**. Ini memvalidasi source/build, bukan konfigurasi disk production atau migrasi data nyata.
+
+**Not established:** belum ada bukti `UNDARA_DATA_DIR` production benar-benar menunjuk persistent volume, belum menjalankan legacy migration pada server customer data, belum menguji backup+restore media, dan belum menjalankan browser E2E upload → reload → publish/password/personal invitation → image/audio playback pada environment target.
