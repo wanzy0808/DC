@@ -2538,3 +2538,21 @@ Follow-up commits include `8c64ee0eb259f1f9bf6644b8948fc004e16f3f20`, `6672a8463
 **Observed validation:** GitHub Actions **Build Validation** run `36984310873` pada code HEAD `6435f0d93d707dc1a356814e1449ad66ea6a40c2` selesai **success**: Prisma generate, seluruh source regression tests, dan Next.js production build lulus. **Orphan Audit** run `36984310816` juga selesai **success**. Ini memvalidasi source/build termasuk rewrite referensi legacy, bukan konfigurasi disk production atau migrasi data nyata.
 
 **Not established:** belum ada bukti `UNDARA_DATA_DIR` production benar-benar menunjuk persistent volume, belum menjalankan legacy migration pada server customer data, belum menguji backup+restore media, dan belum menjalankan browser E2E upload → reload → publish/password/personal invitation → image/audio playback pada environment target.
+
+### 2 Oktober 2026 — custom Designer job memakai foto user dengan akses event-scoped
+
+**Owner request:** Owner/Designer yang mengerjakan custom invitation harus dapat memakai foto yang sudah di-upload user, tanpa membuka seluruh media customer kepada role staff atau menyalin file customer ke library Designer.
+
+**Implementation:** custom request baru dibuat Owner dengan memilih User, event draft, dan Owner/Designer yang menangani. `DesignerTemplate.customInvitationId` mengikat draft custom ke tepat satu `Invitation`. Event harus configured, belum publish, dan sudah mempunyai template awal tersimpan. Template Studio custom memuat data event asli beserta `InvitationAsset` event tersebut, sehingga foto dapat dipilih untuk Cover/mempelai/gallery serta di-crop, diurutkan, diposisikan, dan diberi visual motion. Generic template master tetap memakai fixture/demo dan tetap membersihkan photo assignment customer saat disimpan.
+
+**Media authorization:** endpoint private invitation media tidak memberikan bypass berdasarkan role saja. Customer owner tetap mempunyai akses event miliknya. OWNER/ADMIN hanya mendapat staff access bila ada custom job aktif untuk invitation tersebut; DESIGNER selain membutuhkan custom job aktif `DRAFT/REVIEW` juga wajib cocok dengan `designerId`. Template Mode tidak mengaktifkan upload/delete customer file dan tidak menyalin binary ke `DesignerAsset`. Saat Owner melakukan handoff, custom template diubah menjadi `ARCHIVED`; query media hanya menerima `DRAFT/REVIEW`, sehingga akses staff dari job itu berhenti otomatis. Custom-bound draft juga ditolak dari jalur Publish katalog.
+
+**Workflow:** Owner panel sekarang mempunyai `Buat Custom Request` untuk memilih User → Event → Owner/Designer. Designer Dashboard menandai `Custom User` dan membuka draft yang ditugaskan. Designer mengirim hasil ke Owner untuk review; Owner dapat meminta revisi atau mengonfirmasi hasil ke event user yang sama. Owner yang menjadi author draft dapat handoff langsung. Jalur assignment lama dipertahankan untuk draft legacy yang belum memiliki binding.
+
+**Database/deployment:** migration `prisma/migrations/20261002103500_custom_template_invitation_access/migration.sql` menambah nullable FK/index `DesignerTemplate.customInvitationId → Invitation.id`. Target production wajib menjalankan `pnpm db:deploy` sebelum fitur ini digunakan.
+
+**Representative commits:** `ecd702235f5c8cf22745d833ba1a69ab704e9c17`, `748d9d16cc5e03c8e5bf357557380cecaeb76292`, `d89d7f8b632e5b13e125dc663246490def77e410`, dan `6ab2a2d9c217f16dc6bf64289f5bc210685cfcc3`.
+
+**Observed validation:** GitHub Actions **Build Validation** run `36997144519` pada code HEAD `6ab2a2d9c217f16dc6bf64289f5bc210685cfcc3` selesai **success**: Prisma generate, source regression tests termasuk custom-media guards, dan Next.js production build seluruhnya lulus.
+
+**Not established:** migration belum dibuktikan diterapkan pada database production, belum ada browser E2E nyata Owner → Designer → review → handoff dengan file customer pada server target, dan full cross-tenant authorization audit Undara masih merupakan launch blocker terpisah.

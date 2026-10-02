@@ -83,8 +83,10 @@ Current repository evidence already shows:
 - [x] Public RSVP has basic rate limiting.
 - [x] Upload API validates ownership, MIME family, size, count limits, and optimizes images.
 - [x] New customer InvitationAsset binaries are stored outside the public web root and served through an authorization-aware media endpoint; legacy public files require deployment migration.
+- [x] Owner/Designer custom-edit access uses the same private media endpoint and is limited to an explicitly bound active custom job; generic staff role alone cannot read draft customer media.
 - [x] GitHub Actions performs install, Prisma client generation, and production build validation.
 - [x] Production migration command (`pnpm db:deploy`) is documented.
+- [ ] Apply `20261002103500_custom_template_invitation_access` on the target database before using event-bound custom jobs; source/CI success is not proof the production schema is migrated.
 
 Important gaps found in the initial audit:
 
@@ -140,6 +142,8 @@ Undara is multi-tenant and event-scoped. Authentication alone is insufficient. E
 - [x] Main invitation API resolves owned invitations server-side.
 - [x] Payment proof submission verifies `invitationId + ownerId`.
 - [x] Invitation upload verifies `invitationId + ownerId`.
+- [x] Assigned custom Template Studio media access is event-scoped by `DesignerTemplate.customInvitationId` + active `DRAFT/REVIEW`; role `DESIGNER` additionally requires matching `designerId`, and handoff/archive revokes that staff access.
+- [x] Custom Template Studio reuses the user event's existing `InvitationAsset` records without copying customer files into `DesignerAsset`; Template Mode does not expose customer upload/delete controls.
 - [x] RSVP guest lookup constrains `guestId` to the current invitation.
 - [x] Published event mutation/delete lock exists in the main invitation API.
 - [ ] **BLOCKER:** Audit every `app/api/**` route for authentication + role + resource ownership.

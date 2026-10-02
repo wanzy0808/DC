@@ -201,12 +201,16 @@ Transform per-foto yang dipilih dari canvas tetap merupakan properti visual dan 
 
 ## Custom request handoff (Owner / Designer → User)
 
-- Custom request dibuat di Template Studio oleh **Designer** atau **Owner**.
-- Tombol **Simpan** tetap membuat `DesignerTemplate` berstatus `DRAFT`; Designer mengirim draft ke Owner dengan **Kirim ke Owner**.
-- Owner dapat memilih dua jalur untuk template yang direview: **Publish ke Katalog** atau **Berikan ke User**. Draft yang dibuat Owner sendiri juga boleh langsung diberikan ke user.
-- **Berikan ke User** wajib memilih akun `USER` dan satu event/undangan yang masih draft milik user tersebut.
-- Assignment **tidak memindahkan atau mengubah master template**. Sistem menyalin snapshot `designKey` (dan musik template bila ada) ke `Invitation.templateKey` milik user, lalu template custom diarsipkan sebagai pekerjaan yang sudah diserahkan.
-- Sesudah assignment, seluruh data acara, RSVP, tamu, gift, asset user, publish state, dan edit lanjutan mengikuti `Invitation.ownerId` user. Edit user tidak pernah menulis balik ke `DesignerTemplate`.
-- Template custom dari **Canvas Kosong** boleh diteruskan dan disimpan oleh user hanya bila Canvas Kosong tersebut sudah lebih dulu di-assign Owner ke invitation user. User tetap tidak mendapat akses membuat Canvas Kosong sendiri.
-- Event yang sudah publish tidak boleh menjadi target assignment custom; Owner memilih event draft agar aturan lock publish tetap konsisten.
-- Audit assignment dicatat sebagai `CUSTOM_TEMPLATE_ASSIGNED` pada `AuditLog`.
+- **Custom request baru dibuat oleh Owner dan langsung diikat ke satu akun `USER`, satu event draft milik user tersebut, dan satu penanggung jawab Owner/Designer sebelum proses desain dimulai.** Binding disimpan sebagai `DesignerTemplate.customInvitationId`; satu event tidak boleh mempunyai dua custom job aktif `DRAFT/REVIEW` bersamaan.
+- Event target harus sudah `eventConfigured`, belum publish, dan mempunyai template awal yang sudah disimpan. Custom draft dimulai dari snapshot desain event tersebut agar Designer mengerjakan konteks yang benar, bukan fixture demo.
+- Selama custom job masih `DRAFT` atau `REVIEW`, Owner/Admin yang mereview dan **Designer yang memang ditugaskan** boleh membaca media event target melalui endpoint media privat. Role Designer sendiri tidak pernah menjadi bypass global; akses harus cocok dengan `customInvitationId` dan, untuk Designer, `designerId`.
+- Template Studio custom memakai data event user dan daftar `InvitationAsset` milik event itu. Designer boleh memilih foto user untuk Cover/mempelai/gallery, mengatur urutan, crop, fokus, posisi dan motion yang memang merupakan properti desain. **File asli tetap milik event user, tidak dicopy ke `DesignerAsset`/Library Saya.**
+- Template Mode tidak memberi Designer tombol upload/delete customer media. Upload baru atau penghapusan file customer tetap merupakan aksi pemilik event melalui Customer Studio/flow yang berwenang. Designer hanya menyimpan referensi asset ID dan visual override pada custom design.
+- Tombol **Simpan** mempertahankan photo assignment milik custom job karena hasil akan kembali ke event yang sama. Master template katalog biasa tetap membersihkan assignment foto customer ketika disimpan.
+- Designer mengirim `DRAFT → REVIEW` lewat **Kirim ke Owner**. Owner dapat meminta revisi atau **Konfirmasi ke User**. Custom job yang sudah terikat event **tidak boleh dipublish ke katalog**; jalur Publish hanya untuk master template non-custom.
+- Draft custom yang dikerjakan Owner sendiri boleh langsung dikonfirmasi ke user selama masih draft. Draft legacy yang belum mempunyai `customInvitationId` tetap dapat memakai jalur assignment lama agar kompatibel, tetapi custom request baru wajib memakai binding sejak awal.
+- **Konfirmasi ke User** menyalin snapshot `designKey` (dan musik custom bila ada) ke `Invitation.templateKey` event yang sama lalu mengubah `DesignerTemplate.status` menjadi `ARCHIVED`. Karena endpoint media hanya menerima custom job aktif `DRAFT/REVIEW`, akses Owner/Designer ke media customer melalui job tersebut otomatis berhenti setelah handoff.
+- Sesudah handoff, seluruh data acara, RSVP, tamu, gift, asset user, publish state, dan edit lanjutan tetap mengikuti `Invitation.ownerId` user. Edit user tidak pernah menulis balik ke `DesignerTemplate`.
+- Template custom dari **Canvas Kosong** boleh diteruskan dan disimpan oleh user hanya setelah custom tersebut di-handoff ke invitation user. User tetap tidak mendapat akses membuat Canvas Kosong sendiri.
+- Audit pembuatan job dicatat sebagai `CUSTOM_TEMPLATE_REQUEST_CREATED`; handoff dicatat sebagai `CUSTOM_TEMPLATE_ASSIGNED`.
+- Perubahan ini membawa migration `prisma/migrations/20261002103500_custom_template_invitation_access/migration.sql`. Deployment target wajib menjalankan `pnpm db:deploy` sebelum workflow custom baru digunakan; build CI tidak menerapkan migration production.
