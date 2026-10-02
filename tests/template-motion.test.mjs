@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { templatePhotoMotion, templateNativeMotionForKey } from "../lib/templates/template-motion.ts";
+import { templateHasDefaultMotion, templateNativeMotion, templatePhotoMotion, templateNativeMotionForKey } from "../lib/templates/template-motion.ts";
+import { invitationTemplates } from "../lib/templates/catalog.ts";
 import { defaultPhotoAssignments, withPhotoAssignments, parsePhotoAssignments } from "../lib/templates/photo-slots.ts";
 import { defaultNativeVisualTransform, withNativeVisualTransforms, parseNativeVisualTransforms } from "../lib/templates/native-visual-transforms.ts";
 import { observeInvitationEntrances, observeInvitationEntranceRoot } from "../components/PublicInvitation/entrance-animation-runtime.ts";
@@ -15,7 +16,22 @@ test("Serein defaults use opposite portrait entrances and persisted photo OFF wi
   assert.equal(resolved.cover.animation, "none");
   assert.equal(resolved.personOne.animation, "zoom");
   assert.equal(templatePhotoMotion("serein", {}).cover.animation, "reveal-left", "Reset returns to the theme default");
-  assert.deepEqual(templatePhotoMotion("romantic-rose"), {}, "Other themes acquire no defaults");
+  assert.equal(templatePhotoMotion("romantic-rose").personOne.animation, "glide-left", "Romantic Rose now participates in the shared photo choreography");
+  assert.deepEqual(templatePhotoMotion("classic-pearl"), {}, "Photo-free themes acquire no photo defaults");
+});
+
+test("every active template carries motion beyond the cover through the final sections", () => {
+  const requiredSections = ["greeting", "identity", "event", "dateTime", "gallery", "countdown", "location", "rsvp", "wishes", "gift", "closing"];
+  for (const template of invitationTemplates) {
+    assert.equal(templateHasDefaultMotion(template.key), true, `${template.key} must own default motion`);
+    const motion = templateNativeMotion(template.key);
+    for (const section of requiredSections) {
+      assert.ok(motion[`heading:${section}`], `${template.key} is missing ${section} heading motion`);
+    }
+    for (const key of ["object:rsvp:form-group", "object:wishes:form-group", "object:footer:motion-group"]) {
+      assert.ok(motion[key], `${template.key} is missing shared continuation target ${key}`);
+    }
+  }
 });
 
 test("section OFF and authored timelines suppress photo defaults while explicit photo choices remain authoritative", () => {
