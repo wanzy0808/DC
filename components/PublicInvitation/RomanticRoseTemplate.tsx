@@ -222,11 +222,11 @@ export default function RomanticRoseTemplate({
   const editableCopy = localizedEditableCopy(designKey || invitation.templateKey, "romantic-rose", invitation.description, language);
   const copyMotions = parseEditableCopyMotions(activeDesignKey);
   useInvitationCopyAnimations(rootRef, copyMotions, editableCopy, String(opened));
-  useInvitationNativeVisualAnimations(rootRef, activeDesignKey, String(opened));
+  useInvitationNativeVisualAnimations(rootRef, activeDesignKey, String(opened), { template: "romantic-rose", sectionStyles });
   const illustrationLayers = parseAssetLayers(designKey || invitation.templateKey);
   const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor ?? undefined;
   const media = resolveInvitationPhotos(invitation.assets, invitation.templateKey, configuredCover, photoAssignments);
-  useInvitationPhotoAnimations(rootRef, media.assignment, `${opened}-${media.gallery.length}`);
+  useInvitationPhotoAnimations(rootRef, media.assignment, `${opened}-${media.gallery.length}`, { template: "romantic-rose", sectionStyles });
   const { cover, gallery, assignment } = media;
   const gallerySettings = resolveGallerySettings(assignment);
   const groomPhoto = media.personOne;
@@ -415,9 +415,11 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="event" style={invitationSectionStyleCss(sectionStyles.event)} className="relative overflow-hidden bg-[#5a2e3a] px-8 py-24 text-left text-[#fff8f3]">
                         {objectOverlay("event", instanceId)}
                         <RoseHeading section="event" eyebrow="Save the date" align="left" light>{tr("Detail Acara")}</RoseHeading>
-                        <p data-studio-native-object="object:event:event-title" className="max-w-[24rem] text-sm leading-7 text-[#e7d4c9]">{displayTitleCase(invitation.title) || tr("Perayaan Pernikahan")}</p>
-                        <p data-studio-native-object="object:event:venue" className="mt-7 max-w-[18ch] font-[family-name:var(--rr-display)] text-[clamp(1.8rem,7vw,2.7rem)] leading-[1.08] text-[#fff8f3]">{invitation.venue || tr("Lokasi belum ditentukan")}</p>
-                        {invitation.dressCode && <p data-studio-native-object="object:event:dress-code" className="mt-7 border-t border-[#d7b598]/35 pt-5 text-sm text-[#e7d4c9]">Dress code · {invitation.dressCode}</p>}
+                        <div data-studio-native-object="object:event:details-group">
+                          <p data-studio-native-object="object:event:event-title" className="max-w-[24rem] text-sm leading-7 text-[#e7d4c9]">{displayTitleCase(invitation.title) || tr("Perayaan Pernikahan")}</p>
+                          <p data-studio-native-object="object:event:venue" className="mt-7 max-w-[18ch] font-[family-name:var(--rr-display)] text-[clamp(1.8rem,7vw,2.7rem)] leading-[1.08] text-[#fff8f3]">{invitation.venue || tr("Lokasi belum ditentukan")}</p>
+                          {invitation.dressCode && <p data-studio-native-object="object:event:dress-code" className="mt-7 border-t border-[#d7b598]/35 pt-5 text-sm text-[#e7d4c9]">Dress code · {invitation.dressCode}</p>}
+                        </div>
                       </section>
           ))}
 
@@ -495,7 +497,9 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="rsvp" style={invitationSectionStyleCss(sectionStyles.rsvp)} className="relative bg-[#f7efe9] px-5 py-24">
                         {objectOverlay("rsvp", instanceId)}
                           <RoseHeading section="rsvp" eyebrow="Your presence means so much" studioElement="title" style={rsvpElementStyleCss(rsvpConfig, "title")}>{tr(rsvpConfig.title || "Konfirmasi Kehadiran")}</RoseHeading>
-                          <RsvpForm slug={invitation.slug} preview={preview} eventCategory="WEDDING" rsvpConfig={rsvpConfig} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={displayTitleCase(invitation.title) || displayName} start={invitation.ceremonyTime} description={invitation.description} />
+                          <div data-studio-native-object="object:rsvp:form-group">
+                            <RsvpForm slug={invitation.slug} preview={preview} eventCategory="WEDDING" rsvpConfig={rsvpConfig} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={displayTitleCase(invitation.title) || displayName} start={invitation.ceremonyTime} description={invitation.description} />
+                          </div>
                         </section>
           ))}
 
@@ -503,7 +507,9 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="wishes" style={invitationSectionStyleCss(sectionStyles.wishes)} className="relative bg-[#fffaf6] px-7 py-24 text-left">
                         {objectOverlay("wishes", instanceId)}
                           <RoseHeading section="wishes" eyebrow="A little note of love">{tr("Ucapan & Doa")}</RoseHeading>
-                          <GuestWishes slug={invitation.slug} preview={preview} appearance="rose" initialName={personalGuest?.name} inputStyle={sectionElementStyleCss(sectionElementStyles, "wishes", "input")} buttonStyle={sectionElementStyleCss(sectionElementStyles, "wishes", "button")} />
+                          <div data-studio-native-object="object:wishes:form-group">
+                            <GuestWishes slug={invitation.slug} preview={preview} appearance="rose" initialName={personalGuest?.name} inputStyle={sectionElementStyleCss(sectionElementStyles, "wishes", "input")} buttonStyle={sectionElementStyleCss(sectionElementStyles, "wishes", "button")} />
+                          </div>
                         </section>
           ))}
 
@@ -526,17 +532,21 @@ export default function RomanticRoseTemplate({
                         {objectOverlay("closing", instanceId)}
                         <Heart data-studio-native-object="object:closing:heart" className="mb-8 h-6 w-6 text-[#8c5664]" />
                         <RoseHeading section="closing" eyebrow="Forever begins here" align="left">{tr("Terima Kasih")}</RoseHeading>
-                        <p data-studio-copy-field="closing" className="max-w-sm whitespace-pre-line text-sm leading-8 text-[#6f5057]"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p>
-                        <p data-studio-copy-field="prayerWish" className="mt-5 max-w-sm whitespace-pre-line text-sm leading-8 text-[#6f5057]"><InvitationLayerTextContent text={editableCopy.prayerWish ?? ""} unit={copyMotions.prayerWish?.unit} /></p>
-                        <p data-studio-native-object="object:closing:names" className="mt-10 max-w-[18ch] break-words font-[family-name:var(--rr-display)] text-2xl leading-tight text-[#5a2e3a]">{displayName}</p>
-                        {invitation.weddingHashtag && <p data-studio-native-object="object:closing:hashtag" className="mt-4 text-sm text-[#765460]">{invitation.weddingHashtag}</p>}
+                        <div data-studio-native-object="object:closing:copy-group">
+                          <p data-studio-copy-field="closing" className="max-w-sm whitespace-pre-line text-sm leading-8 text-[#6f5057]"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p>
+                          <p data-studio-copy-field="prayerWish" className="mt-5 max-w-sm whitespace-pre-line text-sm leading-8 text-[#6f5057]"><InvitationLayerTextContent text={editableCopy.prayerWish ?? ""} unit={copyMotions.prayerWish?.unit} /></p>
+                          <p data-studio-native-object="object:closing:names" className="mt-10 max-w-[18ch] break-words font-[family-name:var(--rr-display)] text-2xl leading-tight text-[#5a2e3a]">{displayName}</p>
+                          {invitation.weddingHashtag && <p data-studio-native-object="object:closing:hashtag" className="mt-4 text-sm text-[#765460]">{invitation.weddingHashtag}</p>}
+                        </div>
                       </section>
           ))}
 
           {renderSectionInstances("footer", (instanceId) => (
             <footer data-invitation-section="footer" style={invitationSectionStyleCss(sectionStyles.footer)} className="relative flex items-center justify-center bg-[#5a2e3a] px-6 py-7">
                         {objectOverlay("footer", instanceId)}
-                        <span aria-hidden="true" data-studio-native-object="object:footer:rule" className="h-px w-16 bg-[#d7b598] opacity-60" />
+                        <span data-studio-native-object="object:footer:motion-group" className="contents">
+                          <span aria-hidden="true" data-studio-native-object="object:footer:rule" className="h-px w-16 bg-[#d7b598] opacity-60" />
+                        </span>
                       </footer>
           ))}
 
