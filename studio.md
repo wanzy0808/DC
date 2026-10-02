@@ -197,3 +197,16 @@ Pengaturan yang menentukan **isi, urutan, layout, dan perilaku Galeri** berada d
 
 Transform per-foto yang dipilih dari canvas tetap merupakan properti visual dan dapat memakai inspector kanan sesuai model Studio. Panel kiri Galeri mengatur **apa yang dipakai dan bagaimana Gallery berperilaku**; inspector kanan tidak menjadi tempat konfigurasi autoplay/urutan.
 
+
+
+## Custom request handoff (Owner / Designer → User)
+
+- Custom request dibuat di Template Studio oleh **Designer** atau **Owner**.
+- Tombol **Simpan** tetap membuat `DesignerTemplate` berstatus `DRAFT`; Designer mengirim draft ke Owner dengan **Kirim ke Owner**.
+- Owner dapat memilih dua jalur untuk template yang direview: **Publish ke Katalog** atau **Berikan ke User**. Draft yang dibuat Owner sendiri juga boleh langsung diberikan ke user.
+- **Berikan ke User** wajib memilih akun `USER` dan satu event/undangan yang masih draft milik user tersebut.
+- Assignment **tidak memindahkan atau mengubah master template**. Sistem menyalin snapshot `designKey` (dan musik template bila ada) ke `Invitation.templateKey` milik user, lalu template custom diarsipkan sebagai pekerjaan yang sudah diserahkan.
+- Sesudah assignment, seluruh data acara, RSVP, tamu, gift, asset user, publish state, dan edit lanjutan mengikuti `Invitation.ownerId` user. Edit user tidak pernah menulis balik ke `DesignerTemplate`.
+- Template custom dari **Canvas Kosong** boleh diteruskan dan disimpan oleh user hanya bila Canvas Kosong tersebut sudah lebih dulu di-assign Owner ke invitation user. User tetap tidak mendapat akses membuat Canvas Kosong sendiri.
+- Event yang sudah publish tidak boleh menjadi target assignment custom; Owner memilih event draft agar aturan lock publish tetap konsisten.
+- Audit assignment dicatat sebagai `CUSTOM_TEMPLATE_ASSIGNED` pada `AuditLog`.
