@@ -147,9 +147,9 @@ test("Zen cover uses one-shot motion and avoids nested photo entrance flicker", 
   const photoHook = readFileSync(repoFile("components/PublicInvitation/use-photo-animations.ts"), "utf8");
   const motion = readFileSync(repoFile("lib/templates/template-motion.ts"), "utf8");
 
-  assert.match(nativeHook, /"zen-atelier"\]\.includes\(template\)/);
+  assert.match(nativeHook, /template !== "zen-atelier"/);
   assert.match(nativeHook, /waitForImages: template === "zen-atelier"/);
-  assert.match(photoHook, /"zen-atelier"\]\.includes\(theme\?\.template \?\? ""\)/);
+  assert.match(photoHook, /theme\?\.template !== "zen-atelier"/);
   const zenPhotos = motion.split("const zenAtelierPhotos: PhotoMotionMap = {")[1]?.split("};")[0] || "";
   assert.doesNotMatch(zenPhotos, /cover:\s*\{/);
   assert.match(zenPhotos, /gallery:\s*\{ animation: "tilt-in"/);
