@@ -140,3 +140,17 @@ test("Zen couple names keep the same first-person then second-person order as ot
   assert.match(universal, /const names = couple\s*\? \[displayTitleCase\(invitation\.groomName\), displayTitleCase\(invitation\.brideName\)\]/);
   assert.doesNotMatch(universal, /key === "zen-atelier" \? \[displayTitleCase\(invitation\.brideName\), displayTitleCase\(invitation\.groomName\)\]/);
 });
+
+
+test("Zen cover uses one-shot motion and avoids nested photo entrance flicker", () => {
+  const nativeHook = readFileSync(repoFile("components/PublicInvitation/use-native-visual-animations.ts"), "utf8");
+  const photoHook = readFileSync(repoFile("components/PublicInvitation/use-photo-animations.ts"), "utf8");
+  const motion = readFileSync(repoFile("lib/templates/template-motion.ts"), "utf8");
+
+  assert.match(nativeHook, /template !== "zen-atelier"/);
+  assert.match(nativeHook, /waitForImages: template === "zen-atelier"/);
+  assert.match(photoHook, /theme\?\.template !== "zen-atelier"/);
+  const zenPhotos = motion.split("const zenAtelierPhotos: PhotoMotionMap = {")[1]?.split("};")[0] || "";
+  assert.doesNotMatch(zenPhotos, /cover:\s*\{/);
+  assert.match(zenPhotos, /gallery:\s*\{ animation: "tilt-in"/);
+});

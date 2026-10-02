@@ -41,7 +41,8 @@ const midnightRomancePhotos: PhotoMotionMap = {
 };
 
 const zenAtelierPhotos: PhotoMotionMap = {
-  cover: { animation: "reveal-left", animationDuration: .78, animationDelay: .05 },
+  // The cover photo sits inside an already animated kakemono scroll group.
+  // Keep one transform owner there to avoid nested entrance repaints/flicker.
   gallery: { animation: "tilt-in", animationDuration: .7, animationStagger: .055, parallax: .02 },
 };
 
