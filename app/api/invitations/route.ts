@@ -3,6 +3,7 @@ import { isWeddingChildPosition } from "@/lib/events/parents";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { getOwnerPackageGrant } from "@/lib/packages/owner-grants";
 import {
@@ -110,6 +111,9 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+  if (!isTrustedMutationOrigin(request)) {
+    return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+  }
   const ownerGrant = await getOwnerPackageGrant(user.id);
 
   try {
@@ -293,6 +297,9 @@ class MissingMusicAssetError extends Error {}
 export async function PUT(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+  if (!isTrustedMutationOrigin(request)) {
+    return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+  }
   const ownerGrant = await getOwnerPackageGrant(user.id);
 
   try {
@@ -508,6 +515,9 @@ export async function PUT(request: Request) {
 export async function DELETE(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+  if (!isTrustedMutationOrigin(request)) {
+    return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+  }
 
   try {
     const id = new URL(request.url).searchParams.get("id")?.trim() || "";

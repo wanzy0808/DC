@@ -37,3 +37,33 @@ test("finance role cannot enter broad admin operations", () => {
   assert.doesNotMatch(source, /\["ADMIN", "FINANCE"\]\.includes\(user\.role\)/);
   assert.match(source, /Akses Owner\/Admin diperlukan/);
 });
+
+
+test("core account and invitation mutations reject untrusted origins", () => {
+  const routes = [
+    "app/api/invitations/route.ts",
+    "app/api/dashboard/preferences/route.ts",
+    "app/api/profile/avatar/route.ts",
+    "app/api/profile/route.ts",
+    "app/api/guests/[id]/route.ts",
+    "app/api/guests/[id]/swap/route.ts",
+    "app/api/guests/[id]/labels/route.ts",
+    "app/api/guests/manage/route.ts",
+    "app/api/tables/route.ts",
+    "app/api/personal-invitations/route.ts",
+    "app/api/wa-blast/route.ts",
+    "app/api/wa-blast/templates/route.ts",
+    "app/api/usher/route.ts",
+    "app/api/usher/checkin/route.ts",
+    "app/api/usher/manual-checkin/route.ts",
+    "app/api/usher/qr/route.ts",
+    "app/api/invitations/assets/[assetId]/route.ts",
+    "app/api/invitations/assets/upload/route.ts",
+  ];
+
+  for (const route of routes) {
+    const source = read(route);
+    assert.match(source, /isTrustedMutationOrigin/);
+    assert.match(source, /Origin permintaan tidak valid/);
+  }
+});
