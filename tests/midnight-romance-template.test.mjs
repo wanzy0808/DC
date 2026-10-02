@@ -33,9 +33,9 @@ test("Midnight Romance preserves real photo slots and shared invitation engines"
   assert.match(universal, /<GuestWishes[\s\S]*midnight-romance[\s\S]*\? "zen" : "default"/);
   assert.match(universal, /data-studio-section-element="location:button"/);
   assert.match(universal, /data-studio-section-element="gift:button"/);
-  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <CalendarDays/);
-  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <MapPin/);
-  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <Gift/);
+  assert.match(universal, /key !== "celestial-ink" && key !== "velvet-horizon" && key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <CalendarDays/);
+  assert.match(universal, /key !== "celestial-ink" && key !== "velvet-horizon" && key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <MapPin/);
+  assert.match(universal, /key !== "celestial-ink" && key !== "velvet-horizon" && key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <Gift/);
 });
 
 test("Midnight Romance maps all ten local WebP props and keeps them uncropped", () => {
@@ -75,8 +75,8 @@ test("Midnight Romance uses its velvet palette and Bodoni editorial pairing", ()
 test("Midnight Romance entrances are one-shot and wait for artwork", () => {
   const nativeHook = read("components/PublicInvitation/use-native-visual-animations.ts");
   const photoHook = read("components/PublicInvitation/use-photo-animations.ts");
-  assert.match(nativeHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco"\]\.includes\(template\)/);
-  assert.match(photoHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco"\]\.includes\(theme\?\.template \?\? ""\)/);
+  assert.match(nativeHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "velvet-horizon"\]\.includes\(template\)/);
+  assert.match(photoHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "velvet-horizon"\]\.includes\(theme\?\.template \?\? ""\)/);
   assert.match(nativeHook, /waitForImages:[^\n]*midnight-romance/);
   assert.match(universal, /key === "midnight-romance"[\s\S]{0,250}sectionStyles\.envelope\?\.animation === "none"/);
 });
