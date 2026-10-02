@@ -544,9 +544,7 @@ export default function RomanticRoseTemplate({
           {renderSectionInstances("footer", (instanceId) => (
             <footer data-invitation-section="footer" style={invitationSectionStyleCss(sectionStyles.footer)} className="relative flex items-center justify-center bg-[#5a2e3a] px-6 py-7">
                         {objectOverlay("footer", instanceId)}
-                        <span data-studio-native-object="object:footer:motion-group" className="contents">
-                          <span aria-hidden="true" data-studio-native-object="object:footer:rule" className="h-px w-16 bg-[#d7b598] opacity-60" />
-                        </span>
+                        <span aria-hidden="true" data-studio-native-object="object:footer:rule" className="h-px w-16 bg-[#d7b598] opacity-60" />
                       </footer>
           ))}
 
