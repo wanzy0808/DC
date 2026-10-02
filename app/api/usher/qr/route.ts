@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { createGuestQrToken } from "@/lib/usher/qr";
 
@@ -8,6 +9,9 @@ export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+    if (!isTrustedMutationOrigin(request)) {
+      return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+    }
 
     const body = await request.json();
     const guestId = String(body.guestId ?? "").trim();

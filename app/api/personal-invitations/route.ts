@@ -2,6 +2,7 @@ import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 import { hashInvitationPassword } from "@/lib/invitations/password";
 import { parsePersonalGuestFields } from "@/lib/guests/personal-profile";
 import { findGuestsByContact } from "@/lib/guests/identity";
@@ -42,6 +43,9 @@ export async function GET(request: Request) {
     if (!user) {
       return NextResponse.json({ error: "Belum login." }, { status: 401 });
     }
+    if (!isTrustedMutationOrigin(request)) {
+      return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+    }
 
     const invitationId = new URL(request.url).searchParams.get("invitationId")?.trim() ?? "";
     if (!invitationId) {
@@ -77,6 +81,9 @@ export async function POST(request: Request) {
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: "Belum login." }, { status: 401 });
+    }
+    if (!isTrustedMutationOrigin(request)) {
+      return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
     }
 
     const body = await request.json();
@@ -176,6 +183,9 @@ export async function PATCH(request: Request) {
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ error: "Belum login." }, { status: 401 });
+    }
+    if (!isTrustedMutationOrigin(request)) {
+      return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
     }
 
     const body = await request.json();

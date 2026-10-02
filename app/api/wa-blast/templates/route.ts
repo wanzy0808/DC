@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 
 const categories = ["INVITATION", "RSVP_REMINDER", "EVENT_REMINDER", "THANK_YOU"] as const;
@@ -47,6 +48,9 @@ export async function GET(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+    if (!isTrustedMutationOrigin(request)) {
+      return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+    }
     const invitationId = new URL(request.url).searchParams.get("invitationId")?.trim() || "";
     const result = await access(user.id, invitationId);
     if (result.error) return result.error;
@@ -66,6 +70,9 @@ export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+    if (!isTrustedMutationOrigin(request)) {
+      return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+    }
     const input = await request.json().catch(() => null);
     if (!input || typeof input !== "object" || Array.isArray(input)) {
       return NextResponse.json({ error: "Data template tidak valid." }, { status: 400 });
@@ -98,6 +105,9 @@ export async function PATCH(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+    if (!isTrustedMutationOrigin(request)) {
+      return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+    }
     const input = await request.json().catch(() => null);
     if (!input || typeof input !== "object" || Array.isArray(input)) {
       return NextResponse.json({ error: "Data template tidak valid." }, { status: 400 });
@@ -131,6 +141,9 @@ export async function DELETE(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+    if (!isTrustedMutationOrigin(request)) {
+      return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+    }
     const input = await request.json().catch(() => null);
     if (!input || typeof input !== "object" || Array.isArray(input)) {
       return NextResponse.json({ error: "Data template tidak valid." }, { status: 400 });
