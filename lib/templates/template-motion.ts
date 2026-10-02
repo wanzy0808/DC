@@ -54,9 +54,9 @@ const zenAtelierPhotos: PhotoMotionMap = {
 };
 
 const velvetHorizonPhotos: PhotoMotionMap = {
-  personOne: { animation: "glide-left", animationDuration: .82 },
-  personTwo: { animation: "glide-right", animationDuration: .82, animationDelay: .07 },
-  gallery: { animation: "tilt-in", animationDuration: .72, animationStagger: .06, parallax: .025 },
+  personOne: { animation: "glide-left", animationDuration: .76 },
+  personTwo: { animation: "glide-right", animationDuration: .76, animationDelay: .06 },
+  gallery: { animation: "rise", animationDuration: .66, animationStagger: .045 },
 };
 
 const photoDefaults: Record<string, PhotoMotionMap> = {
@@ -242,7 +242,7 @@ const paperCutBotanicalNative: Record<string, TemplateNativeMotion> = {
   "object:cover:event-name": { animation: "rise", animationDuration: .74, animationDelay: .14 },
   "object:cover:date": { animation: "fade", animationDuration: .62, animationDelay: .22 },
   "heading:greeting": { animation: "slide-left", animationDuration: .68 },
-  "object:greeting:paper-art": { animation: "glide-right", animationDuration: .78, animationDelay: .08 },
+  "object:greeting:paper-art": { animation: "fade", animationDuration: .68, animationDelay: .06 },
   "heading:identity": { animation: "rise", animationDuration: .68 },
   "object:identity:couple-art": { animation: "paper-cut", animationDuration: .82, animationDelay: .06 },
   "object:identity:personOne-group": { animation: "glide-left", animationDuration: .76, animationDelay: .1 },
@@ -652,7 +652,6 @@ const celestialInkNative: Record<string, TemplateNativeMotion> = {
 
 const velvetHorizonNative: Record<string, TemplateNativeMotion> = {
   "object:envelope:sunset-glow": { animation: "fade", animationDuration: .72 },
-  "object:envelope:blossom-art": { animation: "glide-right", animationDuration: .82, animationDelay: .04 },
   "object:envelope:garland-art": { animation: "glide-left", animationDuration: .82, animationDelay: .07 },
   "object:envelope:intro": { animation: "rise", animationDuration: .68, animationDelay: .06 },
   "object:envelope:stationery-group": { animation: "soft-scale", animationDuration: .78, animationDelay: .08 },
@@ -662,10 +661,8 @@ const velvetHorizonNative: Record<string, TemplateNativeMotion> = {
   "object:cover:sunset-field": { animation: "fade", animationDuration: .76 },
   "object:cover:media-group": { animation: "fade", animationDuration: .8, animationDelay: .02 },
   "object:cover:arch-art": { animation: "reveal-up", animationDuration: .88, animationDelay: .04 },
-  "object:cover:drape-art": { animation: "glide-right", animationDuration: .86, animationDelay: .06 },
-  "object:cover:blossom-art": { animation: "glide-right", animationDuration: .8, animationDelay: .09 },
-  "object:cover:sunset-disc-art": { animation: "soft-scale", animationDuration: .76, animationDelay: .08 },
-  "object:cover:lantern-art": { animation: "rise", animationDuration: .8, animationDelay: .12 },
+  "object:cover:drape-art": { animation: "reveal-up", animationDuration: .76, animationDelay: .05 },
+  "object:cover:blossom-art": { animation: "fade", animationDuration: .68, animationDelay: .08 },
   "object:cover:copy-panel": { animation: "rise", animationDuration: .8, animationDelay: .1 },
   "object:cover:personOne-name": { animation: "slide-left", animationDuration: .76, animationDelay: .12 },
   "object:cover:ampersand-symbol": { animation: "fade", animationDuration: .58, animationDelay: .16 },
@@ -683,29 +680,29 @@ const velvetHorizonNative: Record<string, TemplateNativeMotion> = {
 
   "heading:event": { animation: "rise", animationDuration: .68 },
   "object:event:details-group": { animation: "reveal-up", animationDuration: .76, animationDelay: .06 },
-  "object:event:velvet-art": { animation: "glide-left", animationDuration: .8, animationDelay: .08 },
+  "object:event:velvet-art": { animation: "fade", animationDuration: .68, animationDelay: .06 },
 
   "heading:dateTime": { animation: "rise", animationDuration: .68 },
   "object:dateTime:panel": { animation: "soft-scale", animationDuration: .76, animationDelay: .05 },
   "object:dateTime:velvet-art": { animation: "fade", animationDuration: .76, animationDelay: .08 },
 
   "heading:gallery": { animation: "rise", animationDuration: .68 },
-  "object:gallery:grid": { animation: "tilt-in", animationDuration: .72, animationDelay: .04 },
+  "object:gallery:grid": { animation: "rise", animationDuration: .68, animationDelay: .04 },
   "object:gallery:velvet-art": { animation: "reveal-up", animationDuration: .78, animationDelay: .07 },
 
   "heading:countdown": { animation: "fade", animationDuration: .64 },
   "object:countdown:grid": { animation: "rise", animationDuration: .72, animationDelay: .05 },
-  "object:countdown:velvet-art": { animation: "glide-right", animationDuration: .78, animationDelay: .08 },
+  "object:countdown:velvet-art": { animation: "fade", animationDuration: .68, animationDelay: .06 },
 
   "heading:location": { animation: "rise", animationDuration: .68 },
   "object:location:details-group": { animation: "reveal-up", animationDuration: .76, animationDelay: .06 },
   "object:location:velvet-art": { animation: "glide-left", animationDuration: .82, animationDelay: .08 },
 
   "heading:rsvp": { animation: "rise", animationDuration: .68 },
-  "object:rsvp:velvet-art": { animation: "glide-right", animationDuration: .78, animationDelay: .08 },
+  "object:rsvp:velvet-art": { animation: "fade", animationDuration: .68, animationDelay: .06 },
 
   "heading:wishes": { animation: "rise", animationDuration: .68 },
-  "object:wishes:velvet-art": { animation: "glide-left", animationDuration: .8, animationDelay: .08 },
+  "object:wishes:velvet-art": { animation: "fade", animationDuration: .68, animationDelay: .06 },
 
   "heading:gift": { animation: "rise", animationDuration: .68 },
   "object:gift:panel": { animation: "reveal-up", animationDuration: .76, animationDelay: .06 },
@@ -748,7 +745,7 @@ const zenAtelierNative: Record<string, TemplateNativeMotion> = {
 
   "heading:identity": { animation: "rise", animationDuration: .66 },
   "object:identity:sun-art": { animation: "soft-scale", animationDuration: .76, animationDelay: .05 },
-  "object:identity:blossom-art": { animation: "glide-right", animationDuration: .78, animationDelay: .08 },
+  "object:identity:blossom-art": { animation: "fade", animationDuration: .68, animationDelay: .06 },
 
   "heading:event": { animation: "slide-left", animationDuration: .66 },
   "object:event:details-group": { animation: "rise", animationDuration: .72, animationDelay: .05 },
