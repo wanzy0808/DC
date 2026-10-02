@@ -16,6 +16,7 @@ const genericSceneKeys = [
   "golden-art-deco",
   "paper-cut-botanical",
   "celestial-ink",
+  "velvet-horizon",
 ];
 
 test("every active built-in template stays on the shared web-invitation renderer contract", () => {
@@ -32,6 +33,7 @@ test("every active built-in template stays on the shared web-invitation renderer
     "pencil-reverie",
     "zen-atelier",
     "celestial-ink",
+    "velvet-horizon",
     "serein",
   ]);
 
