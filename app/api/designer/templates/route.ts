@@ -28,6 +28,60 @@ async function nextTemplateNumber() {
   return String(Math.max(0, Number(latest?.templateNo ?? "0")) + 1).padStart(3, "0");
 }
 
+const studioInvitationSelect = {
+  id: true,
+  slug: true,
+  type: true,
+  title: true,
+  eventCategory: true,
+  groomName: true,
+  brideName: true,
+  groomFatherName: true,
+  groomMotherName: true,
+  groomChildOrder: true,
+  groomChildPosition: true,
+  brideFatherName: true,
+  brideMotherName: true,
+  brideChildOrder: true,
+  brideChildPosition: true,
+  venue: true,
+  address: true,
+  mapUrl: true,
+  timezone: true,
+  eventDate: true,
+  ceremonyTime: true,
+  receptionTime: true,
+  description: true,
+  weddingHashtag: true,
+  dressCode: true,
+  eventNotes: true,
+  musicUrl: true,
+  templateKey: true,
+  isPublished: true,
+  giftBankName: true,
+  giftAccountName: true,
+  giftAccountNumber: true,
+  updatedAt: true,
+  assets: {
+    select: { id: true, type: true, url: true, title: true },
+    orderBy: { createdAt: "asc" as const },
+  },
+} as const;
+
+const customInvitationSummarySelect = {
+  id: true,
+  title: true,
+  eventCategory: true,
+  updatedAt: true,
+  owner: {
+    select: { id: true, email: true, firstName: true, lastName: true },
+  },
+} as const;
+
+function customAccessActive(status: string) {
+  return status === "DRAFT" || status === "REVIEW";
+}
+
 export async function GET(request: Request) {
   const author = await requireTemplateAuthor();
   if (!author) return NextResponse.json({ error: "Akses Template Studio diperlukan." }, { status: 403 });
@@ -45,15 +99,28 @@ export async function GET(request: Request) {
             OR: [
               { status: "REVIEW" },
               { status: "DRAFT", designerId: author.id },
+              { status: "DRAFT", customInvitationId: { not: null } },
             ],
           }
-        : { status: "REVIEW" },
+        : {
+            OR: [
+              { status: "REVIEW" },
+              { status: "DRAFT", customInvitationId: { not: null } },
+            ],
+          },
       orderBy: { updatedAt: "asc" },
       include: {
         designer: { select: { id: true, firstName: true, lastName: true, email: true } },
+        customInvitation: { select: customInvitationSummarySelect },
       },
     });
-    return NextResponse.json({ templates });
+    return NextResponse.json({
+      templates: templates.map(({ customInvitationId, customInvitation, ...template }) => ({
+        ...template,
+        isCustom: Boolean(customInvitationId),
+        customInvitation: customAccessActive(template.status) ? customInvitation : null,
+      })),
+    });
   }
 
   if (requestedId) {
@@ -62,14 +129,27 @@ export async function GET(request: Request) {
         id: requestedId,
         ...(reviewer ? {} : { designerId: author.id }),
       },
+      include: {
+        customInvitation: { select: studioInvitationSelect },
+      },
     });
     if (!template) return NextResponse.json({ error: "Draft template tidak ditemukan." }, { status: 404 });
-    return NextResponse.json({ template });
+    const { customInvitationId, customInvitation, ...safeTemplate } = template;
+    return NextResponse.json({
+      template: {
+        ...safeTemplate,
+        isCustom: Boolean(customInvitationId),
+        customInvitation: customAccessActive(template.status) ? customInvitation : null,
+      },
+    });
   }
 
   const templates = await prisma.designerTemplate.findMany({
     where: { designerId: author.id },
     orderBy: { createdAt: "desc" },
+    include: {
+      customInvitation: { select: customInvitationSummarySelect },
+    },
   });
 
   const paidOrders = await prisma.paymentOrder.findMany({
@@ -92,8 +172,11 @@ export async function GET(request: Request) {
     );
     const invitationIds = new Set(matching.map((order) => order.invitationId));
     invitationIds.forEach((id) => saleEvents.add(id));
+    const { customInvitationId, customInvitation, ...safeTemplate } = template;
     return {
-      ...template,
+      ...safeTemplate,
+      isCustom: Boolean(customInvitationId),
+      customInvitation: customAccessActive(template.status) ? customInvitation : null,
       salesCount: invitationIds.size,
       orderValue: matching.reduce((sum, order) => sum + order.amount, 0),
     };
@@ -205,6 +288,9 @@ export async function PATCH(request: Request) {
     }
     if (action === "PUBLISH") {
       if (!reviewer) return NextResponse.json({ error: "Hanya Owner/Admin yang dapat mempublikasikan template." }, { status: 403 });
+      if (current.customInvitationId) {
+        return NextResponse.json({ error: "Custom request terikat ke satu event user dan tidak boleh dipublish ke katalog. Berikan hasilnya ke user." }, { status: 409 });
+      }
       if (current.status !== "REVIEW") {
         return NextResponse.json({ error: "Template harus melalui review sebelum dipublikasikan." }, { status: 409 });
       }

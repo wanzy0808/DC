@@ -169,6 +169,7 @@ model Invitation {
   guests             Guest[]
   guestWishes        GuestWish[]
   waBlastTemplates   WaBlastTemplate[]
+  customDesignerTemplates DesignerTemplate[] @relation("CustomInvitationEvent")
 
   @@index([ownerId, type])
 }
@@ -256,14 +257,17 @@ model DesignerTemplate {
   description   String         @default("")
   usesPhotos    Boolean        @default(false)
   musicUrl      String?
-  status        TemplateStatus @default(DRAFT)
-  designerId    String
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  designer      User           @relation("TemplateDesigner", fields: [designerId], references: [id], onDelete: Cascade)
+  status             TemplateStatus @default(DRAFT)
+  designerId         String
+  customInvitationId String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  designer           User           @relation("TemplateDesigner", fields: [designerId], references: [id], onDelete: Cascade)
+  customInvitation   Invitation?    @relation("CustomInvitationEvent", fields: [customInvitationId], references: [id], onDelete: SetNull)
 
   @@index([designerId, createdAt])
   @@index([status, createdAt])
+  @@index([customInvitationId, status])
 }
 
 model WeddingTable {

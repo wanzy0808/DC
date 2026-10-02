@@ -136,9 +136,28 @@ async function serve(
   if (asset.type === "AUDIO" && parsed.extension === ".webp") return notFound();
 
   const user = await getCurrentUser();
-  let ownerAccess = Boolean(user && user.id === asset.ownerId);
+  const ownerAccess = Boolean(user && user.id === asset.ownerId);
+  let customStaffAccess = false;
 
-  if (!ownerAccess) {
+  if (
+    user &&
+    !ownerAccess &&
+    (user.role === "OWNER" || user.role === "ADMIN" || user.role === "DESIGNER")
+  ) {
+    const activeCustom = await prisma.designerTemplate.findFirst({
+      where: {
+        customInvitationId: asset.invitationId,
+        status: { in: ["DRAFT", "REVIEW"] },
+        ...(user.role === "DESIGNER" ? { designerId: user.id } : {}),
+      },
+      select: { id: true },
+    });
+    customStaffAccess = Boolean(activeCustom);
+  }
+
+  const authenticatedPrivateAccess = ownerAccess || customStaffAccess;
+
+  if (!authenticatedPrivateAccess) {
     const invitation = asset.invitation;
     if (
       !invitation.eventConfigured ||
@@ -195,7 +214,7 @@ async function serve(
     });
   }
 
-  const publicCacheable = !ownerAccess && !asset.invitation.passwordProtected;
+  const publicCacheable = !authenticatedPrivateAccess && !asset.invitation.passwordProtected;
   const headers = new Headers({
     "Content-Type": parsed.contentType,
     "Cache-Control": publicCacheable
