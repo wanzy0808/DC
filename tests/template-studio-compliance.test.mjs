@@ -32,8 +32,8 @@ test("every active built-in template stays on the shared web-invitation renderer
     "paper-cut-botanical",
     "pencil-reverie",
     "zen-atelier",
-    "celestial-ink",
     "velvet-horizon",
+    "celestial-ink",
     "serein",
   ]);
 
