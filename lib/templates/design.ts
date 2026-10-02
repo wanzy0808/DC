@@ -24,6 +24,7 @@ export const invitationPalettes = {
   midnight: { name: "Midnight", bg: "#11131a", surface: "#f9f4ee", ink: "#141720", accent: "#8f7b9d", soft: "#c5b9cb" },
   midnightVelvet: { name: "Midnight Romance", bg: "#080b18", surface: "#12182b", ink: "#f3e8d8", accent: "#b58a56", soft: "#642b43" },
   decoNoir: { name: "Golden Art Deco", bg: "#0d0f0c", surface: "#171a14", ink: "#f3e7c8", accent: "#c79a45", soft: "#6d552e" },
+  velvetHorizon: { name: "Velvet Horizon", bg: "#f1e4d7", surface: "#fff7ed", ink: "#4a302a", accent: "#9a5147", soft: "#c8a89a" },
 } as const;
 
 export const invitationFonts = {
