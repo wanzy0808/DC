@@ -3,14 +3,18 @@ import path from "node:path";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 import {
   parsePrivateInvitationAssetUrl,
   privateInvitationAssetPath,
 } from "@/lib/storage/private-media";
 
-export async function DELETE(_request: Request, { params }: { params: Promise<{ assetId: string }> }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ assetId: string }> }) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+  if (!isTrustedMutationOrigin(request)) {
+    return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+  }
 
   const { assetId } = await params;
   const asset = await prisma.invitationAsset.findFirst({ where: { id: assetId, ownerId: user.id } });

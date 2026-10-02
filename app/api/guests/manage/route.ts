@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { Prisma } from "@/generated/prisma/client";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { findGuestsByContact } from "@/lib/guests/identity";
 import { parsePersonalGuestFields } from "@/lib/guests/personal-profile";
@@ -19,6 +20,9 @@ export async function PATCH(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+    if (!isTrustedMutationOrigin(request)) {
+      return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+    }
     const body = await request.json();
     const id = String(body.id ?? "").trim();
     if (!id) return NextResponse.json({ error: "ID tamu wajib diisi." }, { status: 400 });
@@ -129,6 +133,9 @@ export async function DELETE(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+    if (!isTrustedMutationOrigin(request)) {
+      return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+    }
     const id = String(new URL(request.url).searchParams.get("id") ?? "").trim();
     if (!id) return NextResponse.json({ error: "ID tamu wajib diisi." }, { status: 400 });
     const guest = await ownedGuest(user.id, id);
