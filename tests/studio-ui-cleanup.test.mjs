@@ -879,7 +879,7 @@ test("Photo slots and gallery use the shared entrance runtime without touching c
 
   assert.match(universalTemplate, /useInvitationPhotoAnimations\(rootRef, media\.assignment/);
   assert.match(romanticTemplate, /useInvitationPhotoAnimations\(rootRef, media\.assignment/);
-  assert.match(zenGallery, /customMotion \|\| !window\.IntersectionObserver/);
+  assert.doesNotMatch(zenGallery, /IntersectionObserver|classList\.toggle\("zen-reveal"/);
   assert.match(zenGallery, /data-invitation-photo-slot="gallery"/);
   assert.match(photoAnimationHook, /observePhotoParallax\(parallaxTargets\)/);
   assert.match(photoParallaxRuntime, /requestAnimationFrame\(update\)/);
