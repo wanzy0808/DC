@@ -109,7 +109,7 @@ test("Classic Pearl uses its atelier palette and Cormorant editorial pairing", (
   assert.match(catalog, /key: "classic-pearl"[\s\S]*preset: \{ layout: "classic", palette: "pearlAtelier", font: "cormorantManrope" \}/);
   assert.match(design, /pearlAtelier: \{ name: "Classic Pearl"/);
   assert.match(design, /cormorantManrope: \{ name: "Cormorant Garamond \+ Manrope"/);
-  assert.match(catalog, /photo-free classic atelier/);
+  assert.match(catalog, /Atelier klasik dengan porcelain ivory/);
 });
 
 test("Classic Pearl entrance motion is one-shot and waits for local artwork", () => {

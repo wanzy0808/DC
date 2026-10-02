@@ -63,7 +63,7 @@ test("Garden Light has template-owned photo and native motion with reduced-motio
 test("Garden Light defaults to its own palette and editorial font pairing", () => {
   assert.match(catalog, /key: "garden-light"[\s\S]*preset: \{ layout: "garden", palette: "gardenGlow", font: "youngInstrument" \}/);
   assert.match(design, /gardenGlow: \{ name: "Garden Light"/);
-  assert.match(catalog, /golden-hour-to-twilight garden celebration/);
+  assert.match(catalog, /Nuansa pesta taman dari golden hour menuju senja/);
 });
 
 

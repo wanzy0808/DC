@@ -68,7 +68,7 @@ test("Modern Maroon preserves Studio palette customization", () => {
 
 test("Modern Maroon defaults to its modern type pairing", () => {
   assert.match(catalog, /key: "modern-maroon"[\s\S]*preset: \{ layout: "maroon", palette: "maroon", font: "syneInter" \}/);
-  assert.match(catalog, /Editorial maroon asimetris/);
+  assert.match(catalog, /Komposisi editorial maroon yang asimetris/);
 });
 
 
