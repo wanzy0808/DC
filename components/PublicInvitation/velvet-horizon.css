@@ -72,12 +72,12 @@
 }
 .vh-envelope-garland {
   z-index:1;
-  top:-7%;
-  right:-13%;
-  width:min(58%,310px);
-  height:32%;
-  opacity:.24;
-  transform:rotate(9deg);
+  top:-9%;
+  right:-18%;
+  width:min(46%,250px);
+  height:28%;
+  opacity:.16;
+  transform:rotate(7deg);
 }
 .vh-envelope-intro {
   position:relative;
@@ -272,34 +272,35 @@
     linear-gradient(180deg,transparent 38%,rgba(46,34,32,.18) 58%,rgba(34,27,26,.58) 100%);
   pointer-events:none;
 }
+/* Decorative assets each own a separate visual zone so they never pile up. */
 .vh-cover-arch {
   z-index:3;
-  top:-2%;
-  left:-17%;
-  width:70%;
-  height:78%;
-  opacity:.58;
-  filter:saturate(.66) sepia(.18) brightness(1.08);
+  left:-20%;
+  bottom:-6%;
+  width:62%;
+  height:72%;
+  opacity:.42;
+  filter:saturate(.64) sepia(.16) brightness(1.06);
 }
 .vh-cover-drape {
   z-index:4;
-  top:-13%;
+  top:-17%;
   right:-24%;
-  width:66%;
-  height:46%;
-  opacity:.38;
-  filter:saturate(.67) brightness(1.16);
-  transform:rotate(7deg);
+  width:56%;
+  height:34%;
+  opacity:.24;
+  filter:saturate(.64) brightness(1.14);
+  transform:rotate(6deg);
 }
 .vh-cover-floral {
   z-index:5;
-  top:-6%;
-  right:-14%;
-  width:44%;
-  height:34%;
-  opacity:.46;
-  filter:saturate(.72) sepia(.06) brightness(1.08);
-  transform:rotate(7deg);
+  right:-17%;
+  bottom:-10%;
+  width:36%;
+  height:28%;
+  opacity:.28;
+  filter:saturate(.7) sepia(.05) brightness(1.07);
+  transform:rotate(-7deg);
 }
 .vh-cover-copy {
   position:absolute;
@@ -399,20 +400,16 @@
 }
 .vh-section-primary {
   position:absolute;
-  opacity:.08;
-  filter:saturate(.62) sepia(.08);
+  max-width:32%;
+  opacity:.065;
+  filter:saturate(.58) sepia(.08);
 }
-.vh-section-art-greeting .vh-section-primary { right:-9%; top:-9%; width:38%; height:40%; }
-.vh-section-art-identity .vh-section-primary { left:-19%; bottom:-13%; width:47%; height:54%; }
-.vh-section-art-event .vh-section-primary { right:-8%; bottom:-12%; width:34%; height:43%; opacity:.1; }
-.vh-section-art-dateTime .vh-section-primary { right:-18%; top:-10%; width:48%; height:44%; opacity:.06; }
-.vh-section-art-gallery .vh-section-primary { right:-10%; top:-9%; width:38%; height:34%; }
-.vh-section-art-countdown .vh-section-primary { left:-13%; bottom:-12%; width:39%; height:48%; opacity:.07; }
-.vh-section-art-location .vh-section-primary { right:-12%; bottom:-13%; width:39%; height:47%; opacity:.09; }
-.vh-section-art-rsvp .vh-section-primary { right:-10%; top:-10%; width:36%; height:35%; }
-.vh-section-art-wishes .vh-section-primary { left:-12%; bottom:-10%; width:34%; height:37%; opacity:.07; }
-.vh-section-art-gift .vh-section-primary { right:-8%; top:-10%; width:36%; height:34%; opacity:.07; }
-.vh-section-art-closing .vh-section-primary { left:-16%; bottom:-14%; width:48%; height:56%; opacity:.09; }
+.vh-section-art-greeting .vh-section-primary { right:-10%; top:-10%; width:30%; height:32%; }
+.vh-section-art-identity .vh-section-primary { left:-15%; bottom:-10%; width:32%; height:38%; }
+.vh-section-art-event .vh-section-primary { right:-10%; bottom:-10%; width:28%; height:34%; opacity:.075; }
+.vh-section-art-countdown .vh-section-primary { left:-11%; bottom:-10%; width:29%; height:36%; opacity:.055; }
+.vh-section-art-location .vh-section-primary { right:-10%; bottom:-10%; width:29%; height:35%; opacity:.065; }
+.vh-section-art-closing .vh-section-primary { left:-13%; bottom:-11%; width:31%; height:38%; opacity:.065; }
 
 /* Identity. */
 .vh-identity {
@@ -509,11 +506,11 @@
 .vh-gallery-edit { position:relative; z-index:5; margin-bottom:18px; }
 .vh-gallery-garland {
   z-index:0;
-  top:-9%;
-  right:-11%;
-  width:38%;
-  height:28%;
-  opacity:.08;
+  top:-7%;
+  right:-9%;
+  width:28%;
+  height:22%;
+  opacity:.055;
 }
 .vh-gallery-grid {
   position:relative;
@@ -618,9 +615,9 @@
 }
 
 @media(max-width:520px) {
-  .vh-cover-arch { left:-25%; width:82%; }
-  .vh-cover-drape { right:-31%; width:78%; }
-  .vh-cover-floral { right:-21%; width:54%; }
+  .vh-cover-arch { left:-27%; bottom:-4%; width:72%; height:66%; }
+  .vh-cover-drape { top:-15%; right:-29%; width:62%; height:30%; }
+  .vh-cover-floral { right:-20%; bottom:-8%; width:42%; height:24%; }
   .vh-cover-copy { left:6%; bottom:6%; width:70%; padding:20px 17px 18px; }
   .vh-cover-names { font-size:clamp(37px,11vw,52px); }
   .vh-section { padding-top:62px; padding-bottom:62px; }
