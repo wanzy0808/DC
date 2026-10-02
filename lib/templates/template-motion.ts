@@ -242,7 +242,7 @@ const paperCutBotanicalNative: Record<string, TemplateNativeMotion> = {
   "object:cover:event-name": { animation: "rise", animationDuration: .74, animationDelay: .14 },
   "object:cover:date": { animation: "fade", animationDuration: .62, animationDelay: .22 },
   "heading:greeting": { animation: "slide-left", animationDuration: .68 },
-  "object:greeting:paper-art": { animation: "fade", animationDuration: .68, animationDelay: .06 },
+  "object:greeting:paper-art": { animation: "glide-right", animationDuration: .78, animationDelay: .08 },
   "heading:identity": { animation: "rise", animationDuration: .68 },
   "object:identity:couple-art": { animation: "paper-cut", animationDuration: .82, animationDelay: .06 },
   "object:identity:personOne-group": { animation: "glide-left", animationDuration: .76, animationDelay: .1 },
@@ -745,7 +745,7 @@ const zenAtelierNative: Record<string, TemplateNativeMotion> = {
 
   "heading:identity": { animation: "rise", animationDuration: .66 },
   "object:identity:sun-art": { animation: "soft-scale", animationDuration: .76, animationDelay: .05 },
-  "object:identity:blossom-art": { animation: "fade", animationDuration: .68, animationDelay: .06 },
+  "object:identity:blossom-art": { animation: "glide-right", animationDuration: .78, animationDelay: .08 },
 
   "heading:event": { animation: "slide-left", animationDuration: .66 },
   "object:event:details-group": { animation: "rise", animationDuration: .72, animationDelay: .05 },
