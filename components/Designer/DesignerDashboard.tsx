@@ -13,6 +13,13 @@ type Template = {
   templateFile: string | null;
   designKey?: string | null;
   status: string;
+  isCustom?: boolean;
+  customInvitation?: {
+    id: string;
+    title: string;
+    eventCategory: string;
+    updatedAt: string;
+  } | null;
   salesCount: number;
   orderValue: number;
   createdAt: string;
@@ -35,12 +42,7 @@ function rupiah(value: number) {
 
 export default function DesignerDashboard() {
   const [templates, setTemplates] = useState<Template[]>([]);
-  const [summary, setSummary] = useState<Summary>({
-    templateCount: 0,
-    templatesWithSales: 0,
-    salesCount: 0,
-    orderValue: 0,
-  });
+  const [summary, setSummary] = useState<Summary>({ templateCount: 0, templatesWithSales: 0, salesCount: 0, orderValue: 0 });
   const [message, setMessage] = useState("Memuat template...");
   const [busyId, setBusyId] = useState<string | null>(null);
 
@@ -49,16 +51,9 @@ export default function DesignerDashboard() {
     const data = await response.json();
     if (response.ok) {
       setTemplates(data.templates ?? []);
-      setSummary(data.summary ?? {
-        templateCount: data.templates?.length ?? 0,
-        templatesWithSales: 0,
-        salesCount: 0,
-        orderValue: 0,
-      });
+      setSummary(data.summary ?? { templateCount: data.templates?.length ?? 0, templatesWithSales: 0, salesCount: 0, orderValue: 0 });
       setMessage("");
-    } else {
-      setMessage(data.error ?? "Template belum dapat dimuat.");
-    }
+    } else setMessage(data.error ?? "Template belum dapat dimuat.");
   }
 
   useEffect(() => { void load(); }, []);
@@ -85,8 +80,7 @@ export default function DesignerDashboard() {
   }
 
   const statusLabel = (status: string) =>
-    status === "PUBLISHED" ? "Published" : status === "REVIEW" ? "Review" : status === "ARCHIVED" ? "Archived" : "Draft";
-
+    status === "PUBLISHED" ? "Published" : status === "REVIEW" ? "Review" : status === "ARCHIVED" ? "Selesai" : "Draft";
 
   return (
     <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-[family-name:var(--font-undara-body)]">
@@ -94,97 +88,65 @@ export default function DesignerDashboard() {
         <div>
           <p className="font-[family-name:var(--font-undara-mono)] text-xs uppercase tracking-[.2em] text-primary">Designer Dashboard</p>
           <h1 className="mt-2 font-[family-name:var(--font-undara-heading)] text-3xl font-semibold">Template Studio</h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Kelola template publik maupun custom request. Draft custom dapat dikirim ke Owner untuk dikonfirmasi ke user yang meminta.</p>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Custom request dari Owner membawa akses sementara ke foto event user. File tidak masuk Library Designer dan akses ditutup setelah handoff.
+          </p>
         </div>
         <Button asChild><Link href="/designer/studio">Buka Template Studio</Link></Button>
       </header>
 
       <div className="grid gap-4 sm:grid-cols-4">
-        <section className="rounded-2xl border border-border bg-background p-5">
-          <p className="text-sm text-muted-foreground">Template saya</p>
-          <p className="mt-2 text-3xl font-semibold">{summary.templateCount}</p>
-        </section>
-        <section className="rounded-2xl border border-border bg-background p-5">
-          <p className="text-sm text-muted-foreground">Pernah terjual</p>
-          <p className="mt-2 text-3xl font-semibold">{summary.templatesWithSales}</p>
-        </section>
-        <section className="rounded-2xl border border-border bg-background p-5">
-          <p className="text-sm text-muted-foreground">Total terjual</p>
-          <p className="mt-2 text-3xl font-semibold">{summary.salesCount}</p>
-        </section>
-        <section className="rounded-2xl border border-border bg-background p-5">
-          <p className="text-sm text-muted-foreground">Nilai order terkait</p>
-          <p className="mt-2 text-xl font-semibold">{rupiah(summary.orderValue)}</p>
-        </section>
+        <section className="rounded-2xl border border-border bg-background p-5"><p className="text-sm text-muted-foreground">Template saya</p><p className="mt-2 text-3xl font-semibold">{summary.templateCount}</p></section>
+        <section className="rounded-2xl border border-border bg-background p-5"><p className="text-sm text-muted-foreground">Pernah terjual</p><p className="mt-2 text-3xl font-semibold">{summary.templatesWithSales}</p></section>
+        <section className="rounded-2xl border border-border bg-background p-5"><p className="text-sm text-muted-foreground">Total terjual</p><p className="mt-2 text-3xl font-semibold">{summary.salesCount}</p></section>
+        <section className="rounded-2xl border border-border bg-background p-5"><p className="text-sm text-muted-foreground">Nilai order terkait</p><p className="mt-2 text-xl font-semibold">{rupiah(summary.orderValue)}</p></section>
       </div>
 
-      <div className="grid gap-6">
-        <section className="rounded-2xl border border-border bg-background p-5">
-          <div className="flex items-center justify-between">
-            <h2 className="font-[family-name:var(--font-undara-heading)] text-xl">Template saya</h2>
-            <p className="font-[family-name:var(--font-undara-mono)] text-xs text-muted-foreground">{templates.length} template</p>
-          </div>
-
-          {!templates.length ? (
-            <p className="mt-6 text-sm text-muted-foreground">Belum ada template.</p>
-          ) : (
-            <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {templates.map((item) => (
-                <article key={item.id} className="overflow-hidden rounded-2xl border border-border">
-                  <img src={item.previewUrl} alt={item.name} className="aspect-[4/3] w-full object-cover" />
-                  <div className="p-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="font-[family-name:var(--font-undara-mono)] text-xs text-primary">#{item.templateNo}</p>
-                      <div className="flex items-center gap-2">
-                        <span className="rounded-md border border-primary/30 px-2 py-1 text-[10px] font-semibold text-primary">
-                          {statusLabel(item.status)}
-                        </span>
-                        <p className="text-xs font-medium text-primary">{item.salesCount} terjual</p>
-                      </div>
+      <section className="rounded-2xl border border-border bg-background p-5">
+        <div className="flex items-center justify-between">
+          <h2 className="font-[family-name:var(--font-undara-heading)] text-xl">Template saya</h2>
+          <p className="font-[family-name:var(--font-undara-mono)] text-xs text-muted-foreground">{templates.length} template</p>
+        </div>
+        {!templates.length ? <p className="mt-6 text-sm text-muted-foreground">Belum ada template.</p> : (
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {templates.map((item) => (
+              <article key={item.id} className="overflow-hidden rounded-2xl border border-border">
+                <img src={item.previewUrl} alt={item.name} className="aspect-[4/3] w-full object-cover" />
+                <div className="p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="font-[family-name:var(--font-undara-mono)] text-xs text-primary">#{item.templateNo}</p>
+                    <div className="flex items-center gap-2">
+                      {item.isCustom && <span className="rounded-md border border-primary/30 px-2 py-1 text-[10px] font-semibold text-primary">Custom User</span>}
+                      <span className="rounded-md border border-primary/30 px-2 py-1 text-[10px] font-semibold text-primary">{statusLabel(item.status)}</span>
                     </div>
-                    <h3 className="mt-1 font-[family-name:var(--font-undara-heading)] text-lg">{item.name}</h3>
-                    <p className="mt-1 text-xs text-muted-foreground">Nilai order terkait: {rupiah(item.orderValue)}</p>
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {item.tags.map((tag) => (
-                        <span key={tag} className="rounded-md border border-border px-2 py-1 text-[10px] text-muted-foreground">{tag}</span>
-                      ))}
-                    </div>
-                    {item.templateFile ? (
-                      <a className="mt-3 inline-block text-xs text-primary underline" href={item.templateFile} target="_blank" rel="noreferrer">Buka file template</a>
-                    ) : (
-                      <div className="mt-3 flex flex-wrap items-center gap-2">
-                        <p className="text-xs text-primary">
-                          {item.status === "PUBLISHED"
-                            ? "Template Studio · tampil di katalog"
-                            : "Template Studio · draft belum tampil di katalog"}
-                        </p>
-                        {item.status === "DRAFT" && (
-                          <>
-                            <Button asChild size="sm" variant="outline">
-                              <Link href={`/designer/studio?draft=${encodeURIComponent(item.id)}`}>Lanjut edit</Link>
-                            </Button>
-                            <Button
-                              type="button"
-                              size="sm"
-                              disabled={busyId === item.id}
-                              onClick={() => void submitForReview(item.id)}
-                            >
-                              {busyId === item.id ? "Mengirim..." : "Kirim ke Owner"}
-                            </Button>
-                          </>
-                        )}
-                        {item.status === "REVIEW" && (
-                          <span className="text-xs text-muted-foreground">Menunggu konfirmasi Owner</span>
-                        )}
-                      </div>
-                    )}
                   </div>
-                </article>
-              ))}
-            </div>
-          )}
-        </section>
-      </div>
+                  <h3 className="mt-1 font-[family-name:var(--font-undara-heading)] text-lg">{item.name}</h3>
+                  {item.isCustom ? (
+                    <p className="mt-1 text-xs text-primary">{item.customInvitation ? `Event: ${item.customInvitation.title}` : "Custom selesai · akses data user ditutup"}</p>
+                  ) : <p className="mt-1 text-xs text-muted-foreground">Nilai order terkait: {rupiah(item.orderValue)}</p>}
+                  <div className="mt-2 flex flex-wrap gap-1">{item.tags.map((tag) => <span key={tag} className="rounded-md border border-border px-2 py-1 text-[10px] text-muted-foreground">{tag}</span>)}</div>
+                  {item.templateFile ? (
+                    <a className="mt-3 inline-block text-xs text-primary underline" href={item.templateFile} target="_blank" rel="noreferrer">Buka file template</a>
+                  ) : (
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <p className="text-xs text-primary">
+                        {item.status === "PUBLISHED" ? "Template Studio · tampil di katalog" : item.isCustom ? "Custom Studio · khusus event yang ditugaskan" : "Template Studio · draft belum tampil di katalog"}
+                      </p>
+                      {item.status === "DRAFT" && (
+                        <>
+                          <Button asChild size="sm" variant="outline"><Link href={`/designer/studio?draft=${encodeURIComponent(item.id)}`}>Lanjut edit</Link></Button>
+                          <Button type="button" size="sm" disabled={busyId === item.id} onClick={() => void submitForReview(item.id)}>{busyId === item.id ? "Mengirim..." : "Kirim ke Owner"}</Button>
+                        </>
+                      )}
+                      {item.status === "REVIEW" && <span className="text-xs text-muted-foreground">Menunggu konfirmasi Owner</span>}
+                    </div>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
     </main>
   );
 }

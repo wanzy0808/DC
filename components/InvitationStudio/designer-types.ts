@@ -41,6 +41,7 @@ export type InvitationDesignerInvitation = {
   musicUrl: string | null;
   templateKey: string;
   isPublished: boolean;
+  updatedAt?: string;
   accessPaid?: boolean;
   giftBankName?: string | null;
   giftAccountName?: string | null;

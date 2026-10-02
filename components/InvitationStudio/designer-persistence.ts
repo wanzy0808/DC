@@ -21,14 +21,17 @@ export type StudioTemplateDraft = {
   name: string;
   designKey: string | null;
   musicUrl: string | null;
-  status: "DRAFT" | "PUBLISHED" | string;
+  status: "DRAFT" | "REVIEW" | "PUBLISHED" | "ARCHIVED" | string;
   updatedAt?: string;
+  isCustom?: boolean;
+  customInvitation?: InvitationDesignerInvitation | null;
 };
 
 export type StudioTemplateSaveResult = {
   id: string;
   templateNo: string | number;
   status: string;
+  updatedAt?: string;
 };
 
 export type DesignerLibraryAsset = {
@@ -135,6 +138,7 @@ export async function saveStudioTemplateDraft(
     id: data.template.id,
     templateNo: data.template.templateNo,
     status: data.template.status,
+    updatedAt: data.template.updatedAt,
   };
 }
 

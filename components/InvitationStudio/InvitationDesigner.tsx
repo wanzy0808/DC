@@ -288,6 +288,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [serverRevision, setServerRevision] = useState("");
   const [templateDraftId, setTemplateDraftId] = useState<string | null>(null);
   const [templateDraftStatus, setTemplateDraftStatus] = useState<string | null>(null);
+  const [templateCustomInvitationId, setTemplateCustomInvitationId] = useState<string | null>(null);
   const audioMutation = useRef(false);
   const requestedCatalogApplied = useRef(false);
   const [audioBusy, setAudioBusy] = useState(false);
@@ -343,6 +344,9 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       const requestedDraftId = params.get("draft")?.trim() || "";
       const savedDraft = requestedDraftId ? await loadStudioTemplateDraft(requestedDraftId) : null;
       const requested = params.get("template")?.trim() || "botanical-ivory";
+      const customInvitation = savedDraft?.customInvitation ?? null;
+      const customFallbackDecor =
+        customInvitation?.assets.find((asset) => asset.type === "IMAGE")?.url || templateDemoPhoto;
 
       let initialKey: string;
       let loadedDesign: InvitationDesignState;
@@ -352,8 +356,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         if (savedDraft.status !== "DRAFT" && savedDraft.status !== "REVIEW") throw new Error("Template ini sudah tidak dapat dibuka sebagai draft.");
         if (!savedDraft.designKey) throw new Error("Draft template belum memiliki design yang dapat diedit.");
         initialKey = savedDraft.designKey;
-        loadedDesign = invitationDesignStateFromKey(initialKey, templateDemoPhoto);
-        defaultMusic = savedDraft.musicUrl || getInvitationDefaultMusic(loadedDesign.template).url;
+        loadedDesign = invitationDesignStateFromKey(initialKey, customFallbackDecor);
+        defaultMusic = savedDraft.musicUrl || customInvitation?.musicUrl || getInvitationDefaultMusic(loadedDesign.template).url;
       } else {
         const baseKey = invitationTemplatePresets[requested] ? requested : "botanical-ivory";
         const preset = invitationTemplatePresets[baseKey] || invitationTemplatePresets["botanical-ivory"];
@@ -363,40 +367,56 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       }
 
       const studioEntryId = savedDraft ? `template-studio-draft:${savedDraft.id}` : "template-studio-draft";
-      const demoInvitation: InvitationDesignerInvitation = {
-        ...templateDemoInvitation,
-        id: studioEntryId,
-        templateKey: initialKey,
-        accessPaid: true,
-      };
+      const previewInvitation: InvitationDesignerInvitation = customInvitation
+        ? {
+            ...customInvitation,
+            templateKey: initialKey,
+            accessPaid: true,
+          }
+        : {
+            ...templateDemoInvitation,
+            id: studioEntryId,
+            templateKey: initialKey,
+            accessPaid: true,
+          };
+      const previewTag = customInvitation?.weddingHashtag || "";
+      const previewDressCode = customInvitation?.dressCode || "";
+      const customAssetRevision = customInvitation?.assets.map((asset) => [asset.id, asset.url]) ?? [];
       const serverBaseline = JSON.stringify([
         "template-studio",
         savedDraft?.id || "new",
         initialKey,
         defaultMusic,
         savedDraft?.updatedAt || "",
+        customAssetRevision,
       ]);
-      const canonicalSavedState = JSON.stringify([makeInvitationDesignStateKey(loadedDesign), defaultMusic, "", ""]);
+      const canonicalSavedState = JSON.stringify([
+        makeInvitationDesignStateKey(loadedDesign),
+        defaultMusic,
+        previewTag,
+        previewDressCode,
+      ]);
       const navigationType = (window.performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined)?.type ?? "navigate";
       const historyState = window.history.state as Record<string, unknown> | null;
-      const sameStudioEntry = historyState?.__dcStudioDraftEntry === demoInvitation.id;
+      const sameStudioEntry = historyState?.__dcStudioDraftEntry === studioEntryId;
       let refreshed: [string, string, string, string] | null = null;
       try {
         const raw = window.sessionStorage.getItem(STUDIO_REFRESH_DRAFT_KEY);
-        refreshed = recoverStudioRefreshDraft(raw, sameStudioEntry ? navigationType : "navigate", demoInvitation.id, serverBaseline);
+        refreshed = recoverStudioRefreshDraft(raw, sameStudioEntry ? navigationType : "navigate", studioEntryId, serverBaseline);
         if (!refreshed) window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY);
-        if (!sameStudioEntry) window.history.replaceState({ ...historyState, __dcStudioDraftEntry: demoInvitation.id }, "", window.location.href);
+        if (!sameStudioEntry) window.history.replaceState({ ...historyState, __dcStudioDraftEntry: studioEntryId }, "", window.location.href);
       } catch { /* Optional refresh draft. */ }
 
-      setInvitation(demoInvitation);
-      setDesign(refreshed ? invitationDesignStateFromKey(refreshed[0], templateDemoPhoto) : loadedDesign);
+      setInvitation(previewInvitation);
+      setDesign(refreshed ? invitationDesignStateFromKey(refreshed[0], customFallbackDecor) : loadedDesign);
       setMusicUrl(refreshed ? refreshed[1] : defaultMusic);
-      setEventTag("");
-      setDressCode("");
+      setEventTag(refreshed ? refreshed[2] : previewTag);
+      setDressCode(refreshed ? refreshed[3] : previewDressCode);
       setSavedState(canonicalSavedState);
       setServerRevision(serverBaseline);
       setTemplateDraftId(savedDraft?.id || null);
       setTemplateDraftStatus(savedDraft?.status || null);
+      setTemplateCustomInvitationId(customInvitation?.id || null);
       setSelectedCatalogKey(loadedDesign.template);
       setCanvasStage("envelope");
       setSelectedLayerId(null);
@@ -406,8 +426,10 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       setFuture([]);
       setNotice(savedDraft
         ? savedDraft.status === "REVIEW"
-          ? `Template #${savedDraft.templateNo} sedang direview. Preview tersedia, editing dikunci sampai dikembalikan ke Draft.`
-          : `Draft Template #${savedDraft.templateNo} dimuat.`
+          ? `${savedDraft.isCustom ? "Custom" : "Template"} #${savedDraft.templateNo} sedang direview. Preview tersedia, editing dikunci sampai dikembalikan ke Draft.`
+          : savedDraft.isCustom && customInvitation
+            ? `Custom #${savedDraft.templateNo} untuk “${customInvitation.title}” dimuat. Foto user dapat diposisikan/crop tanpa menyalin file ke Library Designer.`
+            : `Draft Template #${savedDraft.templateNo} dimuat.`
         : "");
       return;
     }
@@ -417,6 +439,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       params.get("type") === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING";
     if (!invitationId) throw new Error("Pilih acara dari Dashboard untuk membuka Studio.");
     const next = await loadStudioInvitation(invitationId, legacyType);
+    setTemplateCustomInvitationId(null);
     const fallbackDecor =
       next.assets.find((asset) => asset.type === "IMAGE")?.url || invitationDecorOptions[0];
     setInvitation(next);
@@ -1760,16 +1783,18 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     try {
       if (templateMode) {
         const selectedCatalog = catalog.find((item) => item.key === selectedCatalogKey);
-        const cleanTemplateDesign: InvitationDesignState = {
-          ...design,
-          photos: {
-            ...design.photos,
-            cover: null,
-            personOne: null,
-            personTwo: null,
-            gallery: null,
-          },
-        };
+        const cleanTemplateDesign: InvitationDesignState = templateCustomInvitationId
+          ? design
+          : {
+              ...design,
+              photos: {
+                ...design.photos,
+                cover: null,
+                personOne: null,
+                personTwo: null,
+                gallery: null,
+              },
+            };
         const templateDesignKey = makeInvitationDesignStateKey(cleanTemplateDesign);
         const savedTemplate = await saveStudioTemplateDraft({
           designKey: templateDesignKey,
@@ -1786,8 +1811,15 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         setSavedState(currentState);
         try { window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY); } catch { /* Optional cache. */ }
         const studioEntryId = `template-studio-draft:${savedTemplate.id}`;
-        setInvitation((current) => current ? { ...current, id: studioEntryId, templateKey: templateDesignKey } : current);
-        setServerRevision(JSON.stringify(["template-studio", savedTemplate.id, templateDesignKey, musicUrl]));
+        setInvitation((current) => current ? { ...current, templateKey: templateDesignKey } : current);
+        setServerRevision(JSON.stringify([
+          "template-studio",
+          savedTemplate.id,
+          templateDesignKey,
+          musicUrl,
+          savedTemplate.updatedAt || "",
+          templateCustomInvitationId ? invitation.assets.map((asset) => [asset.id, asset.url]) : [],
+        ]));
         const location = new URL(window.location.href);
         location.searchParams.set("draft", savedTemplate.id);
         location.searchParams.delete("template");
@@ -1796,7 +1828,9 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           "",
           location.pathname + location.search + location.hash,
         );
-        setNotice(`Draft Template #${savedTemplate.templateNo} tersimpan. Draft belum tampil di katalog sebelum dipublikasikan.`);
+        setNotice(templateCustomInvitationId
+          ? `Custom #${savedTemplate.templateNo} tersimpan. Foto tetap milik event user dan tidak disalin ke Library Designer.`
+          : `Draft Template #${savedTemplate.templateNo} tersimpan. Draft belum tampil di katalog sebelum dipublikasikan.`);
         return;
       }
 
