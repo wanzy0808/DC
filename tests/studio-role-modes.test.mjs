@@ -91,7 +91,7 @@ test("template catalog publication is gated by review and Owner/Admin approval",
   assert.match(templateApi, /Hanya Owner\/Admin yang dapat mempublikasikan template/);
   assert.match(templateApi, /data: \{ status: "PUBLISHED" \}/);
   assert.match(templateApi, /action === "RETURN_DRAFT"/);
-  assert.match(designerDashboard, /Kirim Review/);
+  assert.match(designerDashboard, /Kirim ke Owner/);
   assert.match(read("components/InvitationStudio/InvitationDesigner.tsx"), /templateDraftStatus === "REVIEW" \? false : dirty/);
   assert.match(designerDashboard, /action: "SUBMIT_REVIEW"/);
   assert.match(ownerDashboard, /<OwnerTemplateReview \/>/);
