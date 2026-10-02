@@ -146,6 +146,10 @@ Undara is multi-tenant and event-scoped. Authentication alone is insufficient. E
 - [x] Custom Template Studio reuses the user event's existing `InvitationAsset` records without copying customer files into `DesignerAsset`; Template Mode does not expose customer upload/delete controls.
 - [x] RSVP guest lookup constrains `guestId` to the current invitation.
 - [x] Published event mutation/delete lock exists in the main invitation API.
+- [x] Source-level event scoping hardened for Guest workspace/export, legacy Wedding Table mutations, and legacy package activation; none silently fall back to the account's first event anymore.
+- [x] Broad `/api/admin/operations` access is limited to `OWNER/ADMIN`; `FINANCE` remains limited to payment operations instead of customer/event administration.
+- [x] Payment/invoice reads require both `PaymentOrder.userId` and `Invitation.ownerId` to match the current customer; admin activation rejects inconsistent order↔event ownership.
+- [x] CI guard `tests/private-api-origin-guard.test.mjs` requires every session-authenticated private mutation route to use `isTrustedMutationOrigin`.
 - [ ] **BLOCKER:** Audit every `app/api/**` route for authentication + role + resource ownership.
 - [ ] **BLOCKER:** Verify User A cannot GET event data belonging to User B by changing IDs/query params.
 - [ ] **BLOCKER:** Verify User A cannot PUT/PATCH/DELETE User B event.

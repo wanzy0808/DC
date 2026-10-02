@@ -2556,3 +2556,24 @@ Follow-up commits include `8c64ee0eb259f1f9bf6644b8948fc004e16f3f20`, `6672a8463
 **Observed validation:** GitHub Actions **Build Validation** run `36997144519` pada code HEAD `6ab2a2d9c217f16dc6bf64289f5bc210685cfcc3` selesai **success**: Prisma generate, source regression tests termasuk custom-media guards, dan Next.js production build seluruhnya lulus.
 
 **Not established:** migration belum dibuktikan diterapkan pada database production, belum ada browser E2E nyata Owner → Designer → review → handoff dengan file customer pada server target, dan full cross-tenant authorization audit Undara masih merupakan launch blocker terpisah.
+
+
+### 2 Oktober 2026 — authorization/event isolation hardening pass
+
+**Owner request:** lanjutkan blocker authorization setelah private media/custom Designer access, dengan prinsip bahwa User A tidak boleh dapat membaca atau mengubah resource User B hanya dengan mengganti ID API.
+
+**Implementation:** source-level audit menemukan beberapa fallback/role boundary yang terlalu longgar walau sebagian besar route sudah memakai owner scoping. `/api/guests` sekarang membutuhkan event eksplisit (kecuali mode `all=1` yang memang account-scoped); `/api/guests/export` wajib menerima `invitationId` dan memverifikasi `id + ownerId`; legacy `/api/wedding-tables` tidak lagi memakai wedding event pertama akun dan setiap create/update/delete sekarang diturunkan dari event/table yang benar; legacy `/api/packages` juga wajib menunjuk `invitationId` milik customer dan tidak membuat blank event otomatis.
+
+**Role boundary:** `/api/admin/operations` sebelumnya menerima `FINANCE`, sehingga role pembayaran dapat membaca surface administrasi customer/event dan menjalankan perubahan non-payment. Boundary tersebut dipersempit menjadi `OWNER/ADMIN`; `FINANCE` tetap diterima di `/api/admin/payments` yang memang domainnya.
+
+**Mutation-origin defense:** semua route privat yang memakai sesi login dan mempunyai `POST/PUT/PATCH/DELETE` sekarang diwajibkan memakai `isTrustedMutationOrigin`. Guard ditambahkan pada event save/create/delete, guest/seating, customer media upload/delete, Personal Invitation, WA Blast/template WA, Usher/check-in/QR, profile/avatar, dashboard preference, dan route privat legacy yang tersisa. Test `tests/private-api-origin-guard.test.mjs` melakukan recursive audit terhadap `app/api/**/route.ts` dan membuat CI gagal bila private session mutation baru lupa origin guard.
+
+**Payment ownership integrity:** customer invoice detail/history sekarang mengharuskan `PaymentOrder.userId = current user` sekaligus `PaymentOrder.invitation.ownerId = current user`. Admin/Finance activation mengambil owner event dan memblokir order yang `userId`-nya tidak cocok dengan `Invitation.ownerId`, sehingga row korup/manual tidak dapat menghasilkan entitlement atau WA quota lintas akun.
+
+**Regression coverage:** `tests/tenant-isolation.test.mjs` mengunci event-scoped Guest/export/table/package behavior, Finance-vs-admin boundary, custom-media scoping, private mutation origin guards, dan payment order ownership integrity. Source guard ini adalah defense-in-depth dan regression prevention; ia bukan pengganti E2E dua akun.
+
+**Representative commits:** `4a028e80e2dd370c5f7197ac7a0354be65b4b49c`, `8e245f6e1fdb1627dae5937d776aa33cb1b409db`, `5213c8c94efc6e4a021b373183f43347394fb616`, `4dc41bdb850bdef9e270c85b261f2e37843cbb77`, `1d2a9d492fc1c8197a799232746c3b125b738a77`, `46693b246d9c2bd766821e3cf07cc7c0a8e46a64`, dan `9b46f46fe401aa5dcd2ed18e9ad3e1205aa7496e`.
+
+**Observed validation:** GitHub Actions **Build Validation** run `37001082730` pada code HEAD `9b46f46fe401aa5dcd2ed18e9ad3e1205aa7496e` selesai **success**: Prisma generate, seluruh source regression tests termasuk recursive private-mutation audit, dan production build lulus. **Orphan Audit** run `37001082710` juga **success**.
+
+**Not established:** blocker authorization belum dianggap selesai penuh sampai production-like negative E2E dijalankan memakai sedikitnya Customer A dan Customer B untuk event, asset, guest, table/seating, Personal Invitation, WA Blast, payment, QR/check-in, plus role matrix Admin/Owner/Designer/Editor/Finance. Build/source audit tidak menggantikan pengujian request nyata terhadap PostgreSQL.
