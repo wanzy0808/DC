@@ -92,9 +92,9 @@ test("Golden Art Deco keeps protected event data and shared functional engines",
 });
 
 test("Golden Art Deco replaces generic section icons with its object world", () => {
-  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <CalendarDays/);
-  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <MapPin/);
-  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <Gift/);
+  assert.match(universal, /key !== "celestial-ink" && key !== "velvet-horizon" && key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <CalendarDays/);
+  assert.match(universal, /key !== "celestial-ink" && key !== "velvet-horizon" && key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <MapPin/);
+  assert.match(universal, /key !== "celestial-ink" && key !== "velvet-horizon" && key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <Gift/);
   assert.match(universal, /key === "golden-art-deco" \? "gd-action"/);
 });
 
@@ -127,8 +127,8 @@ test("Golden Art Deco has restrained one-shot motion without animating countdown
 
   const nativeHook = read("components/PublicInvitation/use-native-visual-animations.ts");
   const photoHook = read("components/PublicInvitation/use-photo-animations.ts");
-  assert.match(nativeHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco"\]\.includes\(template\)/);
-  assert.match(photoHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco"\]\.includes\(theme\?\.template \?\? ""\)/);
+  assert.match(nativeHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "velvet-horizon"\]\.includes\(template\)/);
+  assert.match(photoHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "velvet-horizon"\]\.includes\(theme\?\.template \?\? ""\)/);
   assert.match(nativeHook, /waitForImages:[^\n]*golden-art-deco/);
   assert.match(universal, /golden-art-deco"[\s\S]{0,420}sectionStyles\.envelope\?\.animation === "none"/);
 });
