@@ -46,6 +46,12 @@ const zenAtelierPhotos: PhotoMotionMap = {
   gallery: { animation: "tilt-in", animationDuration: .7, animationStagger: .055, parallax: .02 },
 };
 
+const velvetHorizonPhotos: PhotoMotionMap = {
+  personOne: { animation: "glide-left", animationDuration: .82 },
+  personTwo: { animation: "glide-right", animationDuration: .82, animationDelay: .07 },
+  gallery: { animation: "tilt-in", animationDuration: .72, animationStagger: .06, parallax: .025 },
+};
+
 const photoDefaults: Record<string, PhotoMotionMap> = {
   serein: sereinPhotos,
   "eternal-blossom": blossomPhotos,
@@ -53,6 +59,7 @@ const photoDefaults: Record<string, PhotoMotionMap> = {
   "garden-light": gardenLightPhotos,
   "midnight-romance": midnightRomancePhotos,
   "zen-atelier": zenAtelierPhotos,
+  "velvet-horizon": velvetHorizonPhotos,
 };
 
 export function templateHasDefaultPhotoMotion(template: string) {
@@ -635,6 +642,73 @@ const celestialInkNative: Record<string, TemplateNativeMotion> = {
   "object:closing:names": { animation: "soft-scale", animationDuration: .72, animationDelay: .12 },
 };
 
+const velvetHorizonNative: Record<string, TemplateNativeMotion> = {
+  "object:envelope:sunset-glow": { animation: "fade", animationDuration: .72 },
+  "object:envelope:blossom-art": { animation: "glide-right", animationDuration: .82, animationDelay: .04 },
+  "object:envelope:garland-art": { animation: "glide-left", animationDuration: .82, animationDelay: .07 },
+  "object:envelope:intro": { animation: "rise", animationDuration: .68, animationDelay: .06 },
+  "object:envelope:stationery-group": { animation: "soft-scale", animationDuration: .78, animationDelay: .08 },
+  "object:envelope:paper": { animation: "rise", animationDuration: .74, animationDelay: .1 },
+  "object:envelope:seal": { animation: "soft-scale", animationDuration: .62, animationDelay: .14 },
+
+  "object:cover:sunset-field": { animation: "fade", animationDuration: .76 },
+  "object:cover:media-group": { animation: "fade", animationDuration: .8, animationDelay: .02 },
+  "object:cover:arch-art": { animation: "reveal-up", animationDuration: .88, animationDelay: .04 },
+  "object:cover:drape-art": { animation: "glide-right", animationDuration: .86, animationDelay: .06 },
+  "object:cover:blossom-art": { animation: "glide-right", animationDuration: .8, animationDelay: .09 },
+  "object:cover:sunset-disc-art": { animation: "soft-scale", animationDuration: .76, animationDelay: .08 },
+  "object:cover:lantern-art": { animation: "rise", animationDuration: .8, animationDelay: .12 },
+  "object:cover:copy-panel": { animation: "rise", animationDuration: .8, animationDelay: .1 },
+  "object:cover:personOne-name": { animation: "slide-left", animationDuration: .76, animationDelay: .12 },
+  "object:cover:ampersand-symbol": { animation: "fade", animationDuration: .58, animationDelay: .16 },
+  "object:cover:personTwo-name": { animation: "slide-right", animationDuration: .76, animationDelay: .19 },
+  "object:cover:event-name": { animation: "rise", animationDuration: .76, animationDelay: .14 },
+  "object:cover:date": { animation: "fade", animationDuration: .62, animationDelay: .21 },
+  "object:cover:closing-copy": { animation: "fade", animationDuration: .66, animationDelay: .24 },
+
+  "heading:greeting": { animation: "rise", animationDuration: .68 },
+  "object:greeting:velvet-art": { animation: "glide-right", animationDuration: .8, animationDelay: .06 },
+  "heading:identity": { animation: "rise", animationDuration: .68 },
+  "object:identity:personOne-group": { animation: "glide-left", animationDuration: .8, animationDelay: .04 },
+  "object:identity:personTwo-group": { animation: "glide-right", animationDuration: .8, animationDelay: .1 },
+  "object:identity:velvet-art": { animation: "reveal-up", animationDuration: .82, animationDelay: .08 },
+
+  "heading:event": { animation: "rise", animationDuration: .68 },
+  "object:event:details-group": { animation: "reveal-up", animationDuration: .76, animationDelay: .06 },
+  "object:event:velvet-art": { animation: "glide-left", animationDuration: .8, animationDelay: .08 },
+
+  "heading:dateTime": { animation: "rise", animationDuration: .68 },
+  "object:dateTime:panel": { animation: "soft-scale", animationDuration: .76, animationDelay: .05 },
+  "object:dateTime:velvet-art": { animation: "fade", animationDuration: .76, animationDelay: .08 },
+
+  "heading:gallery": { animation: "rise", animationDuration: .68 },
+  "object:gallery:grid": { animation: "tilt-in", animationDuration: .72, animationDelay: .04 },
+  "object:gallery:velvet-art": { animation: "reveal-up", animationDuration: .78, animationDelay: .07 },
+
+  "heading:countdown": { animation: "fade", animationDuration: .64 },
+  "object:countdown:grid": { animation: "rise", animationDuration: .72, animationDelay: .05 },
+  "object:countdown:velvet-art": { animation: "glide-right", animationDuration: .78, animationDelay: .08 },
+
+  "heading:location": { animation: "rise", animationDuration: .68 },
+  "object:location:details-group": { animation: "reveal-up", animationDuration: .76, animationDelay: .06 },
+  "object:location:velvet-art": { animation: "glide-left", animationDuration: .82, animationDelay: .08 },
+
+  "heading:rsvp": { animation: "rise", animationDuration: .68 },
+  "object:rsvp:velvet-art": { animation: "glide-right", animationDuration: .78, animationDelay: .08 },
+
+  "heading:wishes": { animation: "rise", animationDuration: .68 },
+  "object:wishes:velvet-art": { animation: "glide-left", animationDuration: .8, animationDelay: .08 },
+
+  "heading:gift": { animation: "rise", animationDuration: .68 },
+  "object:gift:panel": { animation: "reveal-up", animationDuration: .76, animationDelay: .06 },
+  "object:gift:velvet-art": { animation: "fade", animationDuration: .76, animationDelay: .09 },
+
+  "heading:closing": { animation: "rise", animationDuration: .7 },
+  "object:closing:copy-group": { animation: "rise", animationDuration: .74, animationDelay: .06 },
+  "object:closing:velvet-art": { animation: "reveal-up", animationDuration: .82, animationDelay: .08 },
+  "object:closing:names": { animation: "soft-scale", animationDuration: .72, animationDelay: .12 },
+};
+
 const zenAtelierNative: Record<string, TemplateNativeMotion> = {
   "object:envelope:atmosphere-group": { animation: "fade", animationDuration: .72 },
   "object:envelope:sun": { animation: "soft-scale", animationDuration: .72, animationDelay: .03 },
@@ -719,6 +793,7 @@ const nativeDefaults: Record<string, Record<string, TemplateNativeMotion>> = {
   "paper-cut-botanical": paperCutBotanicalNative,
   "pencil-reverie": pencilReverieNative,
   "zen-atelier": zenAtelierNative,
+  "velvet-horizon": velvetHorizonNative,
 };
 
 export function templateHasDefaultMotion(template: string) {
