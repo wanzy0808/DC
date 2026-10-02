@@ -757,12 +757,16 @@ test("Template Mode uses a reusable Designer artwork library with WebP storage",
   assert.match(photos, /onUpload\?: \(file: File\) => Promise<void>/);
 });
 
-test("Studio raster uploads are decoded and stored as optimized WebP", () => {
+test("Studio raster uploads are decoded to WebP and routed through private media storage", () => {
   assert.match(assetUploadRoute, /import sharp from "sharp"/);
   assert.match(assetUploadRoute, /sharp\(originalBuffer/);
   assert.match(assetUploadRoute, /\.webp\(\{ quality: 82, effort: 4 \}\)/);
-  assert.match(assetUploadRoute, /fileName = `\$\{randomUUID\(\)\}\.webp`/);
+  assert.match(assetUploadRoute, /const assetId = randomUUID\(\)/);
+  assert.match(assetUploadRoute, /buildPrivateInvitationAssetKey\(assetId, type, file\.type\)/);
+  assert.match(assetUploadRoute, /privateInvitationAssetUrl\(assetKey\)/);
+  assert.match(assetUploadRoute, /ensurePrivateInvitationAssetDirectory\(invitation\.id, assetKey\)/);
   assert.match(assetUploadRoute, /title = path\.basename\(file\.name, path\.extname\(file\.name\)\) \+ "\.webp"/);
+  assert.doesNotMatch(assetUploadRoute, /public", "uploads"/);
 });
 
 test("Studio element layers reuse the shared animation catalog and persist timing safely", () => {
