@@ -68,7 +68,7 @@ test("Pencil Reverie shared sections remain data-backed while art stays theme-ow
   assert.match(renderer, /object:event:details-group/);
   assert.match(renderer, /data-studio-section-element="location:button"/);
   assert.match(renderer, /data-studio-section-element="gift:button"/);
-  assert.match(renderer, /sections\.rsvp && section\("rsvp", key === "pencil-reverie"/);
+  assert.match(renderer, /sections\.rsvp && section\("rsvp", \(/);\n  assert.match(renderer, /object:rsvp:form-group/);
   assert.match(renderer, /<RsvpForm slug=\{invitation\.slug\} appearance="zen"/);
   assert.match(renderer, /<GuestWishes[\s\S]*appearance=\{key === "pencil-reverie"[\s\S]*\? "zen" : "default"\}/);
   assert.match(renderer, /key === "pencil-reverie" \? "pr-footer"/);
