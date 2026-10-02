@@ -30,19 +30,30 @@ export default function VelvetHorizonGallery({
       <VelvetHorizonArt objectKey="object:gallery:blossom-art" asset="blossom" className="vh-gallery-blossom" />
 
       {photos.length ? (
-        <div data-studio-native-object="object:gallery:grid" className="vh-gallery-stack">
-          {photos.slice(0, 8).map((asset, index) => (
-            <figure
-              key={asset.id}
-              data-invitation-photo-slot="gallery"
-              data-studio-photo-id={asset.id}
-              className={`vh-gallery-card vh-gallery-card-${index + 1}`}
-            >
-              <img src={asset.url} alt={`${tr("Galeri foto")} ${index + 1}`} loading="lazy" />
-              <figcaption>{String(index + 1).padStart(2, "0")}</figcaption>
-            </figure>
-          ))}
-        </div>
+        <>
+          <div data-studio-native-object="object:gallery:grid" className="vh-gallery-stack">
+            {photos.slice(0, 6).map((asset, index) => (
+              <figure
+                key={asset.id}
+                data-invitation-photo-slot="gallery"
+                data-studio-photo-id={asset.id}
+                className={`vh-gallery-card vh-gallery-card-${index + 1}`}
+              >
+                <img src={asset.url} alt={`${tr("Galeri foto")} ${index + 1}`} loading="lazy" />
+                <figcaption>{String(index + 1).padStart(2, "0")}</figcaption>
+              </figure>
+            ))}
+          </div>
+          {photos.length > 6 && (
+            <div className="vh-gallery-more">
+              {photos.slice(6).map((asset, index) => (
+                <figure key={asset.id} data-invitation-photo-slot="gallery" data-studio-photo-id={asset.id} className="vh-gallery-more-card">
+                  <img src={asset.url} alt={`${tr("Galeri foto")} ${index + 7}`} loading="lazy" />
+                </figure>
+              ))}
+            </div>
+          )}
+        </>
       ) : (
         <div data-studio-native-object="object:gallery:memory-panel" className="vh-gallery-empty">
           <VelvetHorizonArt objectKey="object:gallery:empty-arch-art" asset="arch" className="vh-gallery-empty-arch" />
