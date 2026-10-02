@@ -3,17 +3,12 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { parsePersonalGuestFields } from "@/lib/guests/personal-profile";
 import { findGuestsByContact } from "@/lib/guests/identity";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 
-async function getInvitation(userId: string, invitationId?: string) {
-  if (invitationId) {
-    return prisma.invitation.findFirst({
-      where: { id: invitationId, ownerId: userId },
-    });
-  }
-
+async function getInvitation(userId: string, invitationId: string) {
+  if (!invitationId) return null;
   return prisma.invitation.findFirst({
-    where: { ownerId: userId, type: "WEDDING" },
-    orderBy: { createdAt: "asc" },
+    where: { id: invitationId, ownerId: userId },
   });
 }
 
@@ -75,8 +70,14 @@ export async function GET(request: Request) {
     }
 
     const invitationId = url.searchParams.get("invitationId")?.trim() || "";
-    const invitation = await getInvitation(user.id, invitationId || undefined);
-    if (!invitation || !invitation.eventConfigured) {
+    if (!invitationId) {
+      return NextResponse.json({ error: "Acara wajib dipilih." }, { status: 400 });
+    }
+    const invitation = await getInvitation(user.id, invitationId);
+    if (!invitation) {
+      return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
+    }
+    if (!invitation.eventConfigured) {
       return NextResponse.json({ guests: [], tables: [], canManageGuests: false, canUseRsvp: true });
     }
 
@@ -110,11 +111,20 @@ export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+    if (!isTrustedMutationOrigin(request)) {
+      return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+    }
 
     const body = await request.json();
     const invitationId = String(body.invitationId ?? "").trim();
-    const invitation = await getInvitation(user.id, invitationId || undefined);
-    if (!invitation || !invitation.eventConfigured) {
+    if (!invitationId) {
+      return NextResponse.json({ error: "Acara wajib dipilih." }, { status: 400 });
+    }
+    const invitation = await getInvitation(user.id, invitationId);
+    if (!invitation) {
+      return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
+    }
+    if (!invitation.eventConfigured) {
       return NextResponse.json({ error: "Lengkapi acara sebelum menambahkan tamu." }, { status: 400 });
     }
 

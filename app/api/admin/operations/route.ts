@@ -5,15 +5,15 @@ import { prisma } from "@/lib/prisma";
 import { sendInvoiceEmail } from "@/lib/notifications/email";
 import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 
-async function requireStaff() {
+async function requireAdminOperations() {
   const user = await getCurrentUser();
-  return user && ["ADMIN", "FINANCE"].includes(user.role) ? user : null;
+  return user && ["OWNER", "ADMIN"].includes(user.role) ? user : null;
 }
 function invoiceNumber(){const stamp=new Date().toISOString().slice(0,10).replaceAll("-","");return `UND-${stamp}-${randomBytes(3).toString("hex").toUpperCase()}`}
 
 export async function GET() {
-  const staff = await requireStaff();
-  if (!staff) return NextResponse.json({ error: "Akses Admin diperlukan." }, { status: 403 });
+  const staff = await requireAdminOperations();
+  if (!staff) return NextResponse.json({ error: "Akses Owner/Admin diperlukan." }, { status: 403 });
   const [users, invitations, orders, templates] = await Promise.all([
     prisma.user.findMany({ select: { id:true,email:true,firstName:true,lastName:true,role:true,createdAt:true }, orderBy:{createdAt:"desc"} }),
     prisma.invitation.findMany({ select:{ id:true,slug:true,title:true,groomName:true,brideName:true,templateKey:true,isPublished:true,owner:{select:{id:true,email:true,firstName:true}},payment:{select:{packageKey:true,status:true,amount:true}} }, orderBy:{updatedAt:"desc"} }),
@@ -29,14 +29,14 @@ export async function GET() {
 }
 
 export async function POST(request:Request){
- const staff=await requireStaff();if(!staff)return NextResponse.json({error:"Akses Admin diperlukan."},{status:403});
+ const staff=await requireAdminOperations();if(!staff)return NextResponse.json({error:"Akses Owner/Admin diperlukan."},{status:403});
  if(!isTrustedMutationOrigin(request))return NextResponse.json({error:"Origin permintaan tidak valid."},{status:403});
  try{const body=await request.json();const invitationId=String(body.invitationId??"");const amount=Number(body.amount);if(!invitationId||!Number.isInteger(amount)||amount<=0)return NextResponse.json({error:"Undangan dan nominal custom wajib diisi."},{status:400});const invitation=await prisma.invitation.findUnique({where:{id:invitationId},include:{owner:true}});if(!invitation)return NextResponse.json({error:"Undangan tidak ditemukan."},{status:404});const order=await prisma.paymentOrder.create({data:{invoiceNumber:invoiceNumber(),userId:invitation.ownerId,invitationId,packageKey:"CUSTOM_DESIGN",amount,note:String(body.note??"").trim()||"Custom design invitation dibuat oleh Admin."}});const invoiceUrl=`${process.env.APP_URL??"http://localhost:3000"}/checkout/${order.id}`;const email=await sendInvoiceEmail({to:invitation.owner.email,invoiceNumber:order.invoiceNumber,packageName:"Custom Design Invitation",amount,invoiceUrl});await prisma.auditLog.create({data:{actorId:staff.id,action:"CUSTOM_DESIGN_ORDER_CREATED",entity:"PaymentOrder",entityId:order.id,metadata:{invitationId,amount,invoiceNumber:order.invoiceNumber}}});return NextResponse.json({order,email,invoiceUrl},{status:201})}catch{return NextResponse.json({error:"Order custom design belum dapat dibuat."},{status:500})}
 }
 
 export async function PATCH(request: Request) {
-  const staff = await requireStaff();
-  if (!staff) return NextResponse.json({ error: "Akses Admin diperlukan." }, { status: 403 });
+  const staff = await requireAdminOperations();
+  if (!staff) return NextResponse.json({ error: "Akses Owner/Admin diperlukan." }, { status: 403 });
   if (!isTrustedMutationOrigin(request)) return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
   try {
     const body = await request.json();
