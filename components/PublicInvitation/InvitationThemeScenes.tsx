@@ -143,6 +143,7 @@ const CelestialInkScene = dynamic(() => import("@/components/PublicInvitation/Ce
 const ClassicPearlScene = dynamic(() => import("@/components/PublicInvitation/ClassicPearlScene"));
 const GoldenArtDecoScene = dynamic(() => import("@/components/PublicInvitation/GoldenArtDecoScene"));
 const PaperCutBotanicalScene = dynamic(() => import("@/components/PublicInvitation/PaperCutBotanicalScene"));
+const VelvetHorizonScene = dynamic(() => import("@/components/PublicInvitation/VelvetHorizonScene"));
 
 export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,allowEnvelopeOpen,isWedding,couple,hashtag,recipientLine,motionEnabled}: SceneProps) {
   const language = useInvitationLanguage();
@@ -167,6 +168,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   if (theme === "classic-pearl") return <ClassicPearlScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "golden-art-deco") return <GoldenArtDecoScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "paper-cut-botanical") return <PaperCutBotanicalScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
+  if (theme === "velvet-horizon") return <VelvetHorizonScene names={names} date={date} couple={couple} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} onEditPhoto={onEditPhoto} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "modern-maroon") {
     if (stage === "envelope") return (
       <section data-invitation-section="envelope" className="relative flex min-h-[760px] flex-col overflow-hidden bg-[#2d0710] px-6 py-12 text-[#fff5ee]">
