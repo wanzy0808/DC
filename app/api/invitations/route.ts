@@ -356,7 +356,15 @@ export async function PUT(request: Request) {
     const ceremonyTime = String(body.ceremonyTime ?? invitation.ceremonyTime ?? "").trim() || null;
     const receptionTime = String(body.receptionTime ?? invitation.receptionTime ?? "").trim() || null;
     const templateKey = String(body.templateKey ?? invitation.templateKey).trim();
-    if (templateKey.split("::", 1)[0] === "blank-canvas") {
+    const requestedTemplateBase = templateKey.split("::", 1)[0];
+    const persistedTemplateBase = invitation.templateKey.split("::", 1)[0];
+    const continuesAssignedBlankCanvas =
+      requestedTemplateBase === "blank-canvas" && persistedTemplateBase === "blank-canvas";
+    if (
+      requestedTemplateBase === "blank-canvas" &&
+      !continuesAssignedBlankCanvas &&
+      !["OWNER", "DESIGNER"].includes(user.role)
+    ) {
       return NextResponse.json({ error: "Canvas kosong hanya tersedia di Studio Owner dan Designer." }, { status: 403 });
     }
     const requestedTitle = String(body.title ?? invitation.title).trim();
