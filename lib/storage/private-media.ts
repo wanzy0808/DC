@@ -94,6 +94,18 @@ export function parsePrivateInvitationAssetUrl(url: string) {
   return parsePrivateInvitationAssetKey(assetKey) ? assetKey : null;
 }
 
+export function replaceStoredMediaUrlReferences(
+  value: string,
+  currentUrl: string,
+  nextUrl: string,
+) {
+  if (!value || !currentUrl || currentUrl === nextUrl) return value;
+
+  return value
+    .replaceAll(currentUrl, nextUrl)
+    .replaceAll(encodeURIComponent(currentUrl), encodeURIComponent(nextUrl));
+}
+
 export function privateInvitationAssetPath(invitationId: string, assetKey: string) {
   assertSafeIdentifier(invitationId, "invitation id");
   if (!parsePrivateInvitationAssetKey(assetKey)) {

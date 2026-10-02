@@ -5,6 +5,7 @@ import { prisma } from "../lib/prisma";
 import {
   privateInvitationAssetPath,
   privateInvitationAssetUrl,
+  replaceStoredMediaUrlReferences,
 } from "../lib/storage/private-media";
 
 type LegacyAsset = {
@@ -70,6 +71,27 @@ async function migrateAsset(asset: LegacyAsset) {
       where: { id: asset.id },
       data: { url: nextUrl },
     });
+
+    // Most photo selections persist stable asset IDs, but older design state may
+    // contain a direct media URL in decor= (URL-encoded) or another legacy token.
+    // Rewrite those references before the public source file is removed.
+    const invitation = await tx.invitation.findUnique({
+      where: { id: asset.invitationId },
+      select: { templateKey: true },
+    });
+    if (invitation) {
+      const migratedTemplateKey = replaceStoredMediaUrlReferences(
+        invitation.templateKey,
+        asset.url,
+        nextUrl,
+      );
+      if (migratedTemplateKey !== invitation.templateKey) {
+        await tx.invitation.update({
+          where: { id: asset.invitationId },
+          data: { templateKey: migratedTemplateKey },
+        });
+      }
+    }
 
     if (asset.type === "AUDIO") {
       await tx.invitation.updateMany({

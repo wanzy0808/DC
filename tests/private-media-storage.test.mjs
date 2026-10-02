@@ -9,6 +9,7 @@ import {
   parsePrivateInvitationAssetUrl,
   privateInvitationAssetPath,
   privateInvitationAssetUrl,
+  replaceStoredMediaUrlReferences,
 } from "../lib/storage/private-media.ts";
 
 const repo = new URL("../", import.meta.url);
@@ -39,6 +40,23 @@ test("private invitation media URLs route through authorization instead of publi
   assert.equal(url, `/api/media/invitation-assets/${key}`);
   assert.equal(parsePrivateInvitationAssetUrl(url), key);
   assert.equal(parsePrivateInvitationAssetUrl("/uploads/images/event/photo.webp"), null);
+});
+
+test("legacy migration rewrites raw and URL-encoded media references before deleting public files", () => {
+  const oldUrl = "/uploads/images/invitation_12345678/11111111-1111-1111-1111-111111111111.webp";
+  const nextUrl = "/api/media/invitation-assets/asset_12345678.webp";
+  const designKey = `theme::rose::font::decor=${encodeURIComponent(oldUrl)}::legacy=${oldUrl}`;
+
+  const migrated = replaceStoredMediaUrlReferences(designKey, oldUrl, nextUrl);
+
+  assert.equal(migrated.includes(oldUrl), false);
+  assert.equal(migrated.includes(encodeURIComponent(oldUrl)), false);
+  assert.equal(migrated.includes(nextUrl), true);
+  assert.equal(migrated.includes(encodeURIComponent(nextUrl)), true);
+
+  const migrationSource = read("scripts/migrate-invitation-media.ts");
+  assert.match(migrationSource, /replaceStoredMediaUrlReferences/);
+  assert.match(migrationSource, /templateKey: migratedTemplateKey/);
 });
 
 test("development storage stays outside public and production requires an explicit persistent path", () => {
