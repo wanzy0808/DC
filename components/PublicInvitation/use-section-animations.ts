@@ -16,15 +16,17 @@ export function useInvitationSectionAnimations(
     const collect = () => Array.from(root.querySelectorAll<HTMLElement>("[data-invitation-section]")).flatMap((node) => {
       const key = node.dataset.invitationSection as InvitationSectionKey | undefined;
       const config = key ? styles[key] : undefined;
-      if (config?.timeline || !config?.animation || config.animation === "none") return [];
+      if (config?.timeline || config?.animation === "none") return [];
+      const animation = config?.animation ?? (key === "footer" ? "fade" : undefined);
+      if (!animation) return [];
       return [{
         node,
-        animation: config.animation,
-        duration: config.animationDuration,
-        delay: config.animationDelay,
+        animation,
+        duration: config?.animationDuration ?? (key === "footer" ? .58 : undefined),
+        delay: config?.animationDelay,
       }];
     });
 
-    return observeInvitationEntranceRoot(root, collect);
+    return observeInvitationEntranceRoot(root, collect, { preservePresentation: true });
   }, [rootRef, styles]);
 }
