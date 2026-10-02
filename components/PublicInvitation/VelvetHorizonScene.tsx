@@ -70,7 +70,6 @@ export default function VelvetHorizonScene({
     return (
       <section data-invitation-section="envelope" className="vh-envelope">
         <div aria-hidden="true" data-studio-native-object="object:envelope:sunset-glow" className="vh-envelope-glow" />
-        <VelvetHorizonArt objectKey="object:envelope:blossom-art" asset="blossom" className="vh-envelope-blossom" eager />
         <VelvetHorizonArt objectKey="object:envelope:garland-art" asset="garland" className="vh-envelope-garland" eager />
 
         <div data-studio-native-object="object:envelope:intro" className="vh-envelope-intro">
@@ -173,9 +172,7 @@ export default function VelvetHorizonScene({
       <div aria-hidden="true" data-studio-native-object="object:cover:horizon-glaze" className="vh-cover-horizon-glaze" />
       <VelvetHorizonArt objectKey="object:cover:arch-art" asset="arch" className="vh-cover-arch" eager />
       <VelvetHorizonArt objectKey="object:cover:drape-art" asset="drape" className="vh-cover-drape" eager />
-      <VelvetHorizonArt objectKey="object:cover:blossom-art" asset="blossom" className="vh-cover-blossom" eager />
-      <VelvetHorizonArt objectKey="object:cover:sunset-disc-art" asset="sunsetDisc" className="vh-cover-disc" eager />
-      <VelvetHorizonArt objectKey="object:cover:lantern-art" asset="lanterns" className="vh-cover-lanterns" eager />
+      <VelvetHorizonArt objectKey="object:cover:blossom-art" asset="garland" className="vh-cover-floral" eager />
 
       <div data-studio-native-object="object:cover:copy-panel" className="vh-cover-copy">
         <p data-studio-native-object="object:cover:kicker" className="vh-cover-kicker">{tr("The Wedding Of")}</p>
