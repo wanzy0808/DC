@@ -5,6 +5,13 @@ import type { InvitationSectionAnimation } from "@/lib/templates/section-animati
 export type TemplateNativeMotion = { animation: InvitationSectionAnimation; animationDuration?: number; animationDelay?: number };
 
 /** Theme presentation only; these defaults never overwrite a saved customer design. */
+const romanticRosePhotos: PhotoMotionMap = {
+  cover: { animation: "fade", animationDuration: .72, animationDelay: .04 },
+  personOne: { animation: "glide-left", animationDuration: .82 },
+  personTwo: { animation: "glide-right", animationDuration: .82, animationDelay: .08 },
+  gallery: { animation: "tilt-in", animationDuration: .72, animationStagger: .06, parallax: .02 },
+};
+
 const sereinPhotos: PhotoMotionMap = {
   cover: { animation: "reveal-left", animationDuration: .9, animationDelay: .16 },
   personOne: { animation: "glide-left", animationDuration: .85 },
@@ -53,6 +60,7 @@ const velvetHorizonPhotos: PhotoMotionMap = {
 };
 
 const photoDefaults: Record<string, PhotoMotionMap> = {
+  "romantic-rose": romanticRosePhotos,
   serein: sereinPhotos,
   "eternal-blossom": blossomPhotos,
   "modern-maroon": modernMaroonPhotos,
@@ -780,7 +788,102 @@ const zenAtelierNative: Record<string, TemplateNativeMotion> = {
   "object:closing:names": { animation: "soft-scale", animationDuration: .7, animationDelay: .12 },
 };
 
+const sharedSectionNative: Record<string, TemplateNativeMotion> = {
+  "heading:greeting": { animation: "rise", animationDuration: .64 },
+  "object:greeting:copy-group": { animation: "rise", animationDuration: .7, animationDelay: .05 },
+
+  "heading:identity": { animation: "rise", animationDuration: .64 },
+  "object:identity:personOne-group": { animation: "glide-left", animationDuration: .76, animationDelay: .04 },
+  "object:identity:personTwo-group": { animation: "glide-right", animationDuration: .76, animationDelay: .09 },
+
+  "heading:event": { animation: "slide-left", animationDuration: .64 },
+  "object:event:details-group": { animation: "rise", animationDuration: .7, animationDelay: .05 },
+
+  "heading:dateTime": { animation: "rise", animationDuration: .64 },
+  "object:dateTime:panel": { animation: "reveal-up", animationDuration: .72, animationDelay: .05 },
+
+  "heading:gallery": { animation: "slide-left", animationDuration: .64 },
+  "object:gallery:grid": { animation: "rise", animationDuration: .7, animationDelay: .05 },
+
+  "heading:countdown": { animation: "fade", animationDuration: .6 },
+  "object:countdown:grid": { animation: "rise", animationDuration: .68, animationDelay: .05 },
+
+  "heading:location": { animation: "slide-right", animationDuration: .64 },
+  "object:location:details-group": { animation: "rise", animationDuration: .7, animationDelay: .05 },
+
+  "heading:rsvp": { animation: "rise", animationDuration: .64 },
+  "object:rsvp:form-group": { animation: "rise", animationDuration: .72, animationDelay: .06 },
+
+  "heading:wishes": { animation: "slide-left", animationDuration: .64 },
+  "object:wishes:form-group": { animation: "rise", animationDuration: .72, animationDelay: .06 },
+
+  "heading:gift": { animation: "rise", animationDuration: .64 },
+  "object:gift:panel": { animation: "reveal-up", animationDuration: .72, animationDelay: .05 },
+
+  "heading:closing": { animation: "rise", animationDuration: .66 },
+  "object:closing:copy-group": { animation: "rise", animationDuration: .72, animationDelay: .05 },
+  "object:closing:names": { animation: "soft-scale", animationDuration: .7, animationDelay: .1 },
+
+  "object:footer:motion-group": { animation: "fade", animationDuration: .58, animationDelay: .02 },
+};
+
+const romanticRoseNative: Record<string, TemplateNativeMotion> = {
+  "object:envelope:ring-left": { animation: "soft-scale", animationDuration: .78 },
+  "object:envelope:ring-right": { animation: "soft-scale", animationDuration: .78, animationDelay: .05 },
+  "object:envelope:kicker": { animation: "fade", animationDuration: .6, animationDelay: .04 },
+  "object:envelope:card-stack": { animation: "rise", animationDuration: .82, animationDelay: .07 },
+  "object:envelope:seal": { animation: "soft-scale", animationDuration: .64, animationDelay: .12 },
+  "object:envelope:invitation-copy": { animation: "rise", animationDuration: .7, animationDelay: .14 },
+
+  "object:cover:background-photo": { animation: "fade", animationDuration: .78 },
+  "object:cover:paper-wash": { animation: "reveal-up", animationDuration: .82, animationDelay: .03 },
+  "object:cover:content-group": { animation: "rise", animationDuration: .78, animationDelay: .08 },
+  "object:cover:kicker": { animation: "fade", animationDuration: .58, animationDelay: .1 },
+  "object:cover:date": { animation: "slide-right", animationDuration: .66, animationDelay: .12 },
+  "object:cover:accent-rule": { animation: "reveal-left", animationDuration: .68, animationDelay: .14 },
+
+  "heading:greeting": { animation: "slide-left", animationDuration: .66 },
+  "object:greeting:copy-group": { animation: "glide-right", animationDuration: .74, animationDelay: .06 },
+
+  "heading:identity": { animation: "rise", animationDuration: .66 },
+  "object:identity:couple-group": { animation: "rise", animationDuration: .72, animationDelay: .05 },
+  "object:identity:personOne-group": { animation: "glide-left", animationDuration: .78, animationDelay: .07 },
+  "object:identity:personTwo-group": { animation: "glide-right", animationDuration: .78, animationDelay: .12 },
+
+  "heading:event": { animation: "slide-left", animationDuration: .66 },
+  "object:event:details-group": { animation: "rise", animationDuration: .72, animationDelay: .06 },
+
+  "heading:dateTime": { animation: "slide-right", animationDuration: .66 },
+  "object:dateTime:panel": { animation: "reveal-up", animationDuration: .74, animationDelay: .06 },
+
+  "heading:gallery": { animation: "slide-left", animationDuration: .66 },
+  "object:gallery:grid": { animation: "rise", animationDuration: .72, animationDelay: .05 },
+
+  "heading:countdown": { animation: "fade", animationDuration: .6 },
+  "object:countdown:grid": { animation: "rise", animationDuration: .7, animationDelay: .05 },
+
+  "heading:location": { animation: "slide-right", animationDuration: .66 },
+  "object:location:details-group": { animation: "glide-right", animationDuration: .74, animationDelay: .06 },
+
+  "heading:rsvp": { animation: "rise", animationDuration: .66 },
+  "object:rsvp:form-group": { animation: "rise", animationDuration: .72, animationDelay: .06 },
+
+  "heading:wishes": { animation: "slide-left", animationDuration: .66 },
+  "object:wishes:form-group": { animation: "rise", animationDuration: .72, animationDelay: .06 },
+
+  "heading:gift": { animation: "rise", animationDuration: .66 },
+  "object:gift:panel": { animation: "reveal-up", animationDuration: .74, animationDelay: .06 },
+
+  "heading:closing": { animation: "rise", animationDuration: .66 },
+  "object:closing:heart": { animation: "soft-scale", animationDuration: .64, animationDelay: .04 },
+  "object:closing:copy-group": { animation: "rise", animationDuration: .72, animationDelay: .06 },
+  "object:closing:names": { animation: "soft-scale", animationDuration: .7, animationDelay: .11 },
+
+  "object:footer:motion-group": { animation: "fade", animationDuration: .58 },
+};
+
 const nativeDefaults: Record<string, Record<string, TemplateNativeMotion>> = {
+  "romantic-rose": romanticRoseNative,
   serein: sereinNative,
   "botanical-ivory": botanicalNative,
   "eternal-blossom": blossomNative,
@@ -801,7 +904,8 @@ export function templateHasDefaultMotion(template: string) {
 }
 
 export function templateNativeMotion(template: string) {
-  return nativeDefaults[template] ?? {};
+  const themed = nativeDefaults[template];
+  return themed ? { ...sharedSectionNative, ...themed } : {};
 }
 
 export function templatePhotoMotion(template: string, overrides: PhotoMotionMap = {}, styles: InvitationSectionStyles = {}): PhotoMotionMap {
