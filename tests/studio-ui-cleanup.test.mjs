@@ -970,7 +970,8 @@ test("Premium section timelines lazy-load GSAP only for supported storytelling s
   assert.match(premiumTimelineHook, /clearProps: "opacity,transform,filter,clipPath"/);
   assert.match(premiumTimelineHook, /revision/);
 
-  assert.match(sectionAnimationHook, /config\?\.timeline \|\| config\?\.animation === "none"/);\n  assert.match(sectionAnimationHook, /key === "footer" \? "fade"/);
+  assert.match(sectionAnimationHook, /config\?\.timeline \|\| config\?\.animation === "none"/);
+  assert.match(sectionAnimationHook, /key === "footer" \? "fade"/);
   assert.match(universalTemplate, /usePremiumSectionTimelines\(rootRef, sectionStyles, String\(opened\)\)/);
   assert.match(romanticTemplate, /usePremiumSectionTimelines\(rootRef, sectionStyles, String\(opened\)\)/);
   assert.match(universalTemplate, /sectionStyles\[sectionKey\]\?\.timeline/);
