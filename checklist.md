@@ -9,6 +9,23 @@
 
 > This file is a launch checklist, not a parallel PRD. If this file conflicts with `prd.md`, `prd.md` wins. When an item is implemented, follow `AGENTS.md`: update `prd.md` only if requirements changed and append implementation history/validation to Appendix A in `prd.md`.
 
+## Tahapan aktif setelah handoff — 3 Oktober 2026
+
+Kerjakan satu batch kecil → verifikasi → commit sebelum membuka batch berikutnya. Status berikut mengacu ke source repo, bukan salinan PRD/chat lama.
+
+- [x] Cek prioritas canonical pada `prd.md`: brand Undara, general-event, tanpa limit 3 event, publish/entitlement server-authoritative dan event-scoped, serta private `UNDARA_DATA_DIR`. Ini audit prioritas handoff, bukan klaim seluruh Markdown bebas kontradiksi.
+- [x] Music Asset Library Studio: 14 lagu bundled dari registry bersama, cari judul/artis, dengarkan tanpa mengganti pilihan, radio pilihan aktif/default, upload event terpisah, dan event playback bersama. Jalur Save lama tetap dipakai.
+- [x] Regression suite akhir batch musik: 366/366; TypeScript dan build produksi lokal 72/72 halaman lulus. QA browser dan CI remote dicatat terpisah setelah benar-benar diamati.
+- [ ] Uji browser musik: browse → play/pause → pilih → Simpan → reload → preview/public, ID/EN, ganti template, upload/delete, panel ditutup, tab tersembunyi, dan tidak ada dua player berbunyi. Gunakan akun/event yang benar.
+- [ ] Production storage: verifikasi volume `UNDARA_DATA_DIR`, dry-run migrasi file legacy, review hasil sebelum apply pada server target.
+- [ ] Backup/restore: uji pemulihan PostgreSQL + private media pada environment terpisah; catat hasil nyata sebelum sign-off.
+- [ ] Authorization: negative E2E Customer A/B dan role matrix; source hardening 2 Oktober sudah ada, full runtime audit masih terbuka.
+- [ ] Custom flow: verifikasi migration deploy dan Owner → assigned Designer → review → handoff/archive dengan file event user.
+- [ ] Studio parity: resize 8 arah, rotate, layer ±1, pan 100%, shortcut Amplop/Isi dan toolbar follow; kerjakan bug yang terkonfirmasi satu per commit.
+- [ ] Template/marketing/dashboard: QA flicker/overlap dan seluruh section, lalu device/Light/Dark/ID/EN secara terlingkup.
+
+Implementasi storage/custom/auth yang sudah ada tidak diulang. Fitur ekspansi menunggu fondasi dan bukti QA di atas. `prd.md` Appendix A menyimpan rationale dan hasil per batch.
+
 ## Rebrand Undara — migrasi bertahap (28 September 2026)
 
 - [x] Homepage woodland composition: forest silhouette sebagai depth di belakang Pintu, branch 01–04 sebagai edge framing, branch 05 sebagai divider copy; cloud bubble dan petal ambience tidak dipakai di homepage.
@@ -50,7 +67,7 @@ Ringkasan ini memperbarui pembacaan snapshot 17 September di bawah; checkbox lam
 | Media | Upload `InvitationAsset` baru keluar dari `public/`: source memakai private `UNDARA_DATA_DIR`, authorized media endpoint, Sharp WebP, audio signature/range, dan Build Validation `36984310873` lulus pada `6435f0d`. | Konfigurasi persistent volume production, dry-run/apply migrasi legacy `public/uploads`, backup+restore nyata, dan browser playback/password/personal E2E. |
 | Studio | Perbaikan seleksi layer terkunci/overlap `ab1a9de0`; Build Validation lulus. | QA gestur pointer/touch, gambar transparan bertumpuk dan kesetaraan renderer publik. |
 
-Urutan kerja aktif: uji alur akun/pembayaran dengan PostgreSQL dan email nyata, konfigurasi volume persisten + migrasi media legacy pada deployment, lakukan audit otorisasi lintas akun, lalu E2E serta backup/restore sebelum sign-off.
+Urutan kerja aktif mengikuti Tahapan aktif setelah handoff di atas. Akun/pembayaran dengan PostgreSQL dan email nyata, volume persisten/migrasi legacy, otorisasi lintas akun, E2E dan backup/restore tetap menjadi prasyarat sign-off production, bukan dianggap selesai oleh commit source.
 
 ---
 
@@ -90,8 +107,8 @@ Current repository evidence already shows:
 
 Important gaps found in the initial audit:
 
-- [ ] **BLOCKER — real email delivery is not production-ready.** Registration currently creates a verification token but prints the verification URL to server logs with a `[DEV]` message. Integrate a transactional email provider and never depend on logs for verification links.
-- [ ] **BLOCKER — password reset / forgot-password flow needs production implementation and verification.** No reset flow was confirmed during this audit.
+- [ ] **BLOCKER — real email delivery still needs production verification.** Resend delivery and guards that suppress token logging in production already exist in source; verify provider/APP_URL configuration and real verification/reset delivery instead of rebuilding the implemented email flow.
+- [ ] **BLOCKER — password reset / forgot-password needs production E2E verification.** Routes, expiring hashed tokens, password update and session invalidation exist in source. Test actual delivery, expiry/reuse/concurrent requests and login after reset before sign-off.
 - [ ] **BLOCKER — payment is currently manual proof-of-transfer + admin confirmation, not a payment-gateway/webhook flow.** Decide whether manual transfer is intentionally the launch payment model. If yes, fully harden and document that operational flow. If moving to a gateway, implement signed webhook verification, idempotency, pending/paid/failed/expired handling, and event-scoped entitlement activation.
 - [ ] **BLOCKER — source-level private persistent VPS storage is implemented, tetapi production migration/restore belum sign-off.** Upload `InvitationAsset` baru tidak lagi ditulis ke `public/uploads`; production wajib mengisi absolute `UNDARA_DATA_DIR` pada volume persisten, menjalankan migrasi legacy hingga file publik lama terhapus, lalu membuktikan backup + restore dan browser playback. Object storage eksternal bersifat opsional, bukan kewajiban.
 - [ ] **BLOCKER — production backup + tested restore procedure not verified.** Database backup is not complete until a restore has actually been tested.

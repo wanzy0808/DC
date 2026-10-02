@@ -1990,8 +1990,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           />}
           {panel === "music" && <MusicPanel
             musicUrl={musicUrl}
-            defaultTrack={getInvitationDefaultMusic(design.template).title}
-            defaultUrl={getInvitationDefaultMusic(design.template).url}
+            templateKey={design.template}
             assets={invitation?.assets ?? []}
             busy={audioBusy || saving}
             setMusicUrl={setMusicUrl}

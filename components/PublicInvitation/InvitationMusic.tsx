@@ -1,5 +1,7 @@
 "use client";
 
+import { INVITATION_MUSIC_PAUSE_EVENT, INVITATION_MUSIC_PLAY_EVENT } from "@/lib/invitations/music-playback";
+
 import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
 import { invitationText } from "@/lib/invitations/language";
 
@@ -37,12 +39,13 @@ const InvitationMusic = forwardRef<InvitationMusicHandle, InvitationMusicProps>(
       const pauseWhenHidden = () => {
         if (document.hidden) audio?.pause();
       };
-      window.addEventListener("dc-invitation-music-play", stopOtherInvitation);
+      window.addEventListener(INVITATION_MUSIC_PLAY_EVENT, stopOtherInvitation);
       document.addEventListener("visibilitychange", pauseWhenHidden);
       return () => {
-        window.removeEventListener("dc-invitation-music-play", stopOtherInvitation);
+        window.removeEventListener(INVITATION_MUSIC_PLAY_EVENT, stopOtherInvitation);
         document.removeEventListener("visibilitychange", pauseWhenHidden);
         audio?.pause();
+        if (audio) window.dispatchEvent(new CustomEvent(INVITATION_MUSIC_PAUSE_EVENT, { detail: { player: audio } }));
       };
     }, []);
 
@@ -79,11 +82,11 @@ const InvitationMusic = forwardRef<InvitationMusicHandle, InvitationMusicProps>(
           onPlay={(event) => {
             setFailed(false);
             setPlaying(true);
-            window.dispatchEvent(new CustomEvent("dc-invitation-music-play", { detail: { player: event.currentTarget } }));
+            window.dispatchEvent(new CustomEvent(INVITATION_MUSIC_PLAY_EVENT, { detail: { player: event.currentTarget } }));
           }}
           onPause={(event) => {
             setPlaying(false);
-            window.dispatchEvent(new CustomEvent("dc-invitation-music-pause", { detail: { player: event.currentTarget } }));
+            window.dispatchEvent(new CustomEvent(INVITATION_MUSIC_PAUSE_EVENT, { detail: { player: event.currentTarget } }));
           }}
           onError={() => {
             setFailed(true);

@@ -3,9 +3,8 @@
 import { useState, type ReactNode } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { invitationText, type InvitationLanguage } from "@/lib/invitations/language";
-import { RotateCcw, Upload } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { MAX_AUDIO_FILES, AUDIO_MIME_TYPES } from "@/lib/invitations/audio-limits";
+import { RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { invitationSectionItems } from "@/lib/templates/sections";
 import type { PaletteKey } from "@/lib/templates/design";
 import type {
@@ -350,53 +349,4 @@ export function ColorPanel({
   );
 }
 
-export function MusicPanel({
-  musicUrl, defaultTrack, defaultUrl, assets, busy, setMusicUrl, onUpload, onDelete,
-}: {
-  musicUrl: string;
-  defaultTrack: string;
-  defaultUrl: string;
-  assets: InvitationDesignerInvitation["assets"];
-  busy: boolean;
-  setMusicUrl: (value: string) => void;
-  onUpload?: (file: File) => void;
-  onDelete?: (id: string) => void;
-}) {
-  const { locale } = useLanguage();
-  const en = locale === "en";
-  const tracks = assets.filter((asset) => asset.type === "AUDIO");
-  const activeUrl = musicUrl || tracks[0]?.url || defaultUrl;
-  const full = tracks.length >= MAX_AUDIO_FILES;
-  return (
-    <div>
-      <Heading title="Musik" description={onUpload ? "Maksimal 2 file, masing-masing 3 MB. Hapus file untuk menggantinya." : "Gunakan musik bawaan tema untuk preview template. Upload musik customer tetap event-scoped."} />
-      <fieldset disabled={busy} className="mt-5 min-w-0 space-y-3 border-0 p-0">
-        <legend className="sr-only">{en ? "Choose music" : "Pilih musik"}</legend>
-        <label className="flex min-h-12 cursor-pointer items-center gap-3 border-b border-primary/20 py-3 text-sm">
-          <input type="radio" name="studio-music" checked={activeUrl === defaultUrl} onChange={() => setMusicUrl(defaultUrl)} className="accent-primary" />
-          <span>{defaultTrack}<span className="mt-1 block text-xs text-muted-foreground">{en ? "Theme music · no upload slot used" : "Bawaan tema · tidak memakai slot"}</span></span>
-        </label>
-        {musicUrl && musicUrl !== defaultUrl && !tracks.some((track) => track.url === musicUrl) && (
-          <p className="text-xs text-muted-foreground">{en ? "Previously saved music is in use." : "Musik tersimpan sebelumnya sedang digunakan."}</p>
-        )}
-        {tracks.map((track) => (
-          <div key={track.id} className="flex items-center gap-3 border-b border-primary/20 py-3">
-            <label className="flex min-h-11 min-w-0 flex-1 cursor-pointer items-center gap-3 text-sm">
-              <input type="radio" name="studio-music" checked={activeUrl === track.url} onChange={() => setMusicUrl(track.url)} className="accent-primary" />
-              <span className="break-all">{track.title || (en ? "Uploaded Music" : "Musik unggahan")}</span>
-            </label>
-            {onDelete && <Button size="sm" onClick={() => onDelete(track.id)} aria-label={`${en ? "Delete" : "Hapus"} ${track.title || (en ? "music" : "musik")}`}>{en ? "Delete" : "Hapus"}</Button>}
-          </div>
-        ))}
-        {onUpload && <>
-          <p className="text-xs text-muted-foreground">{tracks.length} / {MAX_AUDIO_FILES} {en ? "files" : "file"}</p>
-          <label aria-disabled={full || busy} className={buttonVariants({ size: "sm", className: `flex min-h-11 w-full cursor-pointer px-3 py-3 ${full || busy ? "pointer-events-none opacity-50" : ""}` })}>
-            <Upload className="h-4 w-4" /> {busy ? (en ? "Processing…" : "Memproses…") : (en ? "Upload Music" : "Unggah Musik")}
-            <input type="file" accept={AUDIO_MIME_TYPES.join(",")} disabled={full || busy} className="sr-only"
-              onChange={(event) => { const file = event.target.files?.[0]; if (file) onUpload(file); event.currentTarget.value = ""; }} />
-          </label>
-        </>}
-      </fieldset>
-    </div>
-  );
-}
+export { MusicPanel } from "@/components/InvitationStudio/MusicPanel";

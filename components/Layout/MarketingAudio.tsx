@@ -1,5 +1,7 @@
 "use client";
 
+import { INVITATION_MUSIC_PAUSE_EVENT, INVITATION_MUSIC_PLAY_EVENT } from "@/lib/invitations/music-playback";
+
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Volume2, VolumeX } from "lucide-react";
@@ -52,7 +54,7 @@ export function MarketingAudioProvider({ children }: { children: ReactNode }) {
     const onPlay = () => setSoundOn(true);
     const onPause = () => setSoundOn(false);
     const startOnGesture = () => {
-      if (!allowedRef.current || manuallyMutedRef.current || !player.paused) return;
+      if (!allowedRef.current || manuallyMutedRef.current || previewPlayerRef.current || !player.paused) return;
       void player.play().catch(() => setSoundOn(false));
     };
     player.addEventListener("play", onPlay);
@@ -68,19 +70,19 @@ export function MarketingAudioProvider({ children }: { children: ReactNode }) {
       const previewPlayer = (event as CustomEvent<{ player: HTMLAudioElement }>).detail?.player;
       if (!previewPlayer || previewPlayer !== previewPlayerRef.current) return;
       previewPlayerRef.current = null;
-      if (resumeMarketingRef.current && allowedRef.current && !manuallyMutedRef.current) {
+      if (resumeMarketingRef.current && allowedRef.current && !manuallyMutedRef.current && !document.hidden) {
         void player.play().catch(() => setSoundOn(false));
       }
       resumeMarketingRef.current = false;
     };
-    window.addEventListener("undara-invitation-music-play", onInvitationPlay);
-    window.addEventListener("undara-invitation-music-pause", onInvitationPause);
+    window.addEventListener(INVITATION_MUSIC_PLAY_EVENT, onInvitationPlay);
+    window.addEventListener(INVITATION_MUSIC_PAUSE_EVENT, onInvitationPause);
     window.addEventListener("pointerdown", startOnGesture);
     window.addEventListener("keydown", startOnGesture);
     if (allowedRef.current) void player.play().catch(() => setSoundOn(false));
     return () => {
-      window.removeEventListener("undara-invitation-music-play", onInvitationPlay);
-      window.removeEventListener("undara-invitation-music-pause", onInvitationPause);
+      window.removeEventListener(INVITATION_MUSIC_PLAY_EVENT, onInvitationPlay);
+      window.removeEventListener(INVITATION_MUSIC_PAUSE_EVENT, onInvitationPause);
       window.removeEventListener("pointerdown", startOnGesture);
       window.removeEventListener("keydown", startOnGesture);
       player.removeEventListener("play", onPlay);
@@ -101,6 +103,8 @@ export function MarketingAudioProvider({ children }: { children: ReactNode }) {
       return;
     }
     manuallyMutedRef.current = false;
+    // An explicit marketing play replaces the audition, rather than mixing both songs.
+    previewPlayerRef.current?.pause();
     try {
       await player.play();
     } catch {
