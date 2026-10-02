@@ -59,7 +59,8 @@ export function useInvitationNativeVisualAnimations(
       return Array.from(targets.values());
     };
     const themed = templateHasDefaultMotion(template);
-    const replay = themed && !["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "velvet-horizon"].includes(template) && template !== "zen-atelier" && template !== "celestial-ink" && template !== "paper-cut-botanical" && template !== "pencil-reverie";
+    // Theme entrances are one-shot while scrolling. Studio replay remains available through the explicit replay event.
+    const replay = false;
     return observeInvitationEntranceRoot(root, collect, {
       replay,
       preservePresentation: themed,
