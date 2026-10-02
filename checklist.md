@@ -47,10 +47,10 @@ Ringkasan ini memperbarui pembacaan snapshot 17 September di bawah; checkbox lam
 | --- | --- | --- |
 | Akun | Resend email verifikasi, reset password, invalidasi sesi reset, pembatasan request per proses; Build Validation `7356c351` lulus. | Konfigurasi `APP_URL`/Resend, pengiriman email nyata, alur klik dan rate limit terdistribusi pada multi-instance. |
 | Pembayaran | Invoice `PaymentOrder`, aktivasi server, klaim `PENDING` atomik untuk mencegah aktivasi/kuota ganda; Build Validation `da8e1c25` lulus. | Uji konkurensi PostgreSQL nyata, rekonsiliasi dan pemeriksaan manual end-to-end; bukti transfer masih URL/data di database. |
-| Media | Upload `InvitationAsset` baru keluar dari `public/`: source memakai private `UNDARA_DATA_DIR`, authorized media endpoint, Sharp WebP, audio signature/range, dan Build Validation `36983861514` lulus pada `abadc44a`. | Konfigurasi persistent volume production, dry-run/apply migrasi legacy `public/uploads`, backup+restore nyata, dan browser playback/password/personal E2E. |
+| Media | Upload `InvitationAsset` baru keluar dari `public/`: source memakai private `UNDARA_DATA_DIR`, authorized media endpoint, Sharp WebP, audio signature/range, dan Build Validation `36984310873` lulus pada `6435f0d`. | Konfigurasi persistent volume production, dry-run/apply migrasi legacy `public/uploads`, backup+restore nyata, dan browser playback/password/personal E2E. |
 | Studio | Perbaikan seleksi layer terkunci/overlap `ab1a9de0`; Build Validation lulus. | QA gestur pointer/touch, gambar transparan bertumpuk dan kesetaraan renderer publik. |
 
-Urutan kerja aktif: uji alur akun/pembayaran dengan PostgreSQL dan email nyata, pindahkan media ke penyimpanan persisten, lakukan audit otorisasi lintas akun, lalu E2E serta backup/restore sebelum sign-off.
+Urutan kerja aktif: uji alur akun/pembayaran dengan PostgreSQL dan email nyata, konfigurasi volume persisten + migrasi media legacy pada deployment, lakukan audit otorisasi lintas akun, lalu E2E serta backup/restore sebelum sign-off.
 
 ---
 

@@ -581,7 +581,7 @@ Unggahan musik dibatasi **2 aset AUDIO per undangan, masing-masing maksimal 3 MB
 
 Foto tetap melalui Sharp: decode, orientasi otomatis, resize maksimal 2000×2000 tanpa pembesaran, encode WebP quality 82, simpan event-scoped. Batas foto tetap 30 file dan input maksimal 15 MB. **Wishes sekarang memakai shared API dan model GuestWish event-scoped**, bukan placeholder; tetap jangan mengklaim fitur berfungsi pada database target sebelum migrasi GuestWish telah diterapkan dan alur submit publik diuji.
 
-### 7.2.1c Penyimpanan media customer privat di VPS (2 Oktober 2026)
+### 7.2.1g Penyimpanan media customer privat di VPS (2 Oktober 2026)
 
 Binary `InvitationAsset` customer untuk **IMAGE** dan **AUDIO** baru tidak boleh ditulis ke `public/` atau mempunyai static-file URL yang melewati authorization. Penyimpanan lokal tetap diperbolehkan tanpa object-storage pihak ketiga: development memakai fallback `.undara-data`, sedangkan production wajib mengisi `UNDARA_DATA_DIR` dengan **absolute path pada disk/volume VPS yang persisten di luar repository dan web root** (contoh operasional `/var/lib/undara`). File disimpan event-scoped di `invitation-assets/<invitationId>/<assetId>.<ext>` dengan nama opaque; database menyimpan URL endpoint `/api/media/invitation-assets/<assetId>.<ext>`, bukan path filesystem.
 
@@ -2533,8 +2533,8 @@ Follow-up commits include `8c64ee0eb259f1f9bf6644b8948fc004e16f3f20`, `6672a8463
 
 **Affected areas:** `lib/storage/private-media.ts`, `app/api/invitations/assets/{upload,[assetId]}/route.ts`, `app/api/media/invitation-assets/[assetKey]/route.ts`, `scripts/migrate-invitation-media.ts`, `.env.example`, `.gitignore`, `package.json`, dan regression tests.
 
-**Representative commits:** `e6355b9c8bf31c078244c707d979b041284eda25`, `8fd0c1debd9deec28bf8c9bcbc6f14a075cbdb76`, dan `abadc44aa1a31aae94e1ea19106addd8e3cfa0e0`.
+**Representative commits:** `e6355b9c8bf31c078244c707d979b041284eda25`, `8fd0c1debd9deec28bf8c9bcbc6f14a075cbdb76`, `abadc44aa1a31aae94e1ea19106addd8e3cfa0e0`, dan `6435f0d93d707dc1a356814e1449ad66ea6a40c2`.
 
-**Observed validation:** GitHub Actions **Build Validation** run `36983861514` pada code HEAD `abadc44aa1a31aae94e1ea19106addd8e3cfa0e0` selesai **success**: Prisma generate, seluruh source regression tests, dan Next.js production build lulus. **Orphan Audit** run `36983861573` juga selesai **success**. Ini memvalidasi source/build, bukan konfigurasi disk production atau migrasi data nyata.
+**Observed validation:** GitHub Actions **Build Validation** run `36984310873` pada code HEAD `6435f0d93d707dc1a356814e1449ad66ea6a40c2` selesai **success**: Prisma generate, seluruh source regression tests, dan Next.js production build lulus. **Orphan Audit** run `36984310816` juga selesai **success**. Ini memvalidasi source/build termasuk rewrite referensi legacy, bukan konfigurasi disk production atau migrasi data nyata.
 
 **Not established:** belum ada bukti `UNDARA_DATA_DIR` production benar-benar menunjuk persistent volume, belum menjalankan legacy migration pada server customer data, belum menguji backup+restore media, dan belum menjalankan browser E2E upload → reload → publish/password/personal invitation → image/audio playback pada environment target.
