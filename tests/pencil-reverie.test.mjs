@@ -99,7 +99,7 @@ test("Pencil Reverie uses native one-shot section choreography without moving co
   assert.match(block, /"object:gallery:memory-board": \{ animation: "rise"/);
   assert.match(block, /"object:countdown:clock-art": \{ animation: "soft-scale"/);
   assert.doesNotMatch(block, /object:countdown:[^"]*-value/);
-  assert.match(nativeHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "velvet-horizon"\]\.includes\(template\)[^;]*template !== "pencil-reverie"/);
+  assert.match(nativeHook, /const replay = false;/);
   assert.match(nativeHook, /waitForImages:[^\n]*pencil-reverie/);
   assert.doesNotMatch(renderer, /data\.prVisible/);
 });
