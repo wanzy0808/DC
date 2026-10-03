@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { hasInvitationAccess } from "@/lib/invitations/password";
 import { InvitationLockedState } from "@/components/PublicInvitation/PublicInvitation";
 import PublicInvitationRenderer from "@/components/PublicInvitation/PublicInvitationRenderer";
@@ -26,7 +26,7 @@ export default async function PersonalInvitationPage({
   });
   if (!guest) notFound();
 
-  if (!invitation.isPublished || !guest.personalPublished || !hasPaidDigitalInvitation(invitation.payment)) {
+  if (!invitation.isPublished || !guest.personalPublished || !(await hasAccountDigitalInvitation(invitation.ownerId, invitation.payment))) {
     return <InvitationLockedState />;
   }
 

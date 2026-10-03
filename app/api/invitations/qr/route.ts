@@ -3,14 +3,14 @@ import QRCode from "qrcode";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { invitationQrTarget } from "@/lib/invitations/qr";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 
 const PRIVATE_HEADERS = { "Cache-Control": "private, no-store" };
 
 export const runtime = "nodejs";
 
 /**
- * Generate/download exactly one deterministic QR per owned, paid invitation.
+ * Generate/download one QR per owned invitation with active Digital access.
  * It encodes an app-hosted permanent invitation ID redirect, NOT a guest's
  * signed QR ticket. The PNG is generated in memory on this application server.
  */
@@ -34,9 +34,9 @@ export async function GET(request: Request) {
     if (!invitation) {
       return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404, headers: PRIVATE_HEADERS });
     }
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
+    if (!(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
       return NextResponse.json(
-        { error: "QR undangan tersedia setelah pembayaran paket Undangan Digital berhasil." },
+        { error: "QR undangan membutuhkan akses Undangan Digital." },
         { status: 402, headers: PRIVATE_HEADERS },
       );
     }

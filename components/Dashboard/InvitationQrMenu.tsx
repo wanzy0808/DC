@@ -7,7 +7,7 @@ import { controlStyles } from "@/components/ui/control-styles";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import InvitationQrPreview from "@/components/Dashboard/InvitationQrPreview";
-import { paidInvitationQrOptions, type InvitationQrOption } from "@/components/Dashboard/invitation-qr";
+import { accessibleInvitationQrOptions, type InvitationQrOption } from "@/components/Dashboard/invitation-qr";
 import { displayTitleCase } from "@/lib/text/display-title-case";
 
 export default function InvitationQrMenu({ onManageInvitations }: { onManageInvitations: () => void }) {
@@ -34,7 +34,7 @@ export default function InvitationQrMenu({ onManageInvitations }: { onManageInvi
       const response = await fetch("/api/invitations?all=1", { cache: "no-store", signal: controller.signal });
       const data = await response.json();
       if (!response.ok || !Array.isArray(data?.invitations)) throw new Error("Invitation list unavailable");
-      if (!controller.signal.aborted) setInvitations(paidInvitationQrOptions(data.invitations));
+      if (!controller.signal.aborted) setInvitations(accessibleInvitationQrOptions(data.invitations));
     } catch {
       if (!controller.signal.aborted) setFailed(true);
     } finally {
@@ -70,7 +70,7 @@ export default function InvitationQrMenu({ onManageInvitations }: { onManageInvi
           </div>
         ) : !invitations.length ? (
           <div className="space-y-4">
-            <p className="text-sm text-foreground">{d("QR tersedia setelah pembayaran Undangan Digital.")}</p>
+            <p className="text-sm text-foreground">{d("Aktifkan akses Undangan Digital untuk melihat QR.")}</p>
             <Button onClick={() => { changeOpen(false); onManageInvitations(); }}>{d("Lihat undangan")}</Button>
           </div>
         ) : (

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { hasInvitationAccess } from "@/lib/invitations/password";
 import { slugifyEvent } from "@/lib/invitations/slug";
 import { InvitationLockedState } from "@/components/PublicInvitation/PublicInvitation";
@@ -37,7 +37,7 @@ export default async function EventInvitationPage({
   if (
     !invitation.templateKey.trim() ||
     !invitation.isPublished ||
-    !hasPaidDigitalInvitation(invitation.payment)
+    !(await hasAccountDigitalInvitation(invitation.ownerId, invitation.payment))
   ) {
     return <InvitationLockedState />;
   }

@@ -109,5 +109,5 @@ test("personal drafts are editable before payment, but guest publication require
   assert.doesNotMatch(api, /hasAccountDigitalInvitation/);
   assert.doesNotMatch(panel, /if \(!selectedEvent\.accessPaid\)/);
   assert.match(api, /body\.published && !invitation\.isPublished/);
-  assert.match(publicPage, /hasPaidDigitalInvitation\(invitation\.payment\)/);
+  assert.match(publicPage, /await hasAccountDigitalInvitation\(invitation\.ownerId, invitation\.payment\)/);
 });

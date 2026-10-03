@@ -1,14 +1,12 @@
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
-
 export type InvitationQrOption = {
   id: string;
   title: string;
   isPublished: boolean;
-  payment?: { packageKey: string; status: string } | null;
+  accessPaid?: boolean;
 };
 
-export function paidInvitationQrOptions(invitations: InvitationQrOption[]) {
-  return invitations.filter((invitation) => hasPaidDigitalInvitation(invitation.payment));
+export function accessibleInvitationQrOptions(invitations: InvitationQrOption[]) {
+  return invitations.filter((invitation) => invitation.accessPaid === true);
 }
 
 export function invitationQrImageUrl(invitationId: string, download = false) {

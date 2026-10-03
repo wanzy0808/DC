@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { hasInvitationAccess } from "@/lib/invitations/password";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { prisma } from "@/lib/prisma";
 import {
@@ -121,6 +122,7 @@ async function serve(
       url: true,
       invitation: {
         select: {
+          ownerId: true,
           slug: true,
           eventConfigured: true,
           isPublished: true,
@@ -162,7 +164,7 @@ async function serve(
     if (
       !invitation.eventConfigured ||
       !invitation.isPublished ||
-      !hasPaidDigitalInvitation(invitation.payment)
+      !(await hasAccountDigitalInvitation(invitation.ownerId, invitation.payment))
     ) {
       return notFound();
     }
@@ -214,7 +216,7 @@ async function serve(
     });
   }
 
-  const publicCacheable = !authenticatedPrivateAccess && !asset.invitation.passwordProtected;
+  const publicCacheable = !authenticatedPrivateAccess && !asset.invitation.passwordProtected && hasPaidDigitalInvitation(asset.invitation.payment);
   const headers = new Headers({
     "Content-Type": parsed.contentType,
     "Cache-Control": publicCacheable

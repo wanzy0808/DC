@@ -5,26 +5,28 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { LanguageProvider } from "../components/I18n/LanguageProvider.tsx";
 import MenuModule from "../components/Dashboard/InvitationQrMenu.tsx";
 import PreviewModule from "../components/Dashboard/InvitationQrPreview.tsx";
-import { invitationQrImageUrl, paidInvitationQrOptions } from "../components/Dashboard/invitation-qr.ts";
+import { invitationQrImageUrl, accessibleInvitationQrOptions } from "../components/Dashboard/invitation-qr.ts";
 
 const InvitationQrMenu = MenuModule.default ?? MenuModule;
 const InvitationQrPreview = PreviewModule.default ?? PreviewModule;
 const render = (element, locale = "id") => renderToStaticMarkup(createElement(LanguageProvider, { initialLocale: locale }, element));
 
-test("QR choices follow each invitation payment, including paid drafts but excluding account-only access", () => {
+test("QR choices follow server access, including paid drafts and manual Owner grants", () => {
   const invitations = [
-    { id: "paid-draft", title: "Draft", isPublished: false, eventConfigured: false, payment: { packageKey: "INVITATION_BASIC", status: "PAID" } },
-    { id: "paid-guestbook", title: "Guestbook", isPublished: true, payment: { packageKey: "GUESTBOOK_DIGITAL", status: "PAID" } },
-    { id: "paid-bundle", title: "Bundle", isPublished: true, payment: { packageKey: "INVITATION_GUESTBOOK", status: "PAID" } },
-    { id: "unpaid", title: "Unpaid", isPublished: false, payment: { packageKey: "INVITATION_BASIC", status: "PENDING" } },
-    { id: "wrong-package", title: "WA", isPublished: true, payment: { packageKey: "WA_BLAST", status: "PAID" } },
+    { id: "paid-draft", title: "Draft", isPublished: false, eventConfigured: false, accessPaid: true, payment: { packageKey: "INVITATION_BASIC", status: "PAID" } },
+    { id: "paid-guestbook", title: "Guestbook", isPublished: true, accessPaid: true, payment: { packageKey: "GUESTBOOK_DIGITAL", status: "PAID" } },
+    { id: "paid-bundle", title: "Bundle", isPublished: true, accessPaid: true, payment: { packageKey: "INVITATION_GUESTBOOK", status: "PAID" } },
+    { id: "unpaid", title: "Unpaid", isPublished: false, accessPaid: false, payment: { packageKey: "INVITATION_BASIC", status: "PENDING" } },
+    { id: "wrong-package", title: "WA", isPublished: true, accessPaid: false, payment: { packageKey: "WA_BLAST", status: "PAID" } },
     { id: "account-grant", title: "Grant", isPublished: false, accessPaid: true, payment: null },
     { id: "no-payment", title: "Missing", isPublished: false },
+    { id: "revoked", title: "Revoked", isPublished: true, accessPaid: false },
+    { id: "flag-not-true", title: "Bad Flag", isPublished: true, accessPaid: "true" },
   ];
   const original = structuredClone(invitations);
-  assert.deepEqual(paidInvitationQrOptions(invitations).map(({ id }) => id), ["paid-draft", "paid-guestbook", "paid-bundle"]);
+  assert.deepEqual(accessibleInvitationQrOptions(invitations).map(({ id }) => id), ["paid-draft", "paid-guestbook", "paid-bundle", "account-grant"]);
   assert.deepEqual(invitations, original);
-  assert.deepEqual(paidInvitationQrOptions([]), []);
+  assert.deepEqual(accessibleInvitationQrOptions([]), []);
 });
 
 test("preview and download stay on the app and identify the same selected invitation", () => {

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 
 /**
- * Stable public destination for a buyer's invitation-share QR.
+ * Stable public destination for an invitation-share QR.
  * An invitation may change slug while still a draft, but its QR must not.
  * Never treat this as an individual guest ticket or Usher check-in token.
  */
@@ -20,6 +20,7 @@ export async function GET(
     const invitation = await prisma.invitation.findUnique({
       where: { id: invitationId },
       select: {
+        ownerId: true,
         slug: true,
         eventConfigured: true,
         templateKey: true,
@@ -32,7 +33,7 @@ export async function GET(
       !invitation.eventConfigured ||
       !invitation.templateKey.trim() ||
       !invitation.isPublished ||
-      !hasPaidDigitalInvitation(invitation.payment)
+      !(await hasAccountDigitalInvitation(invitation.ownerId, invitation.payment))
     ) {
       return new Response("Undangan belum tersedia.", {
         status: 404,
