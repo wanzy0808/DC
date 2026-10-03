@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { getOwnerPackageGrant } from "@/lib/packages/owner-grants";
+import { assertInvitationMusicAsset, MissingMusicAssetError } from "@/lib/invitations/music-selection";
 import {
   buildEventTitle,
   getEventCategory,
@@ -292,8 +293,6 @@ export async function POST(request: Request) {
   }
 }
 
-class MissingMusicAssetError extends Error {}
-
 export async function PUT(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
@@ -453,10 +452,9 @@ export async function PUT(request: Request) {
       await tx.$queryRaw`SELECT "id" FROM "Invitation" WHERE "id" = ${invitation.id} FOR UPDATE`;
       const current = await tx.invitation.findUniqueOrThrow({ where: { id: invitation.id } });
       const musicUrl = String(body.musicUrl ?? current.musicUrl ?? "").trim() || null;
-      if (musicUrl?.startsWith("/uploads/music/")) {
-        const asset = await tx.invitationAsset.findFirst({ where: { invitationId: invitation.id, ownerId: user.id, type: "AUDIO", url: musicUrl } });
-        if (!asset) throw new MissingMusicAssetError("Musik sudah dihapus. Pilih lagu yang tersedia, lalu simpan lagi.");
-      }
+      await assertInvitationMusicAsset(musicUrl, invitation.id, user.id, (where) =>
+        tx.invitationAsset.findFirst({ where }),
+      );
       return tx.invitation.update({
         where: { id: invitation.id },
         data: {
@@ -543,4 +541,3 @@ export async function DELETE(request: Request) {
     return databaseFailure(error, "Acara belum dapat dihapus.");
   }
 }
-
