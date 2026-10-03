@@ -42,6 +42,7 @@ export default function PhotoPanel({
 }) {
   const { locale } = useLanguage();
   const en = locale === "en";
+  const defaultPhotoLabel = en ? "Back to default" : "Kembali ke bawaan";
   const slotLabels = en ? englishLabels : labels;
   const pictures = photos.filter((asset) => asset.type === "IMAGE");
   const [uploading, setUploading] = useState(false);
@@ -164,8 +165,8 @@ export default function PhotoPanel({
                     </Button>
                   ) : (
                     <Button type="button" size="sm" onClick={() => { onActiveSlotChange(slot); onSetPhoto(slot, null); }} className="min-h-11 max-w-full whitespace-normal text-sm"
-                      aria-label={`${en ? "Select photo automatically for " : "Pilih foto otomatis untuk "}${slotLabels[slot]}`}>
-                      {en ? "Automatic" : "Otomatis"}
+                      aria-label={`${defaultPhotoLabel}: ${slotLabels[slot]}`}>
+                      {defaultPhotoLabel}
                     </Button>
                   )}
                 </div>

@@ -28,6 +28,7 @@ Kerjakan satu batch kecil → verifikasi → commit sebelum membuka batch beriku
 - [ ] Studio Foto: QA browser perpindahan slot/Foto → inspector kanan, crop/urutan/playback, penutupan seleksi, mobile scroll, dan Save → reload → public.
 - [x] Ringkas copy seluruh menu Studio: hapus penjelasan berulang di tombol/kartu dan detail implementasi; label editor 8–11px menjadi minimal 12px, aksi utama 14px. Batas upload, error, aksesibilitas serta kontrol yang sama dipertahankan. Lokal 394/394 tes, TypeScript/build lulus; lint 13 file lulus, dua error effect lama terkonfirmasi pada baseline.
 - [ ] Studio menu: QA visual desktop/mobile Light/Dark dan ID/EN untuk keterbacaan, wrapping label, tooltip serta scroll inspector setelah pemadatan copy.
+- [x] Tombol Foto memakai Kembali ke bawaan (ID) / Back to default (EN), menggantikan Otomatis; nama aksesibel mengikuti label dan slot. 6/6 regression tests Foto termasuk label ID/EN serta lint PhotoPanel lulus.
 - [ ] Uji browser musik: browse → play/pause → pilih → Simpan → reload → preview/public, ID/EN, ganti template, upload/delete, panel ditutup, tab tersembunyi, dan tidak ada dua player berbunyi. Gunakan akun/event yang benar.
 - [ ] Studio resize/rotate: QA delapan handle, sisi/sudut yang tetap, objek berotasi, serta parity Amplop/Isi dan renderer publik.
 - [ ] Studio layer: QA naik/turun satu posisi dan front/back, batas urutan, multi-select serta lock/hide.

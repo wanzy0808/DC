@@ -18,7 +18,7 @@ const noop = () => {};
 // tsx exposes CJS default exports differently from Next's bundler.
 const PhotoPanel = PhotoPanelModule.default ?? PhotoPanelModule;
 const StudioSelectionInspector = StudioSelectionInspectorModule.default ?? StudioSelectionInspectorModule;
-const renderLeft = (activeSlot) => renderToStaticMarkup(createElement(LanguageProvider, { initialLocale: "id" },
+const renderLeft = (activeSlot, locale = "id") => renderToStaticMarkup(createElement(LanguageProvider, { initialLocale: locale },
   createElement(PhotoPanel, {
     photos: assets, slots: ["cover", "gallery"], assignments: defaultPhotoAssignments(), activeSlot,
     onActiveSlotChange: noop, onSetPhoto: noop, onToggleGallery: noop, onUpload: noop,
@@ -46,7 +46,8 @@ test("left Photo panel keeps upload/assignment and contains no editing controls 
     assert.doesNotMatch(markup, /Fokus foto|Crop &amp; posisi|Urutan foto|Gaya galeri|Autoplay|Animasi saat muncul/);
   }
   assert.match(renderLeft("gallery"), /aria-label="Kosongkan pilihan galeri"/);
-  assert.match(renderLeft("cover"), />Otomatis<\/button>/);
+  assert.match(renderLeft("cover"), /aria-label="Kembali ke bawaan: Cover utama"[^>]*>Kembali ke bawaan<\/button>/);
+  assert.match(renderLeft("cover", "en"), /aria-label="Back to default: Main Cover"[^>]*>Back to default<\/button>/);
 });
 
 test("right cover inspector renders saved crop values and aspect ratio alongside photo motion", () => {
