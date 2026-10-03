@@ -1083,6 +1083,10 @@ Payment diperlukan ketika user ingin **Publish**.
 
 Entitlement wajib event-scoped. Pembelian Event A tidak membuka Event B.
 
+### 8.1a QR berbagi undangan
+
+Setiap `Invitation.id` milik customer dengan pembayaran paket Digital Invitation berstatus `PAID` mempunyai satu tujuan QR stabil: `APP_URL/q/<invitationId>`. Customer dapat melihat atau mengunduh PNG ketika masih draft; scan membuka slug terbaru hanya setelah event lengkap, terbit, dan entitlement event tetap valid. Endpoint gambar memeriksa sesi, owner dan pembayaran event di server. PNG 640px dibuat di memori server Undara memakai library `qrcode` existing, dengan quiet zone 4 modul, tanpa mengirim URL ke layanan QR eksternal atau menyimpan gambar dalam database. QR ini berbeda dari signed token tamu untuk check-in Usher.
+
 ### 8.2 Checkout
 
 `/packages` dan order flow Digital Invitation harus membawa `invitationId` agar payment menempel ke event yang benar.
@@ -2770,3 +2774,13 @@ Follow-up commits include `8c64ee0eb259f1f9bf6644b8948fc004e16f3f20`, `6672a8463
 **Validation observed on feature commit:** [Build Validation 37112836921](https://github.com/wanzy0808/Undara/actions/runs/37112836921) passed: **428/428 tests, 0 failures**, Prisma generate, TypeScript and Next.js build **72/72** pages. [Orphan Audit 37112836954](https://github.com/wanzy0808/Undara/actions/runs/37112836954) passed. Nine new regression tests cover registry, birthday fixture, narrative/localization, native artwork markers, motion overrides, preview/keyboard guards, readable controls, bundled music precedence and palette contrast.
 
 **Follow-up polish / validation scope:** Form boundaries now have a separate cobalt blend (65%; computed contrast 3.42:1 against paper and 3.58:1 against field surface); placeholder opacity increases to 70%. The palette regression reads these CSS values and enforces 3:1 for boundaries and 4.5:1 for placeholder text. Latest follow-up test/build outcomes are recorded by the automatic GitHub Actions checks on its commit. Local execution is unavailable because the supplied environment cannot connect. Browser/E2E and real mobile/desktop editing have not been run.
+
+## 4 October 2026 — Invitation-share QR generated inside Undara
+
+**Request / rationale:** Owner menanyakan apakah QR perlu API pihak ketiga, apakah dapat dibuat sendiri, dan keamanan pemakaian library. Gunakan encoder standar `qrcode` 1.5.4 yang sudah menjadi dependency; tidak menambah dependency atau menulis ulang algoritma QR.
+
+**Implementation / area:** `app/api/invitations/qr/route.ts` membuat PNG 640px di memori runtime Node dengan quiet zone 4 dan error correction M. QuickChart/fetch dihapus; sesi, ID, owner, pembayaran, tujuan permanen `APP_URL/q/<invitationId>`, header private/no-store, filename dan download tetap dipertahankan. Tes handler menjalankan encoder PNG sebenarnya dan helper entitlement/target dengan batas auth/database diganti fixture. `README.md`, `AGENTS.md`, §8.1a dan `checklist.md` diselaraskan. Tidak ada migrasi DB. Commit: `fix(qr): generate invitation codes on the application server`.
+
+**Observed validation:** 441/441 source regression tests lulus melalui `node --import tsx --test tests/*.test.mjs`; CLI `pnpm test` diblokir IPC socket EPERM pada environment ini. ESLint route/tes baru dan `git diff --check` lulus. Build awal gagal pada cache Turbopack lama; build dengan cache baru dan CI masih menunggu hasil pada saat commit. TypeScript awal mendeteksi Prisma client lokal yang belum mengikuti schema saat ini; CI menghasilkan client dari schema lebih dulu. Tidak ada klaim QA browser, scanner nyata, database atau deployment.
+
+**Dependency review:** Audit produksi selesai dengan 12 advisori (4 moderate, 7 high, 1 critical), tanpa advisori pada `qrcode` atau rantai dependensinya. Ini pemeriksaan advisori yang diketahui, bukan jaminan seluruh aplikasi aman. Triage Sharp/Next dan dependency lain dicatat di checklist untuk batch keamanan terpisah. Renderer tiket Usher/dashboard RSVP masih ditemukan pada source dan dijadwalkan sebagai batch berikutnya.

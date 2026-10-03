@@ -49,6 +49,12 @@ Kerjakan satu batch kecil → verifikasi → commit sebelum membuka batch beriku
 
 Implementasi storage/custom/auth yang sudah ada tidak diulang. Fitur ekspansi menunggu fondasi dan bukti QA di atas. `prd.md` Appendix A menyimpan rationale dan hasil per batch.
 
+## Generator QR internal — 4 Oktober 2026
+
+- [x] QR berbagi undangan: QuickChart diganti `qrcode` existing di server aplikasi, PNG 640px/quiet zone 4, pratinjau/unduh dan URL stabil tetap sama. Sesi, owner, ID dan pembayaran tetap diperiksa sebelum encoding; 13 tes handler baru membuat total lokal 441/441 lulus. Lint route/tes baru lulus.
+- [ ] QR tiket Usher dan dashboard RSVP: ganti dua renderer eksternal yang masih tersisa dengan PNG same-origin, dengan validasi token dan akses event di server.
+- [ ] QR: QA scanner perangkat nyata serta sesi owner → pratinjau/unduh → scan pada domain produksi publik; tes handler tidak menggantikan PostgreSQL/E2E.
+
 ## Rebrand Undara — migrasi bertahap (28 September 2026)
 
 - [x] Homepage woodland composition: forest silhouette sebagai depth di belakang Pintu, branch 01–04 sebagai edge framing, branch 05 sebagai divider copy; cloud bubble dan petal ambience tidak dipakai di homepage.
@@ -359,7 +365,7 @@ The audited payment endpoint currently accepts a **proof-of-transfer URL**, stor
 - [ ] Review all user-rendered text/URLs for XSS and unsafe URL schemes.
 - [ ] Review Maps/live-stream/music/external URLs for protocol allowlisting where needed.
 - [ ] Review image/audio processing against malformed file handling and resource exhaustion.
-- [ ] Dependency vulnerability review before launch.
+- [ ] Dependency vulnerability review before launch. Audit `pnpm audit --prod --json` pada 4 Oktober 2026 menandai 12 advisori (4 moderate, 7 high, 1 critical); tidak ada yang berada pada `qrcode` atau rantai dependensinya. Triage/perbarui dependensi dalam batch terpisah: Sharp 0.34.5 memproses upload customer dan terkena [GHSA-f88m-g3jw-g9cj](https://github.com/advisories/GHSA-f88m-g3jw-g9cj); Next 16.3.3 ditandai [GHSA-vcvr-r3jv-pc5j](https://github.com/advisories/GHSA-vcvr-r3jv-pc5j), namun pencarian source `app/components/lib` tidak menemukan `ImageResponse`/`next/og` yang menjadi pemicu advisori tersebut. Temuan Prisma optional/transitive juga perlu ditinjau. Ini hasil audit versi dependensi, bukan bukti eksploit atau sign-off keamanan.
 
 **Launch acceptance:** No known credential leak, obvious cross-site injection path, unlimited brute-force endpoint, or production debug leakage remains.
 

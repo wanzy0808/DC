@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import QRCode from "qrcode";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { invitationQrTarget } from "@/lib/invitations/qr";
@@ -6,10 +7,12 @@ import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 
 const PRIVATE_HEADERS = { "Cache-Control": "private, no-store" };
 
+export const runtime = "nodejs";
+
 /**
  * Generate/download exactly one deterministic QR per owned, paid invitation.
  * It encodes an app-hosted permanent invitation ID redirect, NOT a guest's
- * signed QR ticket. The existing QR image service sees only this public URL.
+ * signed QR ticket. The PNG is generated in memory on this application server.
  */
 export async function GET(request: Request) {
   const user = await getCurrentUser();
@@ -42,30 +45,14 @@ export async function GET(request: Request) {
     // production. During local development fall back to the current request.
     const appOrigin = process.env.APP_URL?.trim() || url.origin;
     const qrTarget = invitationQrTarget(appOrigin, invitation.id);
-    const providerUrl = new URL("https://quickchart.io/qr");
-    providerUrl.searchParams.set("text", qrTarget);
-    providerUrl.searchParams.set("size", "640");
-    providerUrl.searchParams.set("margin", "3");
-    const provider = await fetch(providerUrl, {
-      cache: "no-store",
-      signal: AbortSignal.timeout(12000),
+    const bytes = await QRCode.toBuffer(qrTarget, {
+      type: "png",
+      width: 640,
+      margin: 4,
+      errorCorrectionLevel: "M",
     });
-    if (!provider.ok || !provider.headers.get("content-type")?.includes("image/png")) {
-      return NextResponse.json(
-        { error: "Gambar QR belum dapat dibuat. Coba lagi." },
-        { status: 502, headers: PRIVATE_HEADERS },
-      );
-    }
-
-    const bytes = await provider.arrayBuffer();
-    if (!bytes.byteLength || bytes.byteLength > 2_000_000) {
-      return NextResponse.json(
-        { error: "Gambar QR tidak valid. Coba lagi." },
-        { status: 502, headers: PRIVATE_HEADERS },
-      );
-    }
     const download = url.searchParams.get("download") === "1";
-    return new Response(bytes, {
+    return new Response(new Uint8Array(bytes), {
       status: 200,
       headers: {
         ...PRIVATE_HEADERS,
@@ -78,7 +65,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("GET /api/invitations/qr failed", error);
     return NextResponse.json(
-      { error: "QR belum dapat dibuat. Periksa koneksi dan coba lagi." },
+      { error: "QR belum dapat dibuat. Coba lagi." },
       { status: 503, headers: PRIVATE_HEADERS },
     );
   }
