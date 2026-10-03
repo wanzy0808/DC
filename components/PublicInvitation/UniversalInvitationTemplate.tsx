@@ -39,7 +39,7 @@ import { parseEditableCopyMotions } from "@/lib/templates/editable-copy-motion";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
 import { photoCropStyle, resolveGallerySettings, resolveInvitationPhotos, resolvePhotoCrop, type CroppablePhotoSlot, type PhotoAssignments, type PhotoCrop, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSectionKey, type InvitationSections } from "@/lib/templates/sections";
-import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
+import { invitationSectionBackgroundRule, invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
 import { parseSectionElementStyles, sectionElementStyleCss } from "@/lib/templates/section-element-styles";
 import { nativeVisualFontFamilies, nativeVisualScopeClass, nativeVisualStyleSheet } from "@/lib/templates/native-visual-transforms";
@@ -590,10 +590,11 @@ export default function UniversalInvitationTemplate({
       style={css}
     >
       <style>{nativeVisualStyleSheet(activeDesignKey)}</style>
+      <style>{invitationSectionBackgroundRule}</style>
       <InvitationFonts families={[font.heading, font.body, ...nativeVisualFontFamilies(activeDesignKey)]} />
       {sections.music !== false && <InvitationMusic ref={musicRef} source={music} opened={opened || sections.envelope === false} preview={preview} />}
       {!opened && sections.envelope !== false ? (
-        <div data-invitation-section="envelope" className="relative" style={invitationSectionStyleCss(sectionStyles.envelope)}><InvitationThemeScenes
+        <div data-invitation-section="envelope" data-invitation-background-override={sectionStyles.envelope?.background ? "true" : undefined} className="relative" style={invitationSectionStyleCss(sectionStyles.envelope)}><InvitationThemeScenes
           theme={key}
           isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
           couple={couple}
@@ -617,7 +618,7 @@ export default function UniversalInvitationTemplate({
       ) : (
         <div className={`${key === "zen-atelier" ? "zen-content " : ""}flex flex-col`}>
           {renderSectionInstances("cover", (instanceId) => (
-            <div className="relative" data-studio-cover-stage data-invitation-section="cover" style={invitationSectionStyleCss(sectionStyles.cover)}><InvitationThemeScenes
+            <div className="relative" data-studio-cover-stage data-invitation-section="cover" data-invitation-background-override={sectionStyles.cover?.background ? "true" : undefined} style={invitationSectionStyleCss(sectionStyles.cover)}><InvitationThemeScenes
               theme={key}
               isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
               couple={couple}

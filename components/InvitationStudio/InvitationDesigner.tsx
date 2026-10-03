@@ -1414,15 +1414,10 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function selectSectionInstance(id: string, key: InvitationSectionKey) {
-    setCropModeSlot(null);
-    setSelectedLayerIds([]);
-    setSelectedLayerId(null);
-    setSelectedPhotoSlot(null);
-    setSelectedRsvpElementKey(null);
-    setSelectedCopyField(null);
-    setSelectedSectionElement(null);
+    clearCanvasSelection();
     setSelectedSectionKey(key);
     setSelectedSectionInstanceId(id);
+    setInspectorOpen(true);
   }
 
   function moveSectionInstance(id: string, direction: -1 | 1) {

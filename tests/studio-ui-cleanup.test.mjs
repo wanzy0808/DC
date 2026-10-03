@@ -662,7 +662,7 @@ test("Studio canvas pans horizontally at every zoom and preserves object gesture
   assert.match(canvasPan, /function beginCanvasPan\(/);
   assert.match(canvasPan, /function moveCanvasPan\(/);
   assert.match(canvasPan, /function endCanvasPan\(/);
-  assert.match(read("components/InvitationStudio/studio-canvas-pan.ts"), /Math\.hypot\(dx, dy\) > 3/);
+  assert.match(canvasPan, /canvasPan\.begin\(event, node, canvasPanReady\)/);
   assert.match(designer, /data-space-pan=\{canvasPanReady \? "true" : undefined\}/);
   assert.match(designer, /data-pan-enabled="true"/);
   assert.match(designer, /beginCanvasPan\(event, true\)/);

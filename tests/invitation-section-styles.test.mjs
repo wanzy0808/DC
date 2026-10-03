@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
+  invitationSectionBackgroundRule,
   invitationSectionStyleCss,
   parseInvitationSectionStyles,
   sanitizeInvitationSectionStyles,
@@ -40,7 +41,28 @@ test("section CSS helper only emits explicit visual overrides", () => {
     opacity: 0.7,
     textAlign: "right",
     background: "#112233",
+    "--inv-section-background": "#112233",
   });
+});
+
+test("Envelope and Cover backgrounds reach their nested scene root without recoloring another section", () => {
+  const key = withInvitationSectionStyles("zen-atelier", {
+    envelope: { background: "#112233" },
+    cover: { background: "#aabbcc" },
+    identity: { background: "#fff0f3" },
+  });
+  const styles = parseInvitationSectionStyles(key);
+  assert.equal(invitationSectionStyleCss(styles.envelope)["--inv-section-background"], "#112233");
+  assert.equal(invitationSectionStyleCss(styles.cover)["--inv-section-background"], "#aabbcc");
+  assert.equal(invitationSectionStyleCss(styles.identity).background, "#fff0f3");
+  assert.deepEqual(invitationSectionStyleCss(styles.greeting), {});
+  assert.match(invitationSectionBackgroundRule, /data-invitation-section="envelope".*data-invitation-background-override="true".*data-invitation-section="envelope"/);
+  assert.match(invitationSectionBackgroundRule, /data-invitation-section="cover".*data-invitation-background-override="true".*data-invitation-section="cover"/);
+  assert.match(invitationSectionBackgroundRule, /background: var\(--inv-section-background\) !important/);
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  assert.match(universal, /<style>\{invitationSectionBackgroundRule\}<\/style>/);
+  assert.match(universal, /data-invitation-background-override=\{sectionStyles\.envelope\?\.background/);
+  assert.match(universal, /data-invitation-background-override=\{sectionStyles\.cover\?\.background/);
 });
 
 test("Studio section selection opens a right-side inspector and renderers consume saved styles", () => {
@@ -58,6 +80,10 @@ test("Studio section selection opens a right-side inspector and renderers consum
   assert.match(editor, /<StudioSelectionInspector/);
   assert.match(selectionInspector, /<SectionInspector/);
   assert.match(editor, /updateSectionStyle/);
+  const sectionSelection = editor.split("function selectSectionInstance(")[1]?.split("function moveSectionInstance(")[0];
+  assert.match(sectionSelection, /clearCanvasSelection\(\)/);
+  assert.match(sectionSelection, /setInspectorOpen\(true\)/);
+  assert.ok(inspector.indexOf('"Background" : "Latar"') < inspector.indexOf('"Alignment" : "Perataan"'));
   assert.match(editor, /resetSectionStyle/);
   assert.match(editor, /useStudioCanvasSelectionMarkers\(/);
   assert.match(selectionMarkers, /"invitationSection", section, "studioSectionSelected"/);

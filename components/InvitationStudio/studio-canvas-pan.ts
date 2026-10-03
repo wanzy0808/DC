@@ -7,6 +7,7 @@ type PanSession = PanPointer & {
   scrollLeft: number;
   scrollTop: number;
   moved: boolean;
+  active: boolean;
 };
 
 export function createStudioCanvasPan(onPanningChange: (panning: boolean) => void) {
@@ -17,31 +18,41 @@ export function createStudioCanvasPan(onPanningChange: (panning: boolean) => voi
     const current = pan;
     if (!current) return;
     pan = null;
-    onPanningChange(false);
+    if (current.active) onPanningChange(false);
     if (current.node.hasPointerCapture(current.pointerId)) {
       current.node.releasePointerCapture(current.pointerId);
     }
   }
 
   return {
-    begin(pointer: PanPointer, node: PanViewport) {
+    begin(pointer: PanPointer, node: PanViewport, captureImmediately = true) {
       if (pan) return false;
       suppressClick = false;
-      node.setPointerCapture(pointer.pointerId);
       pan = {
         pointerId: pointer.pointerId, clientX: pointer.clientX, clientY: pointer.clientY,
-        node, scrollLeft: node.scrollLeft, scrollTop: node.scrollTop, moved: false,
+        node, scrollLeft: node.scrollLeft, scrollTop: node.scrollTop, moved: false, active: captureImmediately,
       };
-      onPanningChange(true);
+      if (captureImmediately) {
+        node.setPointerCapture(pointer.pointerId);
+        onPanningChange(true);
+      }
       return true;
     },
     move(pointer: PanPointer) {
-      if (!pan || pan.pointerId !== pointer.pointerId) return;
+      if (!pan || pan.pointerId !== pointer.pointerId) return false;
       const dx = pointer.clientX - pan.clientX;
       const dy = pointer.clientY - pan.clientY;
-      if (Math.hypot(dx, dy) > 3) pan.moved = true;
+      if (!pan.moved && Math.hypot(dx, dy) <= 3) return false;
+      pan.moved = true;
+      if (!pan.active) {
+        // Capturing a tap would retarget its click to the canvas instead of the section background.
+        pan.node.setPointerCapture(pointer.pointerId);
+        pan.active = true;
+        onPanningChange(true);
+      }
       pan.node.scrollLeft = pan.scrollLeft - dx;
       pan.node.scrollTop = pan.scrollTop - dy;
+      return true;
     },
     end(pointerId: number) {
       if (!pan || pan.pointerId !== pointerId) return;
@@ -76,14 +87,21 @@ export function bindStudioCanvasPanLifecycle(
     pan.cancel();
   };
   const visibility = () => { if (documentTarget.hidden) cancel(); };
+  // A tap can end outside the canvas before a deferred pan captures the pointer.
+  const endPointer = (event: PointerEvent) => pan.end(event.pointerId);
+  const cancelPointer = (event: PointerEvent) => pan.cancel(event.pointerId);
 
   // Keyup can land outside the canvas after focus moves while Space is held.
   windowTarget.addEventListener("keyup", releaseSpace);
   windowTarget.addEventListener("blur", cancel);
+  windowTarget.addEventListener("pointerup", endPointer);
+  windowTarget.addEventListener("pointercancel", cancelPointer);
   documentTarget.addEventListener("visibilitychange", visibility);
   return () => {
     windowTarget.removeEventListener("keyup", releaseSpace);
     windowTarget.removeEventListener("blur", cancel);
+    windowTarget.removeEventListener("pointerup", endPointer);
+    windowTarget.removeEventListener("pointercancel", cancelPointer);
     documentTarget.removeEventListener("visibilitychange", visibility);
     pan.cancel();
   };

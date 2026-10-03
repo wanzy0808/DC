@@ -82,6 +82,21 @@ export default function SectionInspector({
       </div>
 
       <div className="undara-studio-section-field">
+        <span>{en ? "Background" : "Latar"}</span>
+        <div className="undara-studio-section-color">
+          <input
+            type="color"
+            value={style?.background ?? "#ffffff"}
+            aria-label={en ? "Section background color" : "Warna latar section"}
+            title={en ? "Choose section background" : "Pilih warna latar section"}
+            onChange={(event) => onUpdate({ background: event.target.value })}
+          />
+          <output>{style?.background?.toUpperCase() ?? (en ? "Theme" : "Tema")}</output>
+        </div>
+      </div>
+
+
+      <div className="undara-studio-section-field">
         <span>{en ? "Alignment" : "Perataan"}</span>
         <div className="undara-studio-align-icons" role="group" aria-label={en ? "Alignment" : "Perataan"}>
           {alignments.map(({ value, label, Icon }) => (
@@ -211,19 +226,6 @@ export default function SectionInspector({
         </>
       ) : null}
 
-      <div className="undara-studio-section-field">
-        <span>{en ? "Background" : "Latar"}</span>
-        <div className="undara-studio-section-color">
-          <input
-            type="color"
-            value={style?.background ?? "#ffffff"}
-            aria-label={en ? "Section background color" : "Warna latar section"}
-            title={en ? "Choose section background" : "Pilih warna latar section"}
-            onChange={(event) => onUpdate({ background: event.target.value })}
-          />
-          <output>{style?.background?.toUpperCase() ?? (en ? "Theme" : "Tema")}</output>
-        </div>
-      </div>
 
       <button type="button" className="undara-studio-section-reset" onClick={onReset}>
         <RotateCcw size={14} />

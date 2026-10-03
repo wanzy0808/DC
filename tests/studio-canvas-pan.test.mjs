@@ -25,6 +25,66 @@ function lifecycleFixture() {
 }
 const keyup = (code) => Object.assign(new Event("keyup"), { code });
 
+test("a background tap keeps its original section target and does not pan on pointer jitter", () => {
+  const { pan, node, captured, states } = fixture();
+  assert.equal(pan.begin(point(), node, false), true);
+  assert.equal(captured.size, 0);
+  assert.equal(pan.move(point(1, 102, 101)), false);
+  assert.equal(captured.size, 0);
+  assert.equal(node.scrollLeft, 100);
+  assert.equal(node.scrollTop, 200);
+  pan.end(1);
+  assert.deepEqual(states, []);
+  assert.equal(pan.consumeSuppressedClick(), false);
+});
+
+test("background drag captures only after the threshold and suppresses only that drag's click", () => {
+  const { pan, node, captured, states } = fixture();
+  pan.begin(point(), node, false);
+  assert.equal(pan.begin(point(2), node, false), false);
+  assert.equal(pan.move(point(2, 140, 150)), false);
+  assert.equal(pan.move(point(1, 103, 100)), false);
+  assert.equal(captured.size, 0);
+  assert.equal(pan.move(point(1, 104, 110)), true);
+  assert.deepEqual([...captured], [1]);
+  assert.deepEqual(states, [true]);
+  assert.equal(node.scrollLeft, 96);
+  assert.equal(node.scrollTop, 190);
+  pan.end(1);
+  assert.equal(captured.size, 0);
+  assert.deepEqual(states, [true, false]);
+  assert.equal(pan.consumeSuppressedClick(), true);
+  assert.equal(pan.consumeSuppressedClick(), false);
+});
+
+test("cancelling a pending background tap does not leave a capture or swallow the next click", () => {
+  const { pan, node, windowTarget, captured, states, dispose } = lifecycleFixture();
+  pan.begin(point(), node, false);
+  windowTarget.dispatchEvent(new Event("blur"));
+  assert.equal(captured.size, 0);
+  assert.deepEqual(states, []);
+  assert.equal(pan.begin(point(2), node, false), true);
+  pan.end(2);
+  assert.equal(pan.consumeSuppressedClick(), false);
+  dispose();
+});
+
+test("release outside the canvas clears a pending background gesture and listeners are removed on unmount", () => {
+  const { pan, node, windowTarget, captured, states, dispose } = lifecycleFixture();
+  pan.begin(point(), node, false);
+  windowTarget.dispatchEvent(Object.assign(new Event("pointerup"), { pointerId: 1 }));
+  assert.equal(pan.begin(point(2), node, false), true);
+  windowTarget.dispatchEvent(Object.assign(new Event("pointercancel"), { pointerId: 2 }));
+  assert.equal(captured.size, 0);
+  assert.deepEqual(states, []);
+  assert.equal(pan.consumeSuppressedClick(), false);
+  dispose();
+  pan.begin(point(3), node, false);
+  windowTarget.dispatchEvent(Object.assign(new Event("pointerup"), { pointerId: 3 }));
+  assert.equal(pan.begin(point(4), node, false), false);
+  pan.cancel();
+});
+
 test("pan moves both axes from the initial viewport without depending on canvas zoom", () => {
   const { pan, node, captured, states } = fixture();
   assert.equal(pan.begin(point(), node), true);

@@ -29,6 +29,14 @@ export type InvitationSectionStyle = {
 
 export type InvitationSectionStyles = Partial<Record<InvitationSectionKey, InvitationSectionStyle>>;
 
+// Envelope/Cover scenes have their own painted root inside the editable section wrapper.
+// The value stays local to that wrapper, so previews with different colors cannot affect each other.
+export const invitationSectionBackgroundRule = `
+[data-invitation-section="envelope"][data-invitation-background-override="true"] [data-invitation-section="envelope"],
+[data-invitation-section="cover"][data-invitation-background-override="true"] [data-invitation-section="cover"] {
+  background: var(--inv-section-background) !important;
+}`;
+
 const sectionKeys = new Set<InvitationSectionKey>(visualSectionKeys);
 const alignValues = new Set<InvitationSectionAlign>(["left", "center", "right"]);
 const numberBetween = (value: unknown, min: number, max: number) =>
@@ -91,6 +99,6 @@ export function invitationSectionStyleCss(style?: InvitationSectionStyle): CSSPr
     ...(style.opacity !== undefined ? { opacity: style.opacity } : {}),
     ...(style.align ? { textAlign: style.align } : {}),
     // Background is authoritative: shorthand also clears a template gradient/image on the section root.
-    ...(style.background ? { background: style.background } : {}),
+    ...(style.background ? { background: style.background, "--inv-section-background": style.background } : {}),
   };
 }

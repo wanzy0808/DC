@@ -37,14 +37,14 @@ export function useStudioCanvasPan(): StudioCanvasPanController {
     )) return false;
 
     const node = event.currentTarget;
-    if (!canvasPan.begin(event, node)) return false;
-    event.preventDefault();
+    if (!canvasPan.begin(event, node, canvasPanReady)) return false;
+    if (canvasPanReady) event.preventDefault();
     node.focus({ preventScroll: true });
     return true;
   }
 
   function moveCanvasPan(event: ReactPointerEvent<HTMLDivElement>) {
-    canvasPan.move(event);
+    if (canvasPan.move(event)) event.preventDefault();
   }
 
   function endCanvasPan(event: ReactPointerEvent<HTMLDivElement>) {
