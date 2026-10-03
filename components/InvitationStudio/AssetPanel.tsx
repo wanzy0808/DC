@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Circle, ImagePlus, Minus, RefreshCcw, Search, Square, Upload } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { InvitationAssetLayer, InvitationShapeKind } from "@/lib/templates/asset-layers";
 import { MAX_ASSET_LAYERS } from "@/lib/templates/asset-layers";
@@ -104,12 +104,9 @@ export default function AssetPanel({
 
   return (
     <div className="space-y-5">
-      <div>
+      <div className="flex items-baseline justify-between gap-3">
         <h2 className="font-[family-name:var(--font-undara-heading)] text-lg font-semibold text-primary">{en ? "Assets" : "Aset"}</h2>
-        <p className="mt-1 text-sm text-foreground/75">
-          {en ? "Drag an image onto the invitation section where you want to place it." : "Seret gambar ke section undangan tempat kamu ingin meletakkannya."}
-        </p>
-        <p className="mt-2 text-xs text-muted-foreground">{en ? `${layers.length}/${maxLayers} assets used` : `${layers.length}/${maxLayers} asset digunakan`}</p>
+        <span className="text-xs text-muted-foreground" aria-label={en ? "Assets used" : "Aset digunakan"}>{layers.length}/{maxLayers}</span>
       </div>
 
       {onUploadLibraryAsset && (
@@ -117,14 +114,11 @@ export default function AssetPanel({
           <div className="flex items-center justify-between gap-3">
             <div>
               <h3 className="text-sm font-semibold text-primary">{en ? "My library" : "Library Saya"}</h3>
-              <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                {en ? "Reusable artwork for future template drafts. Raster uploads are stored as WebP." : "Artwork reusable untuk draft template berikutnya. Upload raster disimpan sebagai WebP."}
-              </p>
             </div>
           </div>
-          <label className={`flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/35 px-3 text-xs font-semibold text-primary transition hover:bg-primary/5 ${uploadingLibrary ? "pointer-events-none opacity-50" : ""}`}>
+          <label className={buttonVariants({ variant: "outline", size: "sm", className: `flex min-h-11 cursor-pointer justify-center text-sm ${uploadingLibrary ? "pointer-events-none opacity-50" : ""}` })}>
             <Upload size={15} />
-            {uploadingLibrary ? (en ? "Uploading…" : "Mengunggah…") : (en ? "Upload artwork" : "Upload artwork")}
+            {uploadingLibrary ? (en ? "Uploading…" : "Mengunggah…") : (en ? "Upload artwork" : "Unggah aset")}
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp"
@@ -144,7 +138,7 @@ export default function AssetPanel({
           </label>
           {libraryError && <p role="alert" className="text-xs text-destructive">{libraryError}</p>}
           {libraryAssets.length === 0 ? (
-            <p className="text-xs text-muted-foreground">{en ? "No reusable artwork yet." : "Belum ada artwork reusable."}</p>
+            <p className="text-sm text-muted-foreground">{en ? "No artwork yet." : "Belum ada aset."}</p>
           ) : (
             <div className="grid grid-cols-2 gap-2">
               {libraryAssets.map((asset) => (
@@ -158,14 +152,13 @@ export default function AssetPanel({
                     onDragAssetStart(asset.url);
                   }}
                   onDragEnd={onDragAssetEnd}
-                  title={asset.title}
+                  title={`${en ? "Drag to canvas" : "Seret ke canvas"}: ${asset.title}`}
                   className={`min-w-0 rounded-[var(--undara-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 ${layers.length >= maxLayers ? "cursor-not-allowed opacity-40" : "cursor-grab active:cursor-grabbing"}`}
                 >
                   <span className="grid h-24 place-items-center overflow-hidden rounded-lg bg-primary/5">
                     <img src={asset.url} alt="" loading="lazy" className="max-h-full max-w-full object-contain" />
                   </span>
-                  <span className="mt-2 block truncate text-xs text-foreground">{asset.title.replace(/\.webp$/i, "")}</span>
-                  <span className="mt-1 block text-[10px] text-muted-foreground">WebP · {en ? "Reusable" : "Reusable"}</span>
+                  <span className="mt-2 block truncate text-sm text-foreground">{asset.title.replace(/\.webp$/i, "")}</span>
                 </div>
               ))}
             </div>
@@ -188,7 +181,7 @@ export default function AssetPanel({
                 type="button"
                 disabled={layers.length >= maxLayers}
                 onClick={() => onAddShape(shape as InvitationShapeKind)}
-                className="grid min-h-20 place-items-center gap-1 rounded-[var(--undara-control-radius)] border border-primary/25 bg-background px-2 py-3 text-xs text-foreground transition hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-40"
+                className="grid min-h-20 place-items-center gap-1 rounded-[var(--undara-control-radius)] border border-primary/25 bg-background px-2 py-3 text-sm text-foreground transition hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ShapeIcon size={24} strokeWidth={1.5} />
                 <span>{label}</span>
@@ -227,7 +220,7 @@ export default function AssetPanel({
           </div>
         )}
         {!loading && !error && filtered.length === 0 && <p className="text-sm text-muted-foreground">{en ? "No images found." : "Gambar tidak ditemukan."}</p>}
-        {limited && <p className="text-xs text-muted-foreground">{en ? "Showing the first 500 images; use search to narrow the list." : "Menampilkan 500 gambar pertama; gunakan pencarian untuk mempersempit daftar."}</p>}
+        {limited && <p className="text-xs text-muted-foreground">{en ? "First 500 images." : "500 gambar pertama."}</p>}
 
         <div className="grid grid-cols-2 gap-2">
           {filtered.slice(0, visibleCount).map((asset) => (
@@ -241,14 +234,13 @@ export default function AssetPanel({
                 onDragAssetStart(asset.src);
               }}
               onDragEnd={onDragAssetEnd}
-              title={asset.folder + " / " + asset.name}
+              title={`${en ? "Drag to canvas" : "Seret ke canvas"}: ${asset.folder} / ${asset.name}`}
               className={`min-w-0 rounded-[var(--undara-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 ${layers.length >= maxLayers ? "cursor-not-allowed opacity-40" : "cursor-grab active:cursor-grabbing"}`}
             >
               <span className="grid h-24 place-items-center overflow-hidden rounded-lg bg-primary/5">
                 <img src={asset.src} alt="" loading="lazy" className="max-h-full max-w-full object-contain" />
               </span>
-              <span className="mt-2 block truncate text-xs text-foreground">{asset.name}</span>
-              <span className="mt-1 block truncate text-[10px] text-muted-foreground">{asset.folder}</span>
+              <span className="mt-2 block truncate text-sm text-foreground">{asset.name}</span>
             </div>
           ))}
         </div>

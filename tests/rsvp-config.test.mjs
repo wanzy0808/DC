@@ -97,7 +97,7 @@ test("Studio keeps RSVP function controls in Isi while the right inspector stays
   const panels = read("components/InvitationStudio/RsvpPanels.tsx");
   const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
   assert.match(contentPanel, /Hadiri Semua Acara/);
-  assert.match(contentPanel, /Centang opsi acara yang boleh dipilih tamu di dropdown RSVP/);
+  assert.match(contentPanel, /Pilihan acara/);
   assert.match(contentPanel, /type="checkbox" checked=\{rsvpConfig\.ceremony\}/);
   assert.match(contentPanel, /type="checkbox" checked=\{rsvpConfig\.reception\}/);
   assert.match(contentPanel, /type="checkbox" checked=\{rsvpConfig\.attendAll\}/);
@@ -106,7 +106,7 @@ test("Studio keeps RSVP function controls in Isi while the right inspector stays
   assert.match(contentPanel, /Judul RSVP/);
   assert.match(contentPanel, /onRsvpConfig\(\{ title: event\.target\.value \}\)/);
   assert.doesNotMatch(inspector, /undara-studio-rsvp-text-input|onConfig\(\{ title:/);
-  assert.match(inspector, /Panel ini hanya mengubah styling/);
+  assert.match(inspector, /Ubah teks lewat Isi/);
   assert.doesNotMatch(inspector, /Hadiri Semua Acara|Tambah Kolom|MAX_RSVP_CUSTOM_FIELDS/);
   assert.match(designer, /addRsvpCustomField/);
   assert.match(designer, /updateRsvpCustomField/);

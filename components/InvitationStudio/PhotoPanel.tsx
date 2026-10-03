@@ -2,23 +2,23 @@
 
 import { useState } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
-import { Check, ImagePlus, Upload } from "lucide-react";
+import { Check, ChevronDown, ImagePlus, Upload } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
 import { photoCropStyle, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 
-const englishLabels: Record<PhotoSlot, { title: string; description: string }> = {
-  cover: { title: "Main Cover", description: "Main invitation photo." },
-  personOne: { title: "First Partner", description: "Individual portrait for the first partner." },
-  personTwo: { title: "Second Partner", description: "Individual portrait for the second partner." },
-  gallery: { title: "Gallery", description: "Choose photos from your collection." },
+const englishLabels: Record<PhotoSlot, string> = {
+  cover: "Main Cover",
+  personOne: "First Partner",
+  personTwo: "Second Partner",
+  gallery: "Gallery",
 };
 
-const labels: Record<PhotoSlot, { title: string; description: string }> = {
-  cover: { title: "Cover utama", description: "Foto utama yang membuka undangan." },
-  personOne: { title: "Mempelai pertama", description: "Foto individual untuk perkenalan pertama." },
-  personTwo: { title: "Mempelai kedua", description: "Foto individual untuk perkenalan kedua." },
-  gallery: { title: "Galeri", description: "Pilih satu atau beberapa foto dari koleksi." },
+const labels: Record<PhotoSlot, string> = {
+  cover: "Cover utama",
+  personOne: "Mempelai pertama",
+  personTwo: "Mempelai kedua",
+  gallery: "Galeri",
 };
 
 export default function PhotoPanel({
@@ -48,8 +48,6 @@ export default function PhotoPanel({
   const [error, setError] = useState("");
   const selectedGallery = assignments.gallery ?? pictures.map((photo) => photo.id);
   const slotsAvailable = slots.length ? slots : (["cover"] as PhotoSlot[]);
-  const selected = (slot: PhotoSlot) =>
-    slot === "gallery" ? selectedGallery.length > 0 : Boolean(assignments[slot] && pictures.some((photo) => photo.id === assignments[slot]));
   const active = slotsAvailable.includes(activeSlot) ? activeSlot : slotsAvailable[0];
 
   async function uploadFiles(files: File[]) {
@@ -81,7 +79,6 @@ export default function PhotoPanel({
             {pictures.map((photo, index) => (
               <div key={photo.id} className="relative overflow-hidden rounded-xl border border-border bg-muted">
                 <img src={photo.url} alt={`${en ? "Photo" : "Foto"} ${index + 1}`} loading="lazy" className="aspect-[3/4] w-full object-cover" />
-                <span className="absolute inset-x-0 bottom-0 bg-black/55 px-1.5 py-1 text-center text-[10px] text-white">{`${en ? "Photo" : "Foto"} ${index + 1}`}</span>
               </div>
             ))}
           </div>
@@ -90,31 +87,31 @@ export default function PhotoPanel({
             {en ? "No photos uploaded yet." : "Foto belum diunggah."}
           </div>
         )}
-        {onUpload && (        <label className={buttonVariants({ size: "lg", className: `mt-3 flex min-h-12 w-full justify-center px-3 ${uploading || pictures.length >= 30 ? "cursor-not-allowed opacity-50" : "cursor-pointer"}` })}>
-          <Upload className="h-4 w-4" />
-          {uploading ? (en ? "Uploading..." : "Mengunggah foto...") : (en ? "Add Photos" : "Tambah Foto")}
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            multiple
-            disabled={uploading || pictures.length >= 30}
-            className="sr-only"
-            onChange={(event) => {
-              const files = Array.from(event.currentTarget.files ?? []);
-              event.currentTarget.value = "";
-              void uploadFiles(files);
-            }}
-          />
-        </label>
+        {onUpload && (
+          <label className={buttonVariants({ size: "lg", className: `mt-3 flex min-h-12 w-full justify-center px-3 ${uploading || pictures.length >= 30 ? "cursor-not-allowed opacity-50" : "cursor-pointer"}` })}>
+            <Upload className="h-4 w-4" />
+            {uploading ? (en ? "Uploading..." : "Mengunggah foto...") : (en ? "Add Photos" : "Tambah Foto")}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              disabled={uploading || pictures.length >= 30}
+              className="sr-only"
+              onChange={(event) => {
+                const files = Array.from(event.currentTarget.files ?? []);
+                event.currentTarget.value = "";
+                void uploadFiles(files);
+              }}
+            />
+          </label>
         )}
-        <p className="mt-2 text-xs leading-5 text-muted-foreground">{en ? "JPG, PNG or WebP · up to 15 MB per photo." : "JPG, PNG atau WebP · maksimal 15 MB per foto."}</p>
+        <p className="mt-2 text-xs leading-5 text-muted-foreground">JPG / PNG / WebP · 15 MB/{en ? "photo" : "foto"}</p>
         {error && <p role="alert" className="mt-2 text-xs text-destructive">{error}</p>}
       </section>
 
       <section aria-label={en ? "Photo Placement" : "Penempatan foto"} className="space-y-3 border-t border-border pt-6">
         <div>
           <h3 className="text-sm font-semibold">{en ? "Photo Placement" : "Penempatan Foto"}</h3>
-          
         </div>
         {slotsAvailable.map((slot) => {
           const current = slot === "gallery"
@@ -131,18 +128,12 @@ export default function PhotoPanel({
                 <div className="flex h-16 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted">
                   {current ? <img src={current.url} alt="" className="h-full w-full object-cover" style={slot === "gallery" ? undefined : photoCropStyle(assignments, slot)} /> : <ImagePlus className="h-5 w-5 text-muted-foreground" />}
                 </div>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-medium">{slotLabels[slot].title}</span>
-                  <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">{slotLabels[slot].description}</span>
-                  <span className="mt-1 block text-[11px] text-primary">{selected(slot) ? (en ? "Photo selected" : "Foto dipilih") : (en ? "Default / not selected" : "Bawaan / belum dipilih")}</span>
-                </span>
-                <span className="shrink-0 text-xs font-semibold text-primary">{active === slot ? (en ? "Open" : "Terbuka") : (en ? "Choose" : "Pilih")}</span>
+                <span className="min-w-0 flex-1 text-sm font-medium">{slotLabels[slot]}</span>
+                <ChevronDown size={16} aria-hidden="true" className={`shrink-0 text-primary ${active === slot ? "rotate-180" : ""}`} />
               </button>
               {active === slot && (
                 <div className="space-y-4 border-t border-border bg-muted/15 p-3">
-                  {!pictures.length ? (
-                    <p className="text-xs leading-6 text-muted-foreground">{en ? "Add photos to your library first." : "Unggah foto ke Koleksi Foto terlebih dahulu."}</p>
-                  ) : (
+                  {pictures.length > 0 && (
                     <div className="grid grid-cols-3 gap-2">
                       {pictures.map((photo, index) => {
                         const marked = slot === "gallery" ? selectedGallery.includes(photo.id) : assignments[slot] === photo.id;
@@ -156,7 +147,7 @@ export default function PhotoPanel({
                               else onSetPhoto(slot, photo.id);
                             }}
                             aria-pressed={marked}
-                            aria-label={`${slot === "gallery" ? (en ? "Select Gallery" : "Pilih galeri") : (en ? "Select " : "Pilih ") + slotLabels[slot].title}: ${en ? "photo" : "foto"} ${index + 1}`}
+                            aria-label={`${en ? "Select " : "Pilih "}${slotLabels[slot]}: ${en ? "photo" : "foto"} ${index + 1}`}
                             className={`relative overflow-hidden rounded-lg border-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${marked ? "border-primary" : "border-transparent"}`}
                           >
                             <img src={photo.url} alt="" className="aspect-[3/4] w-full object-cover" loading="lazy" />
@@ -167,12 +158,14 @@ export default function PhotoPanel({
                     </div>
                   )}
                   {slot === "gallery" ? (
-                    <Button type="button" size="xs" onClick={() => { onActiveSlotChange(slot); onToggleGallery("*"); }} className="max-w-full whitespace-normal">
-                      {assignments.gallery === null ? (en ? "Clear Gallery Selection" : "Kosongkan Pilihan Galeri") : (en ? "Use All Photos" : "Gunakan Semua Foto")}
+                    <Button type="button" size="sm" onClick={() => { onActiveSlotChange(slot); onToggleGallery("*"); }} className="min-h-11 max-w-full whitespace-normal text-sm"
+                      aria-label={assignments.gallery === null ? (en ? "Clear gallery selection" : "Kosongkan pilihan galeri") : (en ? "Select all gallery photos" : "Pilih semua foto galeri")}>
+                      {assignments.gallery === null ? (en ? "Clear" : "Kosongkan") : (en ? "All photos" : "Semua foto")}
                     </Button>
                   ) : (
-                    <Button type="button" size="xs" onClick={() => { onActiveSlotChange(slot); onSetPhoto(slot, null); }} className="max-w-full whitespace-normal">
-                      {en ? "Use Automatic Selection" : "Gunakan Pilihan Otomatis"}
+                    <Button type="button" size="sm" onClick={() => { onActiveSlotChange(slot); onSetPhoto(slot, null); }} className="min-h-11 max-w-full whitespace-normal text-sm"
+                      aria-label={`${en ? "Select photo automatically for " : "Pilih foto otomatis untuk "}${slotLabels[slot]}`}>
+                      {en ? "Automatic" : "Otomatis"}
                     </Button>
                   )}
                 </div>

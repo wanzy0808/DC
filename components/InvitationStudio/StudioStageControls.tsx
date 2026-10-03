@@ -27,7 +27,7 @@ export default function StudioStageControls({
   onInvitationLanguage: (language: InvitationLanguage) => void;
 }) {
   const buttonClass =
-    "min-h-9 shrink-0 rounded-[var(--undara-control-radius)] border border-primary bg-primary px-2.5 text-[11px] text-primary-foreground hover:bg-primary/90";
+    "min-h-9 shrink-0 rounded-[var(--undara-control-radius)] border border-primary bg-primary px-2.5 text-xs text-primary-foreground hover:bg-primary/90";
 
   return (
     <div

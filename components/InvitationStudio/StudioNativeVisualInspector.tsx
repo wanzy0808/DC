@@ -88,10 +88,10 @@ export default function StudioNativeVisualInspector({
           className="grid h-8 w-8 place-items-center rounded-lg hover:bg-primary/10"><X size={16} /></button>
       </div>
       {systemContent && (
-        <div className="mt-3 flex items-start gap-2 rounded-[var(--undara-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
+        <p className="mt-3 flex items-center gap-2 text-xs leading-5 text-muted-foreground">
           <Lock size={13} className="mt-0.5 shrink-0 text-primary" />
-          <span>{en ? "Content comes from event data and is locked here. Visual styling stays editable." : "Isi berasal dari data acara dan terkunci di sini. Styling visual tetap bisa diedit."}</span>
-        </div>
+          <span>{en ? "Content from event data" : "Isi dari data acara"}</span>
+        </p>
       )}
 
       <div className="mt-4 grid grid-cols-2 gap-3">

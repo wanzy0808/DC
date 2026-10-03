@@ -45,8 +45,8 @@ test("left Photo panel keeps upload/assignment and contains no editing controls 
     assert.doesNotMatch(markup, /<select\b|type="range"|draggable="true"/);
     assert.doesNotMatch(markup, /Fokus foto|Crop &amp; posisi|Urutan foto|Gaya galeri|Autoplay|Animasi saat muncul/);
   }
-  assert.match(renderLeft("gallery"), /Kosongkan Pilihan Galeri/);
-  assert.match(renderLeft("cover"), /Gunakan Pilihan Otomatis/);
+  assert.match(renderLeft("gallery"), /aria-label="Kosongkan pilihan galeri"/);
+  assert.match(renderLeft("cover"), />Otomatis<\/button>/);
 });
 
 test("right cover inspector renders saved crop values and aspect ratio alongside photo motion", () => {

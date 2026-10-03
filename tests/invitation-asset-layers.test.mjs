@@ -188,9 +188,9 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(textPanel, /onClick=\{\(\) => onAdd\(en \? "Add your text" : "Tambahkan teks", targetSection\)\}/);
   const textInspector = read("components/InvitationStudio/TextLayerInspector.tsx");
   assert.doesNotMatch(textPanel, /<textarea|onUpdateText/);
-  assert.match(textPanel, /Double-click kotaknya untuk mengetik langsung di dalam kotak/);
+  assert.match(textPanel, /Tambah teks/);
   assert.doesNotMatch(textInspector, /undara-studio-text-content|<textarea/);
-  assert.match(textInspector, /Double-click kotak teks di canvas/);
+  assert.match(textInspector, /Klik dua kali teks untuk mengetik/);
   assert.match(renderer, /data-studio-text-editing="true"/);
   assert.match(renderer, /contentEditable/);
   assert.match(renderer, /onDoubleClick=\{\(event\) =>/);

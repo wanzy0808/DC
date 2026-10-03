@@ -88,8 +88,8 @@ test("template Studio follows content-left and styling-right ownership for every
   assert.match(panels, /Judul RSVP/);
   assert.doesNotMatch(copyInspector, /<textarea/);
   assert.doesNotMatch(copyInspector, /onChange: \(value: string\)/);
-  assert.match(copyInspector, /Ubah isi teks dari menu Isi di kiri/);
-  assert.match(nativeInspector, /Isi berasal dari data acara dan terkunci di sini/);
+  assert.match(copyInspector, /Ubah teks lewat Isi/);
+  assert.match(nativeInspector, /Isi dari data acara/);
   assert.match(nativeModel, /nativeVisualUsesSystemContent/);
 });
 

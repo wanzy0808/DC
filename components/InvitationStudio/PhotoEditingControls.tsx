@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,7 +35,7 @@ export function PhotoCropControls({
           const active = !assignments.crop?.[slot] && assignments.focus[slot] === focus;
           return (
             <Button key={focus} type="button" size="sm" variant={active ? "default" : "outline"}
-              className="min-h-11 px-1 text-[11px]" aria-pressed={active} onClick={() => onSetFocus(slot, focus)}>
+              className="min-h-11 px-1 text-xs" aria-pressed={active} onClick={() => onSetFocus(slot, focus)}>
               {focus === "top" ? (en ? "Top" : "Atas") : focus === "center" ? (en ? "Center" : "Tengah") : (en ? "Bottom" : "Bawah")}
             </Button>
           );
@@ -43,15 +43,15 @@ export function PhotoCropControls({
       </div>
       <div className="mt-4 flex items-center justify-between gap-2">
         <h3 className="text-xs font-semibold">{en ? "Crop & position" : "Crop & posisi"}</h3>
-        <Button type="button" size="sm" variant="outline" className="min-h-11 px-2 text-[11px]" onClick={() => onResetCrop(slot)}>Reset</Button>
+        <Button type="button" size="sm" variant="outline" className="min-h-11 px-2 text-xs" onClick={() => onResetCrop(slot)}>Reset</Button>
       </div>
-      <p className="mt-2 text-[11px] text-muted-foreground">{en ? "Aspect ratio" : "Rasio crop"}</p>
+      <p className="mt-2 text-xs text-muted-foreground">{en ? "Aspect ratio" : "Rasio crop"}</p>
       <div className="mt-2 grid grid-cols-3 gap-1" role="group" aria-label={en ? "Aspect ratio" : "Rasio crop"}>
         {(["template", "original", "1:1", "4:5", "3:4", "16:9"] as const).map((aspect) => {
           const active = (crop.aspect ?? "template") === aspect;
           return (
             <Button key={aspect} type="button" size="sm" variant={active ? "default" : "outline"}
-              className="min-h-11 px-1 text-[11px]" aria-pressed={active} onClick={() => onSetCrop(slot, { ...crop, aspect })}>
+              className="min-h-11 px-1 text-xs" aria-pressed={active} onClick={() => onSetCrop(slot, { ...crop, aspect })}>
               {aspect === "template" ? "Template" : aspect === "original" ? (en ? "Original" : "Asli") : aspect}
             </Button>
           );
@@ -80,6 +80,7 @@ export function GalleryPhotoControls({ locale, assets, assignments, onReorderGal
   onGallerySettings: (patch: Partial<GallerySettings>) => void;
 }) {
   const en = locale === "en";
+  const autoplayHintId = useId();
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const pictures = assets.filter((asset) => asset.type === "IMAGE");
   const selectedIds = assignments.gallery ?? pictures.map((photo) => photo.id);
@@ -92,7 +93,7 @@ export function GalleryPhotoControls({ locale, assets, assignments, onReorderGal
     <section aria-label={en ? "Gallery editing" : "Pengaturan galeri"}>
       <div className="flex items-center justify-between gap-2">
         <h3 className="text-xs font-semibold">{en ? "Photo order" : "Urutan foto"}</h3>
-        <span className="text-[11px] text-muted-foreground">{photos.length}</span>
+        <span className="text-xs text-muted-foreground">{photos.length}</span>
       </div>
       {photos.length ? (
         <div className="mt-2 max-h-48 space-y-2 overflow-y-auto overscroll-contain">
@@ -117,7 +118,7 @@ export function GalleryPhotoControls({ locale, assets, assignments, onReorderGal
               }} className={`flex items-center gap-1 rounded-[var(--undara-control-radius)] border border-border p-1 ${draggedId === photo.id ? "opacity-50" : ""}`}>
               <GripVertical size={13} className="shrink-0 text-muted-foreground" aria-hidden="true" />
               <img src={photo.url} alt="" loading="lazy" className="h-10 w-7 shrink-0 rounded object-cover" />
-              <span className="min-w-0 flex-1 truncate text-[11px]" title={photo.title || undefined}>{photo.title || `${en ? "Photo" : "Foto"} ${index + 1}`}</span>
+              <span className="min-w-0 flex-1 truncate text-xs" title={photo.title || undefined}>{photo.title || `${en ? "Photo" : "Foto"} ${index + 1}`}</span>
               <div className="flex shrink-0">
                 <Button type="button" size="icon-sm" variant="ghost" className="h-11 w-11" disabled={index === 0}
                   aria-label={`${en ? "Move photo up" : "Naikkan foto"}: ${photo.title || index + 1}`}
@@ -129,25 +130,27 @@ export function GalleryPhotoControls({ locale, assets, assignments, onReorderGal
             </div>
           ))}
         </div>
-      ) : <p className="mt-2 text-[11px] text-muted-foreground">{en ? "Choose gallery photos on the left." : "Pilih foto galeri di kiri."}</p>}
+      ) : <p className="mt-2 text-xs text-muted-foreground">{en ? "Choose gallery photos on the left." : "Pilih foto galeri di kiri."}</p>}
 
       <label className="undara-studio-layer-select">
         <span>{en ? "Gallery style" : "Gaya galeri"}</span>
         <select value={gallerySettings.presentation} onChange={(event) => onGallerySettings({ presentation: event.target.value as GallerySettings["presentation"] })}>
-          <option value="template">{en ? "Template default" : "Default template"}</option>
-          <option value="carousel">Carousel / slider</option>
+          <option value="template">{en ? "Default" : "Bawaan"}</option>
+          <option value="carousel">Carousel</option>
           <option value="stack">{en ? "Stacked cards" : "Kartu bertumpuk"}</option>
-          <option value="filmstrip">Filmstrip swipe</option>
-          <option value="masonry">{en ? "Masonry collage" : "Kolase masonry"}</option>
+          <option value="filmstrip">Filmstrip</option>
+          <option value="masonry">Masonry</option>
         </select>
       </label>
       <div className="mt-3 flex items-center justify-between gap-2">
         <span className="text-xs font-semibold">Autoplay</span>
         <Button type="button" size="sm" variant="outline" className="min-h-11" role="switch"
           aria-label={en ? "Gallery autoplay" : "Autoplay galeri"} aria-checked={gallerySettings.autoplay && slideshow} disabled={!slideshow}
+          aria-describedby={!slideshow ? autoplayHintId : undefined}
+          title={!slideshow ? (en ? "Available for Carousel and Stack." : "Aktif untuk Carousel dan Kartu bertumpuk.") : undefined}
           onClick={() => onGallerySettings({ autoplay: !gallerySettings.autoplay })}>{gallerySettings.autoplay && slideshow ? "ON" : "OFF"}</Button>
       </div>
-      {!slideshow && <p className="mt-1 text-[11px] text-muted-foreground">{en ? "Available for Carousel and Stack." : "Aktif untuk Carousel dan Kartu bertumpuk."}</p>}
+      {!slideshow && <p id={autoplayHintId} className="sr-only">{en ? "Available for Carousel and Stack." : "Aktif untuk Carousel dan Kartu bertumpuk."}</p>}
       {slideshow && gallerySettings.autoplay && (
         <label className="undara-studio-layer-opacity">
           <span><span>{en ? "Slide interval" : "Jeda slide"}</span><output>{gallerySettings.interval.toFixed(1)}s</output></span>

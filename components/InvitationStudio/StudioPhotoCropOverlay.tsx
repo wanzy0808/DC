@@ -110,7 +110,7 @@ export default function StudioPhotoCropOverlay({
       <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-1/3 h-px bg-white/70 shadow-sm" />
       <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-2/3 h-px bg-white/70 shadow-sm" />
 
-      <div className="absolute left-2 top-2 rounded-md bg-black/65 px-2 py-1 text-[10px] font-medium text-white">
+      <div className="absolute left-2 top-2 rounded-md bg-black/65 px-2 py-1 text-xs font-medium text-white">
         {en ? "Drag to reposition" : "Geser untuk atur posisi"}
       </div>
 
@@ -125,7 +125,7 @@ export default function StudioPhotoCropOverlay({
         >
           <Minus size={15} />
         </button>
-        <span className="min-w-12 text-center text-[10px] font-semibold">{live.zoom.toFixed(1)}×</span>
+        <span className="min-w-12 text-center text-xs font-semibold">{live.zoom.toFixed(1)}×</span>
         <button
           type="button"
           className="grid h-8 w-8 place-items-center rounded-lg text-primary hover:bg-primary/10"
@@ -138,7 +138,7 @@ export default function StudioPhotoCropOverlay({
         </button>
         <button
           type="button"
-          className="ml-1 flex h-8 items-center gap-1 rounded-lg bg-primary px-2 text-[10px] font-semibold text-primary-foreground"
+          className="ml-1 flex h-8 items-center gap-1 rounded-lg bg-primary px-2 text-xs font-semibold text-primary-foreground"
           onPointerDown={(event) => event.stopPropagation()}
           onClick={(event) => { event.stopPropagation(); onDone(); }}
         >

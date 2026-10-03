@@ -123,8 +123,7 @@ export function TemplatePanel({
             )}
           </span>
           <span className="flex min-h-14 min-w-0 flex-col justify-center gap-1 border-t border-primary/20 bg-background px-2 py-2">
-            <span className="break-words font-[family-name:var(--font-undara-heading)] text-xs font-semibold leading-snug text-foreground">{en ? "Blank Canvas" : "Canvas Kosong"}</span>
-            <span className="text-[11px] text-primary">{en ? "Start from scratch" : "Mulai dari nol"}</span>
+            <span className="break-words font-[family-name:var(--font-undara-heading)] text-sm font-semibold leading-snug text-foreground">{en ? "Blank Canvas" : "Canvas Kosong"}</span>
           </span>
           <button
             type="button"
@@ -159,8 +158,8 @@ export function TemplatePanel({
               )}
             </span>
             <span className="flex min-h-14 min-w-0 flex-col justify-center gap-1 border-t border-primary/20 bg-background px-2 py-2">
-              <span className="break-words font-[family-name:var(--font-undara-heading)] text-xs font-semibold leading-snug text-foreground">{item.name}</span>
-              <span className="text-[11px] text-primary">{!item.ready ? (en ? "Not Available" : "Belum tersedia") : item.usesPhotos ? (en ? "With Photos" : "Dengan foto") : (en ? "Without Photos" : "Tanpa foto")}</span>
+              <span className="break-words font-[family-name:var(--font-undara-heading)] text-sm font-semibold leading-snug text-foreground">{item.name}</span>
+              <span className="text-xs text-primary">{!item.ready ? (en ? "Not Available" : "Belum tersedia") : item.usesPhotos ? (en ? "With Photos" : "Dengan foto") : (en ? "Without Photos" : "Tanpa foto")}</span>
             </span>
             <button
               type="button"

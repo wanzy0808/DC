@@ -4,7 +4,6 @@ import { useState, type ReactNode } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { invitationText, type InvitationLanguage } from "@/lib/invitations/language";
 import { RotateCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { invitationSectionItems } from "@/lib/templates/sections";
 import type { PaletteKey } from "@/lib/templates/design";
 import type {
@@ -14,7 +13,6 @@ import type {
 import {
   invitationPaletteOptions,
 } from "@/components/InvitationStudio/designer-config";
-import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
 import { MAX_RSVP_CUSTOM_FIELDS, type InvitationRsvpConfig } from "@/lib/templates/rsvp-config";
 import {
   availableEditableCopyFields,
@@ -47,27 +45,18 @@ export function DesignerTool({
 }
 
 const studioHeadingEnglish: Record<string, string> = {
-  "Pilih Tema": "Choose a Theme",
-  "Lihat desainnya langsung di sebelah kanan.": " ",
   "Isi": "Content",
   "Palet Warna": "Color Palette",
-  "Pilih kombinasi warna untuk tema ini.": "Choose this theme's color combination.",
-  "Pasangan Font": "Font Pair",
-  "Nama huruf ditampilkan dengan font aslinya.": "Font names are displayed in their actual typefaces.",
-  "Musik": "Music",
-  "Maksimal 2 file, masing-masing 3 MB. Hapus file untuk menggantinya.": "Up to two files, 3 MB each.",
 };
 
-function Heading({ title, description }: { title: string; description: string }) {
+function Heading({ title }: { title: string }) {
   const { locale } = useLanguage();
   const shownTitle = locale === "en" ? studioHeadingEnglish[title] || title : title;
-  const shownDescription = locale === "en" ? studioHeadingEnglish[description] ?? description : description;
   return (
     <div>
       <h2 className="font-[family-name:var(--font-undara-heading)] text-lg font-semibold text-primary">
         {shownTitle}
       </h2>
-      {shownDescription.trim() && <p className="mt-1 text-sm leading-6 text-foreground/75">{shownDescription}</p>}
     </div>
   );
 }
@@ -152,7 +141,7 @@ export function ContentPanel({
 
   return (
     <div>
-      <Heading title="Isi" description="" />
+      <Heading title="Isi" />
       <div className="mt-4 divide-y divide-primary/15">
         {invitationSectionItems.map((item) => {
           const enabled = sections[item.key] !== false;
@@ -193,12 +182,12 @@ export function ContentPanel({
                     const source = narrativeCopy[field] ?? copyDefaults[field] ?? "";
                     const value = invitationLanguage === "EN" ? englishNarrativeCopy[field] ?? invitationText("EN", source) : source;
                     return (
-                      <label key={field} className="grid gap-1 text-[10px] text-foreground">
+                      <label key={field} className="grid gap-1 text-xs text-foreground">
                         <span className="flex items-center justify-between gap-2">
                           <strong className="font-semibold text-primary">{label}</strong>
                           <button
                             type="button"
-                            className="inline-flex h-7 items-center gap-1 rounded-[8px] px-2 text-[9px] text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                            className="inline-flex h-7 items-center gap-1 rounded-[8px] px-2 text-xs text-muted-foreground hover:bg-primary/10 hover:text-primary"
                             onClick={(event) => {
                               event.preventDefault();
                               onResetNarrativeCopy(field);
@@ -214,9 +203,9 @@ export function ContentPanel({
                           rows={field === "ourStory" ? 7 : 4}
                           maxLength={editableCopyMaxLength[field]}
                           onChange={(event) => onNarrativeCopy(field, event.target.value)}
-                          className="min-h-20 w-full resize-y rounded-[var(--undara-control-radius)] border border-primary/25 bg-background px-2.5 py-2 text-xs leading-5 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+                          className="min-h-20 w-full resize-y rounded-[var(--undara-control-radius)] border border-primary/25 bg-background px-2.5 py-2 text-sm leading-5 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                         />
-                        <small className="text-right text-[9px] text-muted-foreground">{value.length}/{editableCopyMaxLength[field]}</small>
+                        <small className="text-right text-xs text-muted-foreground">{value.length}/{editableCopyMaxLength[field]}</small>
                       </label>
                     );
                   })}
@@ -242,21 +231,16 @@ export function ContentPanel({
 
                       {item.key === "rsvp" && element === "input" && activeElement === "rsvp:input" && (
                         <div className="mt-2 space-y-2 rounded-[var(--undara-control-radius)] border border-primary/20 bg-primary/[.03] p-2.5">
-                          <label className="block text-[10px] text-foreground">
+                          <label className="block text-xs text-foreground">
                             <span className="mb-1 block font-semibold text-primary">{en ? "RSVP title" : "Judul RSVP"}</span>
                             <input
-                              className="h-8 w-full rounded-[9px] border border-primary/25 bg-background px-2 text-[10px]"
+                              className="h-8 w-full rounded-[9px] border border-primary/25 bg-background px-2 text-xs"
                               value={rsvpConfig.title ?? "Konfirmasi Kehadiran"}
                               maxLength={80}
                               onChange={(event) => onRsvpConfig({ title: event.target.value })}
                             />
                           </label>
-                          <p className="text-[10px] leading-4 text-muted-foreground">
-                            {en
-                              ? "Check the event options guests may choose from in the RSVP dropdown."
-                              : "Centang opsi acara yang boleh dipilih tamu di dropdown RSVP."}
-                          </p>
-                          {eventCategory !== "WEDDING" && <p className="text-[10px] leading-4 text-muted-foreground">{en ? "Event choices are mainly used for weddings." : "Pilihan acara terutama dipakai untuk wedding."}</p>}
+                          <h4 className="text-xs font-semibold text-primary">{en ? "Event options" : "Pilihan acara"}</h4>
                           <label className="undara-studio-rsvp-switch">
                             <span>{en ? "Wedding Ceremony" : "Upacara Nikah"}</span>
                             <input type="checkbox" checked={rsvpConfig.ceremony} onChange={(event) => onRsvpConfig({ ceremony: event.target.checked })} />
@@ -272,25 +256,25 @@ export function ContentPanel({
 
                           <div className="pt-1">
                             <div className="mb-1.5 flex items-center justify-between gap-2">
-                              <span className="text-[10px] font-semibold text-primary">{en ? "Columns" : "Kolom"}</span>
-                              <small className="text-[9px] text-muted-foreground">{rsvpConfig.customFields.length}/{MAX_RSVP_CUSTOM_FIELDS}</small>
+                              <span className="text-xs font-semibold text-primary">{en ? "Columns" : "Kolom"}</span>
+                              <small className="text-xs text-muted-foreground">{rsvpConfig.customFields.length}/{MAX_RSVP_CUSTOM_FIELDS}</small>
                             </div>
                             <div className="mb-2 flex flex-wrap gap-1">
-                              <small className="rounded-md border border-primary/15 px-1.5 py-1 text-[8px] text-muted-foreground">{en ? "Name" : "Nama"}</small>
-                              <small className="rounded-md border border-primary/15 px-1.5 py-1 text-[8px] text-muted-foreground">WhatsApp</small>
-                              <small className="rounded-md border border-primary/15 px-1.5 py-1 text-[8px] text-muted-foreground">{en ? "Attendance" : "Kehadiran"}</small>
-                              <small className="rounded-md border border-primary/15 px-1.5 py-1 text-[8px] text-muted-foreground">{en ? "Companions" : "Pendamping"}</small>
+                              <small className="rounded-md border border-primary/15 px-1.5 py-1 text-xs text-muted-foreground">{en ? "Name" : "Nama"}</small>
+                              <small className="rounded-md border border-primary/15 px-1.5 py-1 text-xs text-muted-foreground">WhatsApp</small>
+                              <small className="rounded-md border border-primary/15 px-1.5 py-1 text-xs text-muted-foreground">{en ? "Attendance" : "Kehadiran"}</small>
+                              <small className="rounded-md border border-primary/15 px-1.5 py-1 text-xs text-muted-foreground">{en ? "Companions" : "Pendamping"}</small>
                             </div>
                             <div className="space-y-1.5">
                               {rsvpConfig.customFields.map((field) => (
                                 <div className="grid grid-cols-[minmax(0,1fr)_auto_24px] items-center gap-1" key={field.id}>
-                                  <input className="h-8 min-w-0 rounded-[9px] border border-primary/25 bg-background px-2 text-[10px]" value={field.label} maxLength={60} onChange={(event) => onUpdateRsvpField(field.id, { label: event.target.value })} />
-                                  <label className="flex items-center gap-1 text-[8px] text-muted-foreground"><input type="checkbox" checked={field.required} onChange={(event) => onUpdateRsvpField(field.id, { required: event.target.checked })} />{en ? "Req" : "Wajib"}</label>
+                                  <input className="h-8 min-w-0 rounded-[9px] border border-primary/25 bg-background px-2 text-xs" value={field.label} maxLength={60} onChange={(event) => onUpdateRsvpField(field.id, { label: event.target.value })} />
+                                  <label className="flex items-center gap-1 text-xs text-muted-foreground"><input type="checkbox" checked={field.required} onChange={(event) => onUpdateRsvpField(field.id, { required: event.target.checked })} />{en ? "Req" : "Wajib"}</label>
                                   <button type="button" className="grid h-6 w-6 place-items-center rounded-[8px] text-sm text-muted-foreground hover:bg-primary/10 hover:text-primary" onClick={() => onRemoveRsvpField(field.id)} aria-label={en ? "Remove field" : "Hapus field"}>×</button>
                                 </div>
                               ))}
                             </div>
-                            <button type="button" className="mt-2 min-h-8 w-full rounded-[10px] border border-primary/35 text-[10px] font-semibold text-primary hover:bg-primary/5 disabled:opacity-40" disabled={rsvpConfig.customFields.length >= MAX_RSVP_CUSTOM_FIELDS} onClick={onAddRsvpField}>
+                            <button type="button" className="mt-2 min-h-8 w-full rounded-[10px] border border-primary/35 text-xs font-semibold text-primary hover:bg-primary/5 disabled:opacity-40" disabled={rsvpConfig.customFields.length >= MAX_RSVP_CUSTOM_FIELDS} onClick={onAddRsvpField}>
                               + {en ? "Add column" : "Tambah Kolom"}
                             </button>
                           </div>
@@ -317,10 +301,7 @@ export function ColorPanel({
 }) {
   return (
     <div>
-      <Heading
-        title="Palet Warna"
-        description="Pilih kombinasi warna untuk tema ini."
-      />
+      <Heading title="Palet Warna" />
       <div className="mt-5 space-y-2">
         {invitationPaletteOptions.map(([key, item]) => (
           <button
@@ -339,7 +320,7 @@ export function ColorPanel({
               <i className="flex-1" style={{ background: item.accent }} />
               <i className="flex-1" style={{ background: item.soft }} />
             </span>
-            <span className="text-xs font-semibold text-foreground">
+            <span className="text-sm font-semibold text-foreground">
               {item.name}
             </span>
           </button>

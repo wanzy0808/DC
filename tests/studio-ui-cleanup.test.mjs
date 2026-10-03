@@ -112,7 +112,7 @@ test("Studio uses one left-rail Isi menu for sections and functional components"
   const mergedPanel = designer.split('{panel === "sections" && (')[1]?.split('{panel === "color"')[0] || "";
   assert.match(mergedPanel, /<ContentPanel/);
   assert.doesNotMatch(mergedPanel, /<SectionsPanel/);
-  assert.match(panels, /<Heading title="Isi" description="" \/>/);
+  assert.match(panels, /<Heading title="Isi" \/>/);
   assert.match(panels, /sectionFunctionalElements/);
 });
 
@@ -260,7 +260,7 @@ test("asset library inserts images by drag-and-drop only", () => {
   assert.doesNotMatch(assetPanel, /onClick=\{\(\) => onAdd\(asset\.src\)\}/);
   assert.match(assetPanel, /draggable=\{layers\.length < maxLayers\}/);
   assert.match(assetPanel, /onDragAssetStart\(asset\.src\)/);
-  assert.match(assetPanel, /Seret gambar ke section undangan/);
+  assert.match(assetPanel, /title=\{`\$\{en \? "Drag to canvas" : "Seret ke canvas"\}/);
   assert.doesNotMatch(designer, /<AssetPanel[^>]*onAdd=\{addAssetLayer\}/);
 });
 
@@ -965,7 +965,7 @@ test("Premium section timelines lazy-load GSAP only for supported storytelling s
   assert.match(sectionInspector, /Timeline premium/);
   assert.match(sectionInspector, /premiumSectionTimelinePresets/);
   assert.match(sectionInspector, /animation: undefined/);
-  assert.match(sectionInspector, /GSAP dimuat hanya saat section ini memakainya/);
+  assert.doesNotMatch(sectionInspector, /GSAP dimuat hanya saat section ini memakainya/);
 
   const reducedMotionIndex = premiumTimelineHook.indexOf('prefers-reduced-motion: reduce');
   const importIndex = premiumTimelineHook.indexOf('await import("gsap")');

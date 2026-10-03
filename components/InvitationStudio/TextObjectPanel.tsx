@@ -68,19 +68,13 @@ export default function TextObjectPanel({
         className="w-full justify-center"
       >
         <Type size={18} />
-        <span>{en ? "Add text box" : "Tambah kotak teks"}</span>
+        <span>{en ? "Add text" : "Tambah teks"}</span>
       </Button>
-
-      <p className="text-xs leading-5 text-muted-foreground">
-        {en
-          ? "A text box appears in the center of the canvas. Double-click it to type directly inside the box."
-          : "Kotak teks muncul di tengah canvas. Double-click kotaknya untuk mengetik langsung di dalam kotak."}
-      </p>
 
       <div className="space-y-2 border-t border-primary/20 pt-4">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-sm font-semibold text-primary">{en ? "Font combinations" : "Kombinasi font"}</h3>
-          <small className="text-[10px] text-muted-foreground">{visibleFonts.length}/{orderedFonts.length}</small>
+          <small className="text-xs text-muted-foreground">{visibleFonts.length}/{orderedFonts.length}</small>
         </div>
 
         <InvitationFonts families={visibleFonts.flatMap(([, item]) => [item.heading, item.body])} />
@@ -117,7 +111,7 @@ export default function TextObjectPanel({
         <div className="space-y-2 border-t border-primary/20 pt-4">
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-sm font-semibold text-primary">{en ? "Text boxes" : "Kotak teks"}</h3>
-            <small className="text-[10px] text-muted-foreground">{texts.length}/{MAX_ASSET_LAYERS}</small>
+            <small className="text-xs text-muted-foreground">{texts.length}/{MAX_ASSET_LAYERS}</small>
           </div>
           {texts.map((layer, index) => (
             <button

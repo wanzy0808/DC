@@ -140,9 +140,6 @@ export default function SectionInspector({
               </option>
             ))}
           </select>
-          <small className="text-[10px] leading-4 text-muted-foreground">
-            {en ? "Loaded only when this section uses it." : "GSAP dimuat hanya saat section ini memakainya."}
-          </small>
         </div>
       ) : null}
 

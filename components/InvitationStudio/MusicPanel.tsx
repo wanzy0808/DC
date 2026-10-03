@@ -111,7 +111,6 @@ export function MusicPanel({
   return (
     <div>
       <h2 className="font-[family-name:var(--font-undara-heading)] text-lg font-semibold text-primary">{en ? "Music" : "Musik"}</h2>
-      <p className="mt-1 text-sm text-foreground/75">{en ? "Listen, choose, then save." : "Dengarkan, pilih, lalu simpan."}</p>
       <p className="mt-4 text-sm"><span className="text-muted-foreground">{en ? "Active Music: " : "Musik Aktif: "}</span>
         <strong>{activeTrack?.title || legacyTrack?.title || (en ? "Uploaded Music" : "Musik Unggahan")}</strong>
       </p>
@@ -140,7 +139,6 @@ export function MusicPanel({
         {legacyTrack && choiceRow(legacyTrack)}
         <section aria-labelledby={`${id}-library`}>
           <h3 id={`${id}-library`} className="text-sm font-semibold text-primary">{en ? "Undara Collection" : "Koleksi Undara"}</h3>
-          <p className="mt-1 text-xs text-muted-foreground">{en ? "No upload slots used." : "Tidak memakai slot unggahan."}</p>
           <label htmlFor={`${id}-search`} className="sr-only">{en ? "Search songs or artists" : "Cari lagu atau artis"}</label>
           <Input id={`${id}-search`} type="search" value={search} onChange={(event) => setSearch(event.target.value)}
             placeholder={en ? "Search songs or artists" : "Cari lagu atau artis"} className="mt-3" />
@@ -151,7 +149,7 @@ export function MusicPanel({
           <h3 id={`${id}-uploads`} className="text-sm font-semibold text-primary">{en ? "Uploads" : "Unggahan"}</h3>
           {uploads.map((track) => choiceRow({ ...track, title: track.title || (en ? "Uploaded Music" : "Musik Unggahan") }, track.id))}
           {onUpload && <>
-            <p className="my-3 text-xs text-muted-foreground">{uploads.length} / {MAX_AUDIO_FILES} {en ? "files · up to 3 MB each" : "file · maksimal 3 MB per file"}</p>
+            <p className="my-3 text-xs text-muted-foreground">{uploads.length}/{MAX_AUDIO_FILES} {en ? "files" : "file"} · 3 MB/file</p>
             <label aria-disabled={full || busy} className={buttonVariants({ size: "sm", className: `flex min-h-11 w-full cursor-pointer px-3 py-3 ${full || busy ? "pointer-events-none opacity-50" : ""}` })}>
               <Upload className="size-4" aria-hidden="true" /> {busy ? (en ? "Processing…" : "Memproses…") : (en ? "Upload Music" : "Unggah Musik")}
               <input type="file" accept={AUDIO_MIME_TYPES.join(",")} disabled={full || busy} className="sr-only"

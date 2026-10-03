@@ -71,7 +71,7 @@ test("a saved library song remains selected and recognizable independently of te
 test("only event uploads consume slots, and a full quota still allows the built-in library", () => {
   const markup = renderPanel({ assets: [audio, { ...audio, id: "second", url: "/api/media/invitation-assets/second.mp3" }], onUpload() {}, onDelete() {} });
   assert.deepEqual(selectedUrls(markup), [audio.url]);
-  assert.match(markup, /2 \/ 2 file/);
+  assert.match(markup, /2\/2 file/);
   assert.match(markup, /<input[^>]*type="file"[^>]*disabled=""/);
   assert.match(markup, /Dengarkan White Petals/);
   assert.doesNotMatch(markup, /<fieldset[^>]*disabled=/);

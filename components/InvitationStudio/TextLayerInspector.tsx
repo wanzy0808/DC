@@ -1,6 +1,6 @@
 "use client";
 
-import { AlignCenter, AlignLeft, AlignRight, Lock, RotateCcw } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, RotateCcw } from "lucide-react";
 import { invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
 import LayerAnimationControls from "@/components/InvitationStudio/LayerAnimationControls";
 import {
@@ -125,10 +125,7 @@ export default function TextLayerInspector({
         <button type="button" onClick={onClose} aria-label={en ? "Close text properties" : "Tutup properti teks"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
-      <div className="flex items-start gap-2 rounded-[var(--undara-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
-        <Lock size={13} className="mt-0.5 shrink-0 text-primary" />
-        <span>{en ? "Double-click the text box on the canvas to edit its wording. This panel controls styling only." : "Double-click kotak teks di canvas untuk mengubah isinya. Panel ini hanya mengatur styling."}</span>
-      </div>
+      <p className="text-xs leading-5 text-muted-foreground">{en ? "Double-click text to type." : "Klik dua kali teks untuk mengetik."}</p>
 
       <fieldset disabled={Boolean(layer.locked)} className="contents disabled:opacity-55">
       <label className="undara-studio-layer-select">
@@ -214,9 +211,9 @@ export default function TextLayerInspector({
       <div className="undara-studio-layer-field">
         <span>{en ? "Quick position" : "Posisi cepat"}</span>
         <div className="grid grid-cols-3 gap-1.5">
-          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(layer.id, { x: 50 })}>{en ? "Center X" : "Tengah X"}</button>
-          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(layer.id, { y: 50 })}>{en ? "Center Y" : "Tengah Y"}</button>
-          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(layer.id, { x: 50, y: 50 })}>{en ? "Center" : "Tengah"}</button>
+          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-xs hover:bg-primary/10" onClick={() => onUpdate(layer.id, { x: 50 })}>{en ? "Center X" : "Tengah X"}</button>
+          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-xs hover:bg-primary/10" onClick={() => onUpdate(layer.id, { y: 50 })}>{en ? "Center Y" : "Tengah Y"}</button>
+          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-xs hover:bg-primary/10" onClick={() => onUpdate(layer.id, { x: 50, y: 50 })}>{en ? "Center" : "Tengah"}</button>
         </div>
       </div>
       <div className="undara-studio-layer-field">

@@ -455,7 +455,7 @@ test("system-backed invitation content stays content-locked while native styling
   const inspector = read("components/InvitationStudio/StudioNativeVisualInspector.tsx");
   const selection = read("components/InvitationStudio/studio-canvas-selection.ts");
   assert.match(inspector, /nativeVisualUsesSystemContent/);
-  assert.match(inspector, /Isi berasal dari data acara dan terkunci di sini/);
+  assert.match(inspector, /Isi dari data acara/);
   assert.match(selection, /\[data-studio-native-heading\]/);
   assert.match(selection, /\[data-invitation-photo-slot\]/);
   assert.match(selection, /\[data-studio-native-object\]/);

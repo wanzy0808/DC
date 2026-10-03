@@ -27,7 +27,7 @@ test("Isi owns narrative wording while canvas selection opens styling-only contr
   assert.deepEqual(availableEditableCopyFields("romantic-rose"), ["greeting", "attendanceRequest", "prayerWish", "closing", "ourStory"]);
   assert.deepEqual(availableEditableCopyFields("botanical-ivory"), ["greeting", "attendanceRequest", "prayerWish", "closing", "ourStory"]);
   const content = panel.split("export function ContentPanel(")[1]?.split("export function ColorPanel(")[0] || "";
-  assert.match(content, /<Heading title="Isi" description="" \/>/);
+  assert.match(content, /<Heading title="Isi" \/>/);
   assert.match(content, /sectionFunctionalElements/);
   assert.match(content, /copyFieldsBySection/);
   assert.match(content, /<textarea/);

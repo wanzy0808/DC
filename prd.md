@@ -609,6 +609,8 @@ URL customer lama `/uploads/images/...` dan `/uploads/music/...` adalah **legacy
 
 ### 7.2.1d Studio: UI ringkas dan pemisahan Publish (24 September 2026)
 
+**Copy menu Studio (3 Oktober 2026):** menu kiri dan inspector kanan memakai judul serta label aksi pendek. Hilangkan deskripsi berulang di tombol/kartu, tutorial permanen dan detail implementasi. Label kontrol minimal 12px, label aksi utama 14px; jangan mengecilkan teks menjadi 8–11px agar panel tampak ringkas. Nama aksesibel, tooltip aksi ikon, nilai kontrol, batas unggahan, state kosong/disabled yang perlu dijelaskan dan pesan error tetap tersedia secara singkat. Aturan ini hanya untuk UI editor, bukan teks dalam artwork undangan.
+
 **Bentuk tombol terbaru:** Landing, Studio dan Dashboard memakai satu bentuk CTA: **persegi panjang bersudut bulat 16px**, tidak memakai pill/rounded-full. Semua komponen reusable mengambil `--undara-control-radius` dari `app/globals.css`; Studio tidak boleh membuat radius khusus untuk Amplop/Cover, filter foto, dropdown urutan atau tombol pencarian. Foreground tombol mengikuti semantic `primary-foreground`; tombol outlined tetap terbaca pada kedua mode. Kecuali kontrol artistik/checkbox/radio/navbar yang memang memiliki geometri berbeda, tidak ada aturan bentuk tombol lain.
 
 
@@ -2659,3 +2661,15 @@ Follow-up commits include `8c64ee0eb259f1f9bf6644b8948fc004e16f3f20`, `6672a8463
 **Observed validation:** 6 regression tests baru merender panel kiri/inspector kanan: tidak ada editing di kiri, crop tersimpan, urutan Galeri dan filter ID/aset, playback conditional, ID/EN dan disabled saat save, serta wiring seleksi/callback. Source akhir lulus **394/394** regression tests, lint empat file panel/inspector, Prisma generate, TypeScript dan Next.js 16.3.3 build **72/72** static pages. Tidak ada perubahan skema atau API penyimpanan.
 
 **Not established:** render SSR dan pemeriksaan source bukan QA browser visual/pointer/mobile, audio nyata, atau authenticated Save → reload → public. Item tersebut tetap terbuka pada checklist.
+
+### 3 Oktober 2026 — copy menu Studio ringkas dan terbaca
+
+**Arahan owner:** kurangi tulisan kecil dan penjelasan di tombol edit. Kartu Foto kini memakai nama slot/thumbnail tanpa deskripsi/status berulang; tombol assignment dipendekkan menjadi Otomatis, Kosongkan dan Semua foto. Petunjuk panjang Teks/Aset/Musik/Warna, subtitle Canvas Kosong, metadata folder/format berulang dan penjelasan teknis GSAP dihapus. Hint pemilik isi di kanan disingkat; penjelasan autoplay yang disabled tersedia lewat tooltip/nama deskripsi aksesibel.
+
+**Readability/scope:** label editor 8–11px menjadi minimal 12px, label aksi/kartu utama 14px. Perubahan CSS terbatas pada shell/kontrol Studio; tipografi artwork undangan tetap milik renderer masing-masing. Batas upload, kuota, error/state kosong, nilai kontrol, nama aksesibel serta fungsi/history/persistence tetap tersedia. Aturan aktif diperbarui pada §7.2.1d dan `studio.md`.
+
+**Affected files/commit:** panel Foto/Teks/Aset/Musik/Warna/Tema, inspector aset/teks/copy/RSVP/native/section, kontrol crop/stage dan `studio.css` di `components/InvitationStudio`; assertion copy pada delapan file regression tests; `studio.md`, `checklist.md` dan `prd.md`. Commit batch berjudul `refactor(studio): simplify menu copy and improve readability`.
+
+**Observed validation:** suite **394/394** tes lulus setelah assertion kalimat lama diperbarui; Prisma generate, TypeScript dan Next.js build **72/72** halaman lulus. Lint **13** file TSX berubah lulus. Dua file lainnya (`AssetPanel.tsx`, `StudioPhotoCropOverlay.tsx`) masih memiliki masing-masing satu error `react-hooks/set-state-in-effect`, ditambah satu warning dependency pada crop; menjalankan lint pada source commit parent mengonfirmasi temuan yang sama sebelum batch ini. Tidak ada perubahan skema/API.
+
+**Not established:** QA visual browser pada desktop/mobile Light/Dark, ID/EN dan interaksi live belum dilakukan; checklist tetap terbuka. Kelulusan lint seluruh repo tidak diklaim.
