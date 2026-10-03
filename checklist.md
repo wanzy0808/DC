@@ -49,6 +49,11 @@ Kerjakan satu batch kecil → verifikasi → commit sebelum membuka batch beriku
 
 Implementasi storage/custom/auth yang sudah ada tidak diulang. Fitur ekspansi menunggu fondasi dan bukti QA di atas. `prd.md` Appendix A menyimpan rationale dan hasil per batch.
 
+## Popup kode referral — 4 Oktober 2026
+
+- [x] Beranda: satu tombol `Kode Referral` di aksi atas; input dan `Submit` berada di shared dialog. Form/promo/harga inline dihapus; kode aktif dapat diganti/dihapus dari popup, feedback ID/EN dan abort GET tetap aman. SSR trigger ID/EN, 499/499 tes, lint UI, TypeScript dan build 72/72 lulus lokal.
+- [ ] QA browser customer: buka/tutup/Escape/fokus kembali, submit Enter, kode valid/tidak aktif, load/error, ganti/hapus/reopen, serta desktop/mobile Light/Dark/ID/EN dengan persistence sebenarnya.
+
 ## Generator QR internal — 4 Oktober 2026
 
 - [x] QR berbagi undangan: QuickChart diganti `qrcode` existing di server aplikasi, PNG 640px/quiet zone 4, pratinjau/unduh dan URL stabil tetap sama. Sesi, owner, ID dan pembayaran tetap diperiksa sebelum encoding; 13 tes handler baru membuat total lokal 441/441 lulus. Lint route/tes baru lulus.

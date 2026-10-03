@@ -1,44 +1,58 @@
 "use client";
 
-import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
-import { ArrowUpRight, TicketPercent } from "lucide-react";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { TicketPercent, X } from "lucide-react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
-import { DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
-import { getServicePackage } from "@/lib/packages/catalog";
-import { referralPrice } from "@/lib/partners/referral-pricing";
-
-const referralOffers = ["INVITATION_BASIC", "GUESTBOOK_DIGITAL"].map((key) => {
-  const item = getServicePackage(key)!;
-  return { name: item.name, ...referralPrice(key, item.price) };
-});
+import { controlStyles } from "@/components/ui/control-styles";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export default function ReferralCodePanel() {
   const { locale } = useLanguage();
   const en = locale === "en";
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
   const [applied, setApplied] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const requestRef = useRef<AbortController | null>(null);
 
-  useEffect(() => {
-    let active = true;
-    fetch("/api/dashboard/referral", { cache: "no-store" })
-      .then(async (response) => {
-        if (!response.ok) throw new Error();
-        const data = await response.json();
-        if (!active) return;
-        setInput(data.code ?? "");
-        setApplied(data.active ? data.code : "");
-        if (data.code && !data.active) setMessage(en ? "This code is no longer active. Enter another code." : "Kode ini sudah tidak aktif. Masukkan kode lain.");
-      })
-      .catch(() => { if (active) setMessage(en ? "The referral code could not be loaded." : "Kode referral belum dapat dimuat."); });
-    return () => { active = false; };
-  }, [en]);
+  useEffect(() => () => requestRef.current?.abort(), []);
+
+  async function loadCode() {
+    requestRef.current?.abort();
+    const controller = new AbortController();
+    requestRef.current = controller;
+    setLoading(true);
+    setMessage("");
+    setInput("");
+    setApplied("");
+    try {
+      const response = await fetch("/api/dashboard/referral", { cache: "no-store", signal: controller.signal });
+      if (!response.ok) throw new Error();
+      const data = await response.json();
+      if (controller.signal.aborted) return;
+      setInput(data.code ?? "");
+      setApplied(data.active ? data.code : "");
+      if (data.code && !data.active) setMessage(en ? "This code is no longer active. Enter another code." : "Kode ini sudah tidak aktif. Masukkan kode lain.");
+    } catch {
+      if (!controller.signal.aborted) setMessage(en ? "The referral code could not be loaded." : "Kode referral belum dapat dimuat.");
+    } finally {
+      if (!controller.signal.aborted) setLoading(false);
+    }
+  }
+
+  function changeOpen(next: boolean) {
+    setOpen(next);
+    if (next) void loadCode();
+    else requestRef.current?.abort();
+  }
 
   async function apply(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (busy || loading || !input.trim()) return;
     setBusy(true);
     setMessage("");
     try {
@@ -51,7 +65,7 @@ export default function ReferralCodePanel() {
       if (!response.ok) throw new Error(data.error ?? "Kode belum dapat dipakai.");
       setInput(data.code);
       setApplied(data.code);
-      setMessage(en ? "Code saved. Your discount will appear on a new eligible invoice." : "Kode tersimpan. Diskon akan masuk pada invoice baru yang memenuhi syarat.");
+      setMessage(en ? "Code saved." : "Kode tersimpan.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Kode belum dapat dipakai.");
     } finally {
@@ -76,29 +90,30 @@ export default function ReferralCodePanel() {
   }
 
   return (
-    <DashboardSurface className="mt-5 min-w-0 px-5 py-6 sm:px-7">
-      <div className="flex flex-wrap items-start gap-4 sm:justify-between">
-        <div className="flex min-w-0 items-start gap-4">
-          <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><TicketPercent className="size-5" aria-hidden="true" /></span>
-          <div>
-            <h2 className="font-[family-name:var(--font-undara-heading)] text-xl font-semibold text-primary sm:text-2xl">{en ? "Have a partner referral code?" : "Punya kode referral Mitra?"}</h2>
-            <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">{en ? "Save it here before choosing a package. The discount is calculated when a new invoice is created." : "Simpan di sini sebelum memilih paket. Diskon dihitung saat invoice baru dibuat."}</p>
+    <Dialog open={open} onOpenChange={changeOpen}>
+      <DialogTrigger render={<Button size="lg" className="dc-dashboard-overview-cta" disabled={busy} />}>
+        <TicketPercent className="size-4" aria-hidden="true" />{en ? "Referral Code" : "Kode Referral"}
+      </DialogTrigger>
+      <DialogContent initialFocus={inputRef} showCloseButton={false} overlayClassName="z-[100]" className="z-[101] max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-md">
+        <DialogHeader className="pr-12">
+          <DialogTitle className="font-[family-name:var(--font-undara-heading)] text-xl font-semibold text-primary">{en ? "Referral Code" : "Kode Referral"}</DialogTitle>
+          <DialogDescription className="sr-only">{en ? "Enter your partner referral code." : "Masukkan kode referral Mitra."}</DialogDescription>
+        </DialogHeader>
+        <DialogClose render={<Button size="icon-sm" className="absolute right-4 top-4" aria-label={en ? "Close" : "Tutup"} />}>
+          <X className="size-4" aria-hidden="true" />
+        </DialogClose>
+        <form onSubmit={apply} className="space-y-4" aria-busy={loading || busy}>
+          <label className="block text-sm font-medium" htmlFor="dashboard-referral-code">
+            {en ? "Referral Code" : "Kode Referral"}
+            <input ref={inputRef} id="dashboard-referral-code" name="referralCode" autoComplete="off" autoCapitalize="characters" spellCheck={false} required maxLength={32} readOnly={loading} disabled={busy} value={input} onChange={(event) => setInput(event.target.value.toUpperCase())} placeholder="MITRA-XXXXXXXX" className={`${controlStyles.input} mt-2 font-mono uppercase`} />
+          </label>
+          {(loading || message) && <p role="status" aria-live="polite" className="text-sm text-foreground">{loading ? (en ? "Loading..." : "Memuat...") : message}</p>}
+          <div className="flex flex-wrap justify-end gap-2">
+            {applied && <Button type="button" disabled={busy || loading} onClick={remove}>{en ? "Remove" : "Hapus"}</Button>}
+            <Button type="submit" disabled={busy || loading || !input.trim()}>{busy ? (en ? "Saving..." : "Menyimpan...") : "Submit"}</Button>
           </div>
-        </div>
-        <Link href="/packages" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">{en ? "Choose a package" : "Lihat paket"}<ArrowUpRight className="size-4" aria-hidden="true" /></Link>
-      </div>
-      <form onSubmit={apply} className="mt-5 flex flex-wrap items-end gap-3">
-        <label className="min-w-[190px] flex-1 text-sm font-medium" htmlFor="dashboard-referral-code">
-          {en ? "Referral code" : "Kode referral"}
-          <input id="dashboard-referral-code" name="referralCode" autoComplete="off" maxLength={32} value={input} onChange={(event) => setInput(event.target.value.toUpperCase())} placeholder="MITRA-XXXXXXXX" className="mt-2 h-11 w-full rounded-lg border border-primary/30 bg-background px-4 font-mono text-sm uppercase outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20" />
-        </label>
-        <Button type="submit" disabled={busy || !input.trim()} className="h-11">{busy ? (en ? "Saving..." : "Menyimpan...") : (en ? "Apply code" : "Pakai kode")}</Button>
-        {applied && <Button type="button" variant="outline" disabled={busy} onClick={remove} className="h-11">{en ? "Remove" : "Hapus"}</Button>}
-      </form>
-      <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
-        {referralOffers.map((offer) => <p key={offer.name.id}>{offer.name[locale]} <strong className="text-primary">−{offer.percent}%</strong> · Rp{offer.amount.toLocaleString("id-ID")}</p>)}
-      </div>
-      <p aria-live="polite" className="mt-3 text-sm text-primary">{message || (applied ? (en ? `Active code: ${applied}` : `Kode aktif: ${applied}`) : "")}</p>
-    </DashboardSurface>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

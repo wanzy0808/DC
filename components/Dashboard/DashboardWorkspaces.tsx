@@ -88,6 +88,7 @@ export function WorkspaceOverview({
           </h1>
         </div>
         <div className="relative z-[1] flex max-w-full flex-wrap gap-2 self-start sm:self-auto sm:justify-end">
+          <ReferralCodePanel />
           <InvitationQrMenu onManageInvitations={() => onGo("invitation")} />
           <Button type="button" size="lg" onClick={() => onGo("events")} className="dc-dashboard-overview-cta">
             <CalendarDays className="size-4" />
@@ -107,8 +108,6 @@ export function WorkspaceOverview({
           />
         ))}
       </DashboardMetricGrid>
-
-      <ReferralCodePanel />
 
       <section className="mt-5 grid min-w-0 items-start gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.8fr)]">
         <DashboardSurface className="dc-dashboard-overview-events min-w-0 overflow-hidden">
