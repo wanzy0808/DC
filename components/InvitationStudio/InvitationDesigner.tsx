@@ -1077,12 +1077,14 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       name: shape === "rectangle" ? "Rectangle" : shape === "circle" ? "Circle" : "Line",
       customerAccess: templateMode ? "locked" : "customizable",
     }] });
-    setSelectedPhotoSlot(null);
+    clearCanvasSelection();
     setSelectedLayerIds([id]);
     setSelectedLayerId(id);
     showDesignSection(section);
     setPanel("assets");
     setInspectorOpen(true);
+    setMobileCanvas(true);
+    requestAnimationFrame(() => canvasScrollRef.current?.focus({ preventScroll: true }));
   }
 
   function addTextObject(
@@ -1146,6 +1148,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setSelectedLayerIds(nextIds);
     setSelectedLayerId(nextIds.includes(id) ? id : nextIds.at(-1) ?? null);
     showDesignSection(layer.section ?? "cover");
+    setMobileCanvas(true);
+    if (fromCanvas) canvasScrollRef.current?.focus({ preventScroll: true });
     if (!fromCanvas) requestAnimationFrame(() => {
       const section = layer.section ?? "cover";
       const instanceId = layer.sectionInstanceId ?? section;
@@ -1155,6 +1159,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       (instance?.querySelector(`[data-invitation-section="${section}"]`)
         ?? canvasScrollRef.current?.querySelector(`[data-invitation-section="${section}"]`))
         ?.scrollIntoView({ block: "center" });
+      canvasScrollRef.current?.focus({ preventScroll: true });
     });
   }
 

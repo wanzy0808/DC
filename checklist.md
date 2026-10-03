@@ -37,6 +37,8 @@ Kerjakan satu batch kecil → verifikasi → commit sebelum membuka batch beriku
 - [ ] Studio resize/rotate: QA delapan handle, sisi/sudut yang tetap, objek berotasi, serta parity Amplop/Isi dan renderer publik.
 - [ ] Studio layer: QA naik/turun satu posisi dan front/back, batas urutan, multi-select serta lock/hide.
 - [ ] Studio pan: QA mouse/touch pada 100% dan rentang zoom, Space/focus/tab interruption, dan klik seleksi setelah cancel.
+- [x] Fokus shortcut shape: menambah lingkaran/persegi/garis melepas seleksi sebelumnya, memilih layer baru dan memfokuskan canvas; pemilihan objek di canvas/daftar juga memberi fokus. Mobile menampilkan canvas; Delete/Backspace tetap memakai penghapusan/history dan guard input/lock yang sama. Lokal 405/405, TypeScript/build lulus; ESLint identik baseline 4 error + 6 warning, tanpa temuan baru.
+- [ ] Shortcut shape: QA browser Tambah Lingkaran → Delete/Backspace → Undo/Redo, seleksi ulang, locked/input, Amplop/Isi/mobile dan Simpan → reload → public.
 - [ ] Studio keyboard: QA Delete/clipboard/Undo/Redo pada Amplop/Isi, fokus input/panel luar, IME dan seleksi teks.
 - [ ] Studio toolbar follow: QA bounding/handle/inspector saat scroll, zoom, resize dan ganti stage.
 - [ ] Production storage: verifikasi volume `UNDARA_DATA_DIR`, dry-run migrasi file legacy, review hasil sebelum apply pada server target.
