@@ -277,6 +277,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     beginCanvasPan,
     moveCanvasPan,
     endCanvasPan,
+    cancelCanvasPan,
     consumeSuppressedCanvasClick,
   } = useStudioCanvasPan();
   // A click on the actual envelope advances the Studio stage selector, too.
@@ -2044,12 +2045,18 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           onKeyDown={(event) => {
             if (event.code !== "Space" || event.altKey || event.ctrlKey || event.metaKey) return;
             const target = event.target;
-            if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
+            if (target instanceof Element && target.closest('button, a, input, textarea, select, [contenteditable="true"], [role="textbox"], [role="button"]')) return;
             event.preventDefault();
             setCanvasPanReady(true);
           }}
           onKeyUp={(event) => {
             if (event.code === "Space") setCanvasPanReady(false);
+          }}
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+              setCanvasPanReady(false);
+              cancelCanvasPan();
+            }
           }}
           onPointerDown={(event) => {
             if (beginCanvasPan(event, true)) return;
@@ -2058,7 +2065,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           }}
           onPointerMove={moveCanvasPan}
           onPointerUp={endCanvasPan}
-          onPointerCancel={(event) => { endCanvasPan(event); setCanvasPanReady(false); }}
+          onPointerCancel={(event) => { cancelCanvasPan(event.pointerId); setCanvasPanReady(false); }}
+          onLostPointerCapture={(event) => cancelCanvasPan(event.pointerId)}
           onClick={(event) => {
             if (consumeSuppressedCanvasClick()) return;
             const target = event.target;

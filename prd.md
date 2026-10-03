@@ -2613,3 +2613,15 @@ Follow-up commits include `8c64ee0eb259f1f9bf6644b8948fc004e16f3f20`, `6672a8463
 **Observed validation:** 7 regression tests baru menjalankan validator dengan fixture aset lintas event/customer, simulasi delete sesudah load, IMAGE, default/legacy, penanganan error API oleh Studio, dan wiring guard di dalam lock. Suite lokal lulus **373/373**, lint helper lulus, Prisma generate dan TypeScript lulus, serta build Next.js 16.3.3 lulus **72/72** static pages. Tidak ada perubahan skema atau migrasi database.
 
 **Not established:** fixture validator bukan bukti transaksi PostgreSQL nyata atau authenticated Save/reload/public E2E. Instalasi Chromium dicoba tetapi unduhan binary gagal; QA browser/audio dan produksi tetap terbuka.
+
+**Commit/CI checkpoint:** [`31b197a13bef5adc2ccb7bfcf8fe12e126972e9f`](https://github.com/wanzy0808/Undara/commit/31b197a13bef5adc2ccb7bfcf8fe12e126972e9f) tersimpan pada `main`; [Build Validation 37082214521](https://github.com/wanzy0808/Undara/actions/runs/37082214521) dan [Orphan Audit 37082214520](https://github.com/wanzy0808/Undara/actions/runs/37082214520) selesai success.
+
+### 3 Oktober 2026 — pan Studio tidak tersangkut setelah fokus/gesture terputus
+
+**Problem/fix:** keyup Space sebelumnya hanya didengar canvas, sehingga pindah fokus sebelum Space dilepas dapat meninggalkan mode pan aktif. Gesture juga tidak dibersihkan saat window blur, tab hidden atau pointer capture hilang, dan pointer kedua dapat mengganti sesi pertama. Controller pan kini memiliki cancel terpisah dari pointer-up normal, lifecycle listener global yang dibersihkan saat unmount, serta satu pointer aktif. Cancel tidak menelan klik seleksi berikutnya. Space pada tombol Amplop/Isi dan kontrol interaktif tidak lagi diprevent oleh shortcut pan.
+
+**Affected files/commit:** `components/InvitationStudio/{studio-canvas-pan.ts,useStudioCanvasPan.ts,InvitationDesigner.tsx}`, `tests/{studio-canvas-pan,studio-ui-cleanup}.test.mjs`, `studio.md`, `checklist.md`, dan Appendix A ini; commit batch berjudul `fix(studio): release canvas pan after interrupted gestures`.
+
+**Observed validation:** 9 regression tests baru mengeksekusi controller/lifecycle dengan fixture viewport dan EventTarget: scroll dua arah, pointer kedua, threshold drag/click, cancel, capture hilang, Space keyup di luar canvas, blur, tab hidden dan listener cleanup. Wiring canvas serta guard tombol diperiksa pada source. Suite lokal lulus **382/382**, lint controller/hook, Prisma generate, TypeScript dan build Next.js 16.3.3 **72/72** static pages lulus.
+
+**Not established:** tes fixture bukan QA browser pointer/touch, device, parity visual layer/resize/rotate atau save/public round-trip. Tidak ada perubahan layout, koordinat desain tersimpan, skema maupun deployment.
