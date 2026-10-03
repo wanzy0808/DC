@@ -5,6 +5,8 @@ import test from "node:test";
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 const photoSlots = read("lib/templates/photo-slots.ts");
 const panel = read("components/InvitationStudio/PhotoPanel.tsx");
+const photoControls = read("components/InvitationStudio/PhotoEditingControls.tsx");
+const photoInspector = read("components/InvitationStudio/PhotoSlotInspector.tsx");
 const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
 const gallery = read("components/PublicInvitation/ConfigurablePhotoGallery.tsx");
 const galleryCss = read("components/PublicInvitation/configurable-photo-gallery.css");
@@ -25,20 +27,23 @@ test("gallery settings persist inside the existing photo assignment token", () =
   assert.match(photoSlots, /export function resolveGallerySettings/);
 });
 
-test("Studio Gallery panel can reorder photos and configure playback", () => {
-  assert.match(panel, /Urutan Foto/);
-  assert.match(panel, /draggable/);
-  assert.match(panel, /onReorderGallery\(sourceId, photo\.id\)/);
-  assert.match(panel, /Gaya galeri/);
-  assert.match(panel, /value=\{gallerySettings\.presentation\}/);
-  assert.match(panel, /role="switch"/);
-  assert.match(panel, /gallerySettings\.autoplay/);
-  assert.match(panel, /Jeda slide/);
-  assert.match(panel, /Transisi slide/);
-  assert.match(panel, /Durasi transisi/);
-  assert.match(panel, /Animasi Saat Muncul/);
-  assert.match(panel, /sectionAnimationPresets/);
-  assert.match(panel, /Jeda antar foto/);
+test("Studio Gallery inspector can reorder photos and configure playback without duplicating the left picker", () => {
+  assert.doesNotMatch(panel, /onReorderGallery|onGallerySettings|galleryMotion|Crop & posisi/);
+  assert.match(photoInspector, /<GalleryPhotoControls/);
+  assert.match(photoControls, /Urutan foto/);
+  assert.match(photoControls, /draggable/);
+  assert.match(photoControls, /onReorderGallery\(sourceId, photo\.id\)/);
+  assert.match(photoControls, /event\.stopPropagation\(\)/);
+  assert.match(photoControls, /Gaya galeri/);
+  assert.match(photoControls, /value=\{gallerySettings\.presentation\}/);
+  assert.match(photoControls, /role="switch"/);
+  assert.match(photoControls, /gallerySettings\.autoplay/);
+  assert.match(photoControls, /Jeda slide/);
+  assert.match(photoControls, /Transisi slide/);
+  assert.match(photoControls, /Durasi transisi/);
+  assert.match(photoInspector, /Animasi saat muncul/);
+  assert.match(photoInspector, /sectionAnimationPresets/);
+  assert.match(photoInspector, /Jeda antar foto/);
 });
 
 test("Studio wiring saves gallery order, behavior and entrance motion in design history", () => {
@@ -48,7 +53,7 @@ test("Studio wiring saves gallery order, behavior and entrance motion in design 
   assert.match(designer, /gallerySettings: \{ \.\.\.defaultGallerySettings\(\), \.\.\.\(design\.photos\.gallerySettings \?\? \{\}\), \.\.\.patch \}/);
   assert.match(designer, /onReorderGallery=\{reorderGalleryPhoto\}/);
   assert.match(designer, /onGallerySettings=\{updateGallerySettings\}/);
-  assert.match(designer, /onGalleryMotion=\{\(patch\) => updatePhotoMotion\("gallery", patch\)\}/);
+  assert.match(designer, /onUpdatePhotoMotion=\{updatePhotoMotion\}/);
   assert.match(finalPreview, /photoAssignments=\{design\.photos\}/);
 });
 

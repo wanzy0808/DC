@@ -16,6 +16,7 @@ const assetLayerModel = read("lib/templates/asset-layers.ts");
 const sectionStyles = read("lib/templates/section-styles.ts");
 const photoSlots = read("lib/templates/photo-slots.ts");
 const photoSlotInspector = read("components/InvitationStudio/PhotoSlotInspector.tsx");
+const photoEditingControls = read("components/InvitationStudio/PhotoEditingControls.tsx");
 const photoAnimationHook = read("components/PublicInvitation/use-photo-animations.ts");
 const photoParallaxRuntime = read("components/PublicInvitation/photo-parallax-runtime.ts");
 const copyMotionModel = read("lib/templates/editable-copy-motion.ts");
@@ -446,9 +447,9 @@ test("Studio supports standard cut and non-destructive photo crop controls", () 
   assert.match(designer, /removeAssetLayer\(selectedAssetLayer\.id\)/);
   assert.match(designer, /shortcutKey === "d"/);
   assert.match(designer, /duplicateSelectedAssetLayer\(\)/);
-  assert.match(photos, /Crop & posisi/);
-  assert.match(photos, /onSetCrop/);
-  assert.match(photos, /onResetCrop/);
+  assert.match(photoEditingControls, /Crop & posisi/);
+  assert.match(photoEditingControls, /onSetCrop/);
+  assert.match(photoEditingControls, /onResetCrop/);
   assert.match(photoSlots, /export type PhotoCrop = \{ x: number; y: number; zoom: number; aspect\?: PhotoCropAspect \}/);
   assert.match(photoSlots, /crop: Record<CroppablePhotoSlot, PhotoCrop \| null>/);
   assert.match(photoSlots, /photoCropStyle/);
@@ -606,12 +607,12 @@ test("Studio has standard multi-select keyboard shortcuts", () => {
 
 test("Studio photo crop includes persisted aspect-ratio presets without destructive image edits", () => {
   const photoSlots = read("lib/templates/photo-slots.ts");
-  assert.match(photos, /Rasio crop|Aspect ratio/);
-  assert.match(photos, /"original"/);
-  assert.match(photos, /"1:1"/);
-  assert.match(photos, /"4:5"/);
-  assert.match(photos, /"3:4"/);
-  assert.match(photos, /"16:9"/);
+  assert.match(photoEditingControls, /Rasio crop|Aspect ratio/);
+  assert.match(photoEditingControls, /"original"/);
+  assert.match(photoEditingControls, /"1:1"/);
+  assert.match(photoEditingControls, /"4:5"/);
+  assert.match(photoEditingControls, /"3:4"/);
+  assert.match(photoEditingControls, /"16:9"/);
   assert.match(photoSlots, /export type PhotoCropAspect = "template" \| "original" \| "1:1" \| "4:5" \| "3:4" \| "16:9"/);
   assert.match(photoSlots, /aspectRatio/);
 });
@@ -849,7 +850,7 @@ test("Studio persists photo slot motion inside the existing photos design token"
   assert.match(photoSlots, /motion: sanitizePhotoMotions\(assignments\.motion\)/);
 });
 
-test("Studio photo selection opens a visual-only right inspector", () => {
+test("Studio photo selection opens the shared right inspector", () => {
   assert.match(designer, /const \[selectedPhotoSlot, setSelectedPhotoSlot\] = useState<PhotoSlot \| null>\(null\)/);
   assert.match(designer, /function selectPhotoVisual\(slot: PhotoSlot\)/);
   assert.match(canvasSelectionResolver, /target\.closest<HTMLElement>\("\[data-invitation-photo-slot\]"\)/);

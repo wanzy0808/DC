@@ -16,7 +16,7 @@ import type { InvitationDesignState } from "@/components/InvitationStudio/design
 import type { EditableInvitationCopyField } from "@/lib/templates/editable-copy";
 import type { EditableCopyMotion } from "@/lib/templates/editable-copy-motion";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
-import type { PhotoMotion, PhotoSlot } from "@/lib/templates/photo-slots";
+import type { CroppablePhotoSlot, GallerySettings, InvitationPhotoAsset, PhotoCrop, PhotoFocus, PhotoMotion, PhotoSlot } from "@/lib/templates/photo-slots";
 import type { InvitationSectionKey } from "@/lib/templates/sections";
 import type { InvitationSectionStyle } from "@/lib/templates/section-styles";
 import type { StudioSectionElementKind } from "@/lib/templates/section-element-styles";
@@ -33,6 +33,8 @@ export default function StudioSelectionInspector({
   selectedAssetIndex,
   maxAssetLayers,
   selectedPhotoSlot,
+  photoAssets,
+  photoEditingDisabled,
   selectedRsvpElementKey,
   selectedSectionElement,
   selectedCopyField,
@@ -44,6 +46,11 @@ export default function StudioSelectionInspector({
   onUpdateAsset,
   onPositionAsset,
   onUpdatePhotoMotion,
+  onSetPhotoFocus,
+  onSetPhotoCrop,
+  onResetPhotoCrop,
+  onGallerySettings,
+  onReorderGallery,
   onResetPhotoMotion,
   onClosePhoto,
   onUpdateRsvpConfig,
@@ -63,6 +70,8 @@ export default function StudioSelectionInspector({
   selectedAssetIndex: number;
   maxAssetLayers: number;
   selectedPhotoSlot: PhotoSlot | null;
+  photoAssets: InvitationPhotoAsset[];
+  photoEditingDisabled: boolean;
   selectedRsvpElementKey: string | null;
   selectedSectionElement: SelectedSectionElement;
   selectedCopyField: EditableInvitationCopyField | null;
@@ -74,6 +83,11 @@ export default function StudioSelectionInspector({
   onUpdateAsset: (id: string, patch: Partial<InvitationAssetLayer>) => void;
   onPositionAsset: (id: string, position: AssetLayerPosition) => void;
   onUpdatePhotoMotion: (slot: PhotoSlot, patch: Partial<PhotoMotion>) => void;
+  onSetPhotoFocus: (slot: CroppablePhotoSlot, focus: PhotoFocus) => void;
+  onSetPhotoCrop: (slot: CroppablePhotoSlot, crop: PhotoCrop) => void;
+  onResetPhotoCrop: (slot: CroppablePhotoSlot) => void;
+  onGallerySettings: (patch: Partial<GallerySettings>) => void;
+  onReorderGallery: (sourceId: string, targetId: string) => void;
   onResetPhotoMotion: (slot: PhotoSlot) => void;
   onClosePhoto: () => void;
   onUpdateRsvpConfig: (patch: Partial<InvitationDesignState["rsvpConfig"]>) => void;
@@ -136,6 +150,14 @@ export default function StudioSelectionInspector({
         locale={locale}
         slot={selectedPhotoSlot}
         motion={templatePhotoMotion(design.template, design.photos.motion, design.sectionStyles)[selectedPhotoSlot]}
+        assignments={design.photos}
+        assets={photoAssets}
+        disabled={photoEditingDisabled}
+        onSetFocus={onSetPhotoFocus}
+        onSetCrop={onSetPhotoCrop}
+        onResetCrop={onResetPhotoCrop}
+        onGallerySettings={onGallerySettings}
+        onReorderGallery={onReorderGallery}
         onUpdate={(patch) => onUpdatePhotoMotion(selectedPhotoSlot, patch)}
         onReset={() => onResetPhotoMotion(selectedPhotoSlot)}
         onClose={onClosePhoto}

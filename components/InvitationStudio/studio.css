@@ -152,6 +152,7 @@
 .undara-studio-layer-number input { width: 100%; min-width: 0; height: 36px; border: 0; outline: 0; background: transparent; padding: 0 6px 0 9px; color: var(--foreground); font-size: 13px; font-weight: 600; }
 .undara-studio-layer-number small { color: var(--muted-foreground); font-size: 10px; font-weight: 500; }
 .undara-studio-layer-select select { width: 100%; min-height: 38px; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: 10px; background: var(--background); padding: 0 30px 0 9px; color: var(--foreground); font-size: 12px; font-weight: 600; }
+.undara-studio-photo-editing-controls select { min-height: 44px; }
 .undara-studio-layer-opacity > span { display: flex; justify-content: space-between; gap: 8px; }
 .undara-studio-layer-opacity input { width: 100%; accent-color: var(--primary); }
 .undara-studio-layer-order { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }

@@ -1,0 +1,126 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import test from "node:test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { LanguageProvider } from "../components/I18n/LanguageProvider.tsx";
+import PhotoPanelModule from "../components/InvitationStudio/PhotoPanel.tsx";
+import StudioSelectionInspectorModule from "../components/InvitationStudio/StudioSelectionInspector.tsx";
+import { defaultPhotoAssignments } from "../lib/templates/photo-slots.ts";
+
+const assets = [
+  { id: "photo-a", type: "IMAGE", title: "Foto A", url: "/event-a/photo-a.webp" },
+  { id: "photo-b", type: "IMAGE", title: "Foto B", url: "/event-a/photo-b.webp" },
+  { id: "photo-c", type: "IMAGE", title: "Foto C", url: "/event-a/photo-c.webp" },
+  { id: "audio-a", type: "AUDIO", title: "Lagu A", url: "/event-a/audio.mp3" },
+];
+const noop = () => {};
+// tsx exposes CJS default exports differently from Next's bundler.
+const PhotoPanel = PhotoPanelModule.default ?? PhotoPanelModule;
+const StudioSelectionInspector = StudioSelectionInspectorModule.default ?? StudioSelectionInspectorModule;
+const renderLeft = (activeSlot) => renderToStaticMarkup(createElement(LanguageProvider, { initialLocale: "id" },
+  createElement(PhotoPanel, {
+    photos: assets, slots: ["cover", "gallery"], assignments: defaultPhotoAssignments(), activeSlot,
+    onActiveSlotChange: noop, onSetPhoto: noop, onToggleGallery: noop, onUpload: noop,
+  }),
+));
+const renderRight = (slot, assignments, overrides = {}) => renderToStaticMarkup(createElement(StudioSelectionInspector, {
+  locale: "id", design: { template: "garden-light", layers: [], photos: assignments, sectionStyles: {} },
+  selectedAssetLayer: null, selectedAssetIndex: -1, maxAssetLayers: 10,
+  selectedPhotoSlot: slot, photoAssets: assets, photoEditingDisabled: false,
+  selectedRsvpElementKey: null, selectedSectionElement: null, selectedCopyField: null,
+  selectedSectionKey: null, selectedNativeKey: null,
+  onSetPhotoFocus: noop, onSetPhotoCrop: noop, onResetPhotoCrop: noop,
+  onGallerySettings: noop, onReorderGallery: noop, onUpdatePhotoMotion: noop,
+  onResetPhotoMotion: noop, onClosePhoto: noop, ...overrides,
+}));
+
+test("left Photo panel keeps upload/assignment and contains no editing controls for cover or gallery", () => {
+  for (const slot of ["cover", "gallery"]) {
+    const markup = renderLeft(slot);
+    assert.match(markup, /Koleksi Foto/);
+    assert.match(markup, /Penempatan Foto/);
+    assert.match(markup, /Tambah Foto/);
+    assert.match(markup, /type="file"/);
+    assert.doesNotMatch(markup, /<select\b|type="range"|draggable="true"/);
+    assert.doesNotMatch(markup, /Fokus foto|Crop &amp; posisi|Urutan foto|Gaya galeri|Autoplay|Animasi saat muncul/);
+  }
+  assert.match(renderLeft("gallery"), /Kosongkan Pilihan Galeri/);
+  assert.match(renderLeft("cover"), /Gunakan Pilihan Otomatis/);
+});
+
+test("right cover inspector renders saved crop values and aspect ratio alongside photo motion", () => {
+  const assignments = defaultPhotoAssignments();
+  assignments.cover = "photo-a";
+  assignments.crop.cover = { x: 24, y: 83, zoom: 1.7, aspect: "4:5" };
+  const before = JSON.stringify(assignments);
+  const markup = renderRight("cover", assignments);
+  assert.match(markup, /aria-label="Properti foto"/);
+  assert.match(markup, /Fokus foto/);
+  assert.match(markup, /Rasio crop/);
+  assert.match(markup, /aria-pressed="true"[^>]*>4:5<\/button>/);
+  for (const value of ["24", "83", "1.7"]) assert.match(markup, new RegExp(`value="${value}"`));
+  assert.match(markup, /Animasi saat muncul/);
+  assert.match(markup, /Parallax/);
+  assert.doesNotMatch(markup, /Gaya galeri|Urutan foto|Autoplay galeri/);
+  assert.equal(JSON.stringify(assignments), before);
+});
+
+test("right gallery inspector preserves saved order, filters unavailable/non-image IDs and exposes slideshow settings", () => {
+  const assignments = defaultPhotoAssignments();
+  assignments.gallery = ["photo-b", "foreign-photo", "audio-a", "photo-a"];
+  assignments.gallerySettings = { presentation: "carousel", autoplay: true, interval: 7, transition: "fade", transitionDuration: 1.2 };
+  const markup = renderRight("gallery", assignments);
+  assert.ok(markup.indexOf(assets[1].url) < markup.indexOf(assets[0].url));
+  assert.doesNotMatch(markup, /photo-c\.webp|audio\.mp3|foreign-photo/);
+  assert.match(markup, /Urutan foto/);
+  assert.match(markup, /Gaya galeri/);
+  assert.match(markup, /role="switch"[^>]*aria-checked="true"/);
+  assert.match(markup, /Jeda slide/);
+  assert.match(markup, /value="7"/);
+  assert.match(markup, /value="fade" selected=""/);
+  assert.match(markup, /Durasi transisi/);
+  assert.match(markup, /Jeda antar foto/);
+  assert.doesNotMatch(markup, /Rasio crop|Fokus foto/);
+});
+
+test("template gallery style keeps autoplay disabled and hides unsupported slide controls", () => {
+  const markup = renderRight("gallery", defaultPhotoAssignments());
+  const autoplay = markup.match(/<button[^>]*role="switch"[^>]*>/)?.[0];
+  assert.ok(autoplay);
+  assert.match(autoplay, /disabled=""/);
+  assert.match(autoplay, /aria-checked="false"/);
+  assert.doesNotMatch(markup, /Jeda slide|Transisi slide|Durasi transisi/);
+});
+
+test("photo inspector remains localized and disables editing during save while keeping close available", () => {
+  const markup = renderRight("personOne", defaultPhotoAssignments(), { locale: "en", photoEditingDisabled: true });
+  assert.match(markup, /First portrait/);
+  assert.match(markup, /Photo focus/);
+  assert.match(markup, /Aspect ratio/);
+  assert.match(markup, /Entrance animation/);
+  assert.match(markup, /<fieldset[^>]*disabled=""/);
+  const close = markup.split("<fieldset")[0];
+  assert.match(close, /aria-label="Close photo properties"/);
+  assert.doesNotMatch(close, /disabled=""/);
+});
+
+test("left slot/asset selection uses the shared photo selector and only right inspector receives editing callbacks", () => {
+  const source = readFileSync(new URL("../components/InvitationStudio/InvitationDesigner.tsx", import.meta.url), "utf8");
+  const left = source.split("<PhotoPanel")[1]?.split("/>")[0];
+  assert.ok(left);
+  assert.match(left, /onActiveSlotChange=\{selectPhotoVisual\}/);
+  const rail = source.split('<nav className="undara-studio-rail"')[1]?.split("</nav>")[0];
+  assert.match(rail, /label=\{copy\.photos\}[\s\S]*onClick=\{openPhotoPanel\}/);
+  assert.doesNotMatch(left, /onSetFocus|onSetCrop|onGallerySettings|onReorderGallery|onGalleryMotion/);
+  const right = source.split("<StudioSelectionInspector")[1]?.split("/>")[0];
+  assert.ok(right);
+  assert.match(right, /onSetPhotoFocus=\{setPhotoFocus\}/);
+  assert.match(right, /onSetPhotoCrop=\{setPhotoCrop\}/);
+  assert.match(right, /onGallerySettings=\{updateGallerySettings\}/);
+  assert.match(right, /onReorderGallery=\{reorderGalleryPhoto\}/);
+  assert.match(right, /photoEditingDisabled=\{!invitation \|\| saving\}/);
+  assert.match(right, /onClosePhoto=\{clearCanvasSelection\}/);
+  const panel = readFileSync(new URL("../components/InvitationStudio/PhotoPanel.tsx", import.meta.url), "utf8");
+  assert.match(panel, /onActiveSlotChange\(slot\);[\s\S]*onToggleGallery\(photo\.id\)/);
+});

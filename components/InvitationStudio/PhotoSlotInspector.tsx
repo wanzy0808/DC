@@ -1,7 +1,8 @@
 "use client";
 
 import { Play, RotateCcw } from "lucide-react";
-import type { PhotoMotion, PhotoSlot } from "@/lib/templates/photo-slots";
+import { GalleryPhotoControls, PhotoCropControls } from "@/components/InvitationStudio/PhotoEditingControls";
+import type { CroppablePhotoSlot, GallerySettings, InvitationPhotoAsset, PhotoAssignments, PhotoCrop, PhotoFocus, PhotoMotion, PhotoSlot } from "@/lib/templates/photo-slots";
 import {
   getSectionAnimationPreset,
   sectionAnimationGroups,
@@ -20,6 +21,14 @@ export default function PhotoSlotInspector({
   locale,
   slot,
   motion,
+  assignments,
+  assets,
+  disabled = false,
+  onSetFocus,
+  onSetCrop,
+  onResetCrop,
+  onGallerySettings,
+  onReorderGallery,
   onUpdate,
   onReset,
   onClose,
@@ -27,6 +36,14 @@ export default function PhotoSlotInspector({
   locale: string;
   slot: PhotoSlot;
   motion: PhotoMotion | undefined;
+  assignments: PhotoAssignments;
+  assets: InvitationPhotoAsset[];
+  disabled?: boolean;
+  onSetFocus: (slot: CroppablePhotoSlot, focus: PhotoFocus) => void;
+  onSetCrop: (slot: CroppablePhotoSlot, crop: PhotoCrop) => void;
+  onResetCrop: (slot: CroppablePhotoSlot) => void;
+  onGallerySettings: (patch: Partial<GallerySettings>) => void;
+  onReorderGallery: (sourceId: string, targetId: string) => void;
   onUpdate: (patch: Partial<PhotoMotion>) => void;
   onReset: () => void;
   onClose: () => void;
@@ -41,6 +58,17 @@ export default function PhotoSlotInspector({
         <button type="button" onClick={onClose} aria-label={en ? "Close photo properties" : "Tutup properti foto"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
+      <fieldset disabled={disabled} className="undara-studio-photo-editing-controls min-w-0 border-0 p-0 disabled:opacity-50">
+      {slot === "gallery" ? (
+        <GalleryPhotoControls locale={locale} assets={assets} assignments={assignments}
+          onGallerySettings={onGallerySettings} onReorderGallery={onReorderGallery} />
+      ) : (
+        <PhotoCropControls locale={locale} slot={slot} assignments={assignments}
+          onSetFocus={onSetFocus} onSetCrop={onSetCrop} onResetCrop={onResetCrop} />
+      )}
+
+      <section className="mt-4 border-t border-border pt-3" aria-label={en ? "Photo motion" : "Animasi foto"}>
+      <h3 className="text-xs font-semibold">{en ? "Entrance animation" : "Animasi saat muncul"}</h3>
       <label className="undara-studio-layer-select">
         <span>{en ? "Animation" : "Animasi"}</span>
         <select
@@ -169,6 +197,8 @@ export default function PhotoSlotInspector({
         <RotateCcw size={14} />
         Reset
       </button>
+      </section>
+      </fieldset>
     </aside>
   );
 }

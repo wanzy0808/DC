@@ -768,6 +768,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function clearCanvasSelection() {
+    setCropModeSlot(null);
     setSelectedLayerIds([]);
     setSelectedLayerId(null);
     setSelectedPhotoSlot(null);
@@ -955,6 +956,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
   function selectPhotoVisual(slot: PhotoSlot) {
     setActivePhotoSlot(slot);
+    setCropModeSlot(null);
     setSelectedLayerIds([]);
     setSelectedLayerId(null);
     setSelectedSectionKey(null);
@@ -972,6 +974,15 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setPanel("decor");
     setInspectorOpen(true);
     setMobileCanvas(false);
+  }
+
+  function openPhotoPanel() {
+    setInspectorOpen(true);
+    setMobileCanvas(false);
+    setPanel("decor");
+    const slot = photoSlots.includes(activePhotoSlot) ? activePhotoSlot : photoSlots[0];
+    if (template?.usesPhotos && slot) selectPhotoVisual(slot);
+    else clearCanvasSelection();
   }
 
   function fitCanvasZoom() {
@@ -1921,7 +1932,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           <DesignerTool active={panel === "template"} label={locale === "en" ? "Catalog" : "Katalog"} icon={<LayoutTemplate className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("template"); }} />
           <DesignerTool active={panel === "sections"} label={copy.sections} icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("sections"); }} />
           <DesignerTool active={panel === "text"} label={copy.text} icon={<Type className="h-4 w-4" strokeWidth={2.2} />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
-          <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
+          <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={openPhotoPanel} />
           <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
           <DesignerTool active={panel === "music"} label={copy.music} icon={<Music2 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("music"); }} />
           <DesignerTool active={panel === "color"} label={copy.colors} icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
@@ -1965,17 +1976,9 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               slots={photoSlots}
               assignments={design.photos}
               activeSlot={activePhotoSlot}
-              onActiveSlotChange={setActivePhotoSlot}
+              onActiveSlotChange={selectPhotoVisual}
               onSetPhoto={setPhoto}
               onToggleGallery={toggleGalleryPhoto}
-              onReorderGallery={reorderGalleryPhoto}
-              onGallerySettings={updateGallerySettings}
-              galleryMotion={templatePhotoMotion(design.template, design.photos.motion, design.sectionStyles).gallery}
-              onGalleryMotion={(patch) => updatePhotoMotion("gallery", patch)}
-              onResetGalleryMotion={() => resetPhotoMotion("gallery")}
-              onSetFocus={setPhotoFocus}
-              onSetCrop={setPhotoCrop}
-              onResetCrop={resetPhotoCrop}
               onUpload={templateMode ? undefined : (file) => uploadAsset(file, "IMAGE")}
             />
           )}
@@ -2171,6 +2174,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               selectedAssetIndex={selectedAssetIndex}
               maxAssetLayers={maxAssetLayers}
               selectedPhotoSlot={selectedPhotoSlot}
+              photoAssets={invitation?.assets ?? []}
+              photoEditingDisabled={!invitation || saving}
               selectedRsvpElementKey={selectedRsvpElementKey}
               selectedSectionElement={selectedSectionElement}
               selectedCopyField={selectedCopyField}
@@ -2182,8 +2187,13 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               onUpdateAsset={updateAssetLayer}
               onPositionAsset={positionAssetLayer}
               onUpdatePhotoMotion={updatePhotoMotion}
+              onSetPhotoFocus={setPhotoFocus}
+              onSetPhotoCrop={setPhotoCrop}
+              onResetPhotoCrop={resetPhotoCrop}
+              onGallerySettings={updateGallerySettings}
+              onReorderGallery={reorderGalleryPhoto}
               onResetPhotoMotion={resetPhotoMotion}
-              onClosePhoto={() => setSelectedPhotoSlot(null)}
+              onClosePhoto={clearCanvasSelection}
               onUpdateRsvpConfig={updateRsvpConfig}
               onCloseRsvp={() => setSelectedRsvpElementKey(null)}
               onUpdateSectionElementStyles={updateSectionElementStyles}
