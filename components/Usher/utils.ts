@@ -10,5 +10,5 @@ export function parseUsherQrToken(value: string) {
 }
 
 export function usherQrImageUrl(token: string) {
-  return `https://quickchart.io/qr?text=${encodeURIComponent(token)}&size=320&margin=2`;
+  return `/api/usher/qr?token=${encodeURIComponent(token)}`;
 }

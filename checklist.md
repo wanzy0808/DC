@@ -52,7 +52,8 @@ Implementasi storage/custom/auth yang sudah ada tidak diulang. Fitur ekspansi me
 ## Generator QR internal — 4 Oktober 2026
 
 - [x] QR berbagi undangan: QuickChart diganti `qrcode` existing di server aplikasi, PNG 640px/quiet zone 4, pratinjau/unduh dan URL stabil tetap sama. Sesi, owner, ID dan pembayaran tetap diperiksa sebelum encoding; 13 tes handler baru membuat total lokal 441/441 lulus. Lint route/tes baru lulus.
-- [ ] QR tiket Usher dan dashboard RSVP: ganti dua renderer eksternal yang masih tersisa dengan PNG same-origin, dengan validasi token dan akses event di server.
+- [x] QR tiket Usher dan dashboard RSVP: kedua renderer eksternal diganti PNG same-origin dengan validasi signed token, sesi/event owner dan entitlement existing/explicit owner grant. 18 tes baru; total lokal 459/459, lint file QR, Prisma generate, TypeScript dan build 72/72 lulus. Penerbitan/check-in dan gate RSVP publik tetap dipertahankan.
+- [x] Batch undangan [`9f2b4b6`](https://github.com/wanzy0808/Undara/commit/9f2b4b6fa4de4192b76a6427d33d3df1b707b8c7): [Build Validation](https://github.com/wanzy0808/Undara/actions/runs/37152044594) 441/441 tes dan build 72/72, serta [Orphan Audit](https://github.com/wanzy0808/Undara/actions/runs/37152044583) success.
 - [ ] QR: QA scanner perangkat nyata serta sesi owner → pratinjau/unduh → scan pada domain produksi publik; tes handler tidak menggantikan PostgreSQL/E2E.
 
 ## Rebrand Undara — migrasi bertahap (28 September 2026)

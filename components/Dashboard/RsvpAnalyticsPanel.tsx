@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import { displayTitleCase } from "@/lib/text/display-title-case";
+import { usherQrImageUrl } from "@/components/Usher/utils";
 import {
   DashboardMetricCard,
   DashboardMetricGrid,
@@ -371,7 +372,7 @@ export default function RsvpAnalyticsPanel({
               <img
                 className="h-56 w-56"
                 alt="QR guest ticket"
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=560x560&data=${encodeURIComponent(qr.token)}`}
+                src={usherQrImageUrl(qr.token)}
               />
             </div>
             <p className="mt-4 break-all font-[family-name:var(--font-undara-mono)] text-[11px] leading-4 text-foreground/45">
