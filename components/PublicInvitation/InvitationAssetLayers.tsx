@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { Lock, RotateCw } from "lucide-react";
-import { studioObjectSections, type InvitationAssetLayer, type StudioObjectSection } from "@/lib/templates/asset-layers";
+import { type InvitationAssetLayer, type StudioObjectSection } from "@/lib/templates/asset-layers";
+import { findSectionAt } from "@/components/InvitationStudio/studio-canvas-dom";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import { invitationFontFamily } from "@/lib/templates/presentation";
 import { resizeObjectFromHandle, type ObjectResizeHandle } from "@/lib/templates/object-resize";
@@ -35,21 +36,6 @@ function layerShadowFilter(layer: InvitationAssetLayer) {
   const green = (value >> 8) & 255;
   const blue = value & 255;
   return `drop-shadow(${layer.shadowX ?? 0}px ${layer.shadowY ?? 8}px ${layer.shadowBlur ?? 18}px rgba(${red}, ${green}, ${blue}, ${opacity}))`;
-}
-
-function findSectionAt(x: number, y: number, root: HTMLElement): { section: StudioObjectSection; instanceId: string; rect: DOMRect } | null {
-  const invitation = root.closest(".dc-studio-preview-surface");
-  if (!invitation) return null;
-  for (const node of invitation.querySelectorAll<HTMLElement>("[data-invitation-section]")) {
-    if (!studioObjectSections.includes(node.dataset.invitationSection as StudioObjectSection)) continue;
-    const rect = node.getBoundingClientRect();
-    if (rect.width && rect.height && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-      const instanceId = node.closest<HTMLElement>("[data-section-instance-id]")?.dataset.sectionInstanceId
-        || node.dataset.invitationSection as StudioObjectSection;
-      return { section: node.dataset.invitationSection as StudioObjectSection, instanceId, rect };
-    }
-  }
-  return null;
 }
 
 function EditableLayer({
@@ -100,8 +86,8 @@ function EditableLayer({
   useInvitationLayerAnimation(motion, layer);
 
   function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: ObjectResizeHandle) {
-    if (editingText) return;
-    if (event.currentTarget.closest<HTMLElement>('.dc-studio-canvas-scroll[data-space-pan="true"]')) return;
+    if (editingText || gesture.current) return;
+    if (event.currentTarget.closest<HTMLElement>('.undara-studio-canvas-scroll[data-space-pan="true"], .dc-studio-canvas-scroll[data-space-pan="true"]')) return;
     if (!editable || !root.current || event.button !== 0) return;
     event.stopPropagation();
     onSelect?.(layer.id, event.shiftKey);
@@ -196,7 +182,7 @@ function EditableLayer({
       gesture.current.moved = true;
     }
     if (gesture.current.mode === "move") {
-      const scroller = root.current?.closest<HTMLElement>(".dc-studio-canvas-scroll");
+      const scroller = root.current?.closest<HTMLElement>(".undara-studio-canvas-scroll, .dc-studio-canvas-scroll");
       const viewport = scroller?.getBoundingClientRect();
       if (scroller && viewport) {
         if (event.clientY > viewport.bottom - 42) scroller.scrollTop += 14;
@@ -221,6 +207,12 @@ function EditableLayer({
     if (Object.keys(patch).some((key) => patch[key as keyof LayerPatch] !== layer[key as keyof InvitationAssetLayer])) {
       onUpdate?.(layer.id, patch);
     }
+  }
+  function cancel(event: PointerEvent<HTMLElement>) {
+    if (gesture.current?.pointer !== event.pointerId) return;
+    gesture.current = null;
+    setLive({});
+    onGuides?.({});
   }
   function keys(event: KeyboardEvent<HTMLElement>) {
     if (!editable || editingText || layer.locked || !onUpdate || !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
@@ -351,7 +343,7 @@ function EditableLayer({
               beginTextEditing();
             }}
             onPointerDown={(event) => begin(event, "move")}
-            onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); onGuides?.({}); }}
+            onPointerMove={move} onPointerUp={end} onPointerCancel={cancel}
             onKeyDown={keys}>
             <span ref={motion} data-studio-layer-motion className={`relative block w-full ${displayed.height === undefined ? "" : "h-full"}`}>
               {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words" style={{
@@ -389,11 +381,11 @@ function EditableLayer({
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
         {layer.locked && <span aria-label="Layer terkunci" title="Layer terkunci" className="pointer-events-none absolute -right-2 -top-2 z-30 grid h-6 w-6 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm"><Lock size={13} /></span>}
         {!layer.locked && <button type="button" aria-label="Putar objek" title="Tarik untuk memutar" className="pointer-events-auto absolute -bottom-10 left-1/2 z-20 grid h-8 w-8 -translate-x-1/2 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm cursor-grab transition hover:bg-primary hover:text-primary-foreground active:cursor-grabbing"
-          style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "rotate")} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); onGuides?.({}); }}><RotateCw aria-hidden="true" size={15} strokeWidth={2} /></button>}
+          style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "rotate")} onPointerMove={move} onPointerUp={end} onPointerCancel={cancel}><RotateCw aria-hidden="true" size={15} strokeWidth={2} /></button>}
         {!layer.locked && (["top-left", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left"] as const).map((handle) => (
           <button key={handle} type="button" aria-label={`Ubah ukuran dari ${handle}`} title="Tarik untuk mengubah ukuran"
             className={`pointer-events-auto absolute z-20 grid h-8 w-8 place-items-center border-0 bg-transparent p-0 ${handle.includes("top") ? "-top-4" : handle.includes("bottom") ? "-bottom-4" : "top-1/2 -translate-y-1/2"} ${handle.includes("left") ? "-left-4" : handle.includes("right") ? "-right-4" : "left-1/2 -translate-x-1/2"} ${handle === "top" || handle === "bottom" ? "cursor-ns-resize" : handle === "left" || handle === "right" ? "cursor-ew-resize" : handle === "top-left" || handle === "bottom-right" ? "cursor-nwse-resize" : "cursor-nesw-resize"}`}
-            style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "resize", handle)} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); onGuides?.({}); }}><span aria-hidden="true" className="pointer-events-none h-2.5 w-2.5 rounded-[2px] border border-primary bg-background" /></button>
+            style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "resize", handle)} onPointerMove={move} onPointerUp={end} onPointerCancel={cancel}><span aria-hidden="true" className="pointer-events-none h-2.5 w-2.5 rounded-[2px] border border-primary bg-background" /></button>
         ))}
       </>}
     </div>

@@ -45,7 +45,8 @@ export default function StudioPhotoCropOverlay({
   }
 
   function begin(event: PointerEvent<HTMLDivElement>) {
-    if (event.button !== 0 || !rootRef.current) return;
+    if (event.button !== 0 || !rootRef.current || dragRef.current) return;
+    if (event.currentTarget.closest('.undara-studio-canvas-scroll[data-space-pan="true"]')) return;
     event.preventDefault();
     event.stopPropagation();
     const rect = rootRef.current.getBoundingClientRect();
@@ -79,7 +80,8 @@ export default function StudioPhotoCropOverlay({
     onChange(liveRef.current);
   }
 
-  function cancel() {
+  function cancel(event: PointerEvent<HTMLDivElement>) {
+    if (dragRef.current?.pointer !== event.pointerId) return;
     dragRef.current = null;
     applyPreview(crop);
   }

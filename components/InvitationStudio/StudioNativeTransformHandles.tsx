@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent, type RefObject } from "react";
 import { Lock, RotateCcw, RotateCw } from "lucide-react";
 import { observeStudioNativeTarget } from "./studio-native-target";
+import { resizeNativeVisual, type NativeResizeHandle } from "@/lib/templates/native-visual-resize";
 import {
   defaultNativeVisualTransform, nativeVisualSelector, nativeVisualUsesSystemContent,
   type NativeVisualTransform,
 } from "@/lib/templates/native-visual-transforms";
 
-type Handle = "move" | "rotate" | "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "left";
+type Handle = "move" | "rotate" | NativeResizeHandle;
 type Box = { left: number; top: number; width: number; height: number };
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const round = (value: number) => Math.round(value * 100) / 100;
@@ -90,32 +91,17 @@ export default function StudioNativeTransformHandles({
       while (rotation < -180) rotation += 360;
       return { ...start, rotation: round(rotation) };
     }
-    const radians = start.rotation * Math.PI / 180;
-    const cos = Math.cos(radians);
-    const sin = Math.sin(radians);
-    const localX = dx * cos + dy * sin;
-    const localY = -dx * sin + dy * cos;
-    const signX = drag.handle.includes("left") ? -1 : drag.handle.includes("right") ? 1 : 0;
-    const signY = drag.handle.includes("top") ? -1 : drag.handle.includes("bottom") ? 1 : 0;
-    const width = Math.max(1, drag.node.offsetWidth * zoom);
-    const height = Math.max(1, drag.node.offsetHeight * zoom);
-    const scaleX = signX ? round(clamp(start.scaleX + signX * localX / width, 0.25, 3)) : start.scaleX;
-    const scaleY = signY ? round(clamp(start.scaleY + signY * localY / height, 0.25, 3)) : start.scaleY;
-    const shiftX = signX * (scaleX - start.scaleX) * width / 2;
-    const shiftY = signY * (scaleY - start.scaleY) * height / 2;
-    return {
-      x: round(clamp(start.x + (shiftX * cos - shiftY * sin) / width * 100, -2000, 2000)),
-      y: round(clamp(start.y + (shiftX * sin + shiftY * cos) / height * 100, -2000, 2000)),
-      scaleX, scaleY, rotation: start.rotation,
-    };
+    return resizeNativeVisual(start, drag.handle, drag.node.offsetWidth * zoom, drag.node.offsetHeight * zoom, dx, dy);
   }
 
   function begin(event: PointerEvent<HTMLButtonElement>, handle: Handle) {
-    if (!targetKey || event.button !== 0) return;
+    if (!targetKey || event.button !== 0 || gesture.current) return;
+    if (canvasRef.current?.dataset.spacePan === "true") return;
     const node = target();
     if (!node) return;
     event.preventDefault();
     event.stopPropagation();
+    canvasRef.current?.focus({ preventScroll: true });
     const rect = node.getBoundingClientRect();
     gesture.current = {
       pointer: event.pointerId, handle, startX: event.clientX, startY: event.clientY,
@@ -176,7 +162,7 @@ export default function StudioNativeTransformHandles({
           onPointerCancel={(event) => end(event, true)} />
       ))}
       {transform && <button type="button" className="undara-studio-native-reset" aria-label="Reset posisi ukuran dan rotasi elemen"
-        title="Reset transformasi" onClick={(event) => { event.stopPropagation(); onCommit(targetKey, defaultNativeVisualTransform); }}>
+        title="Reset transformasi" onClick={(event) => { event.stopPropagation(); onCommit(targetKey, { ...transform, ...defaultNativeVisualTransform }); canvasRef.current?.focus({ preventScroll: true }); }}>
         <RotateCcw size={14} />
       </button>}
       <button type="button" className="undara-studio-native-rotate" aria-label="Putar elemen"

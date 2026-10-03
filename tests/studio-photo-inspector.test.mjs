@@ -7,6 +7,7 @@ import { LanguageProvider } from "../components/I18n/LanguageProvider.tsx";
 import PhotoPanelModule from "../components/InvitationStudio/PhotoPanel.tsx";
 import StudioSelectionInspectorModule from "../components/InvitationStudio/StudioSelectionInspector.tsx";
 import { defaultPhotoAssignments } from "../lib/templates/photo-slots.ts";
+import { defaultInvitationRsvpConfig } from "../lib/templates/rsvp-config.ts";
 
 const assets = [
   { id: "photo-a", type: "IMAGE", title: "Foto A", url: "/event-a/photo-a.webp" },
@@ -35,6 +36,28 @@ const renderRight = (slot, assignments, overrides = {}) => renderToStaticMarkup(
   onGallerySettings: noop, onReorderGallery: noop, onUpdatePhotoMotion: noop,
   onResetPhotoMotion: noop, onClosePhoto: noop, ...overrides,
 }));
+
+test("Wishes exposes saved transform controls, while RSVP custom fields keep only supported component properties", () => {
+  const design = {
+    template: "serein", layers: [], photos: defaultPhotoAssignments(), sectionStyles: {},
+    sectionElementStyles: {}, rsvpConfig: defaultInvitationRsvpConfig,
+    nativeVisuals: { "element:wishes:button:wishes_copy2": { x: 14, y: -6, scaleX: 1.3, scaleY: 1, rotation: 8 } },
+  };
+  const wishes = renderRight(null, design.photos, {
+    design, selectedSectionElement: { section: "wishes", kind: "button" },
+    selectedNativeKey: "element:wishes:button:wishes_copy2",
+    onUpdateSectionElementStyles: noop, onCloseSectionElement: noop, onCloseNative: noop,
+  });
+  assert.match(wishes, /Properti visual/);
+  assert.match(wishes, /aria-label="X"[^>]*value="14"/);
+  assert.match(wishes, /value="130"/);
+  const custom = renderRight(null, design.photos, {
+    design, selectedRsvpElementKey: "custom:question_1", selectedNativeKey: "rsvp:custom:question_1:rsvp_copy2",
+    onUpdateRsvpConfig: noop, onCloseRsvp: noop,
+  });
+  assert.match(custom, /Properti komponen RSVP/);
+  assert.doesNotMatch(custom, /Properti visual|aria-label="X"/);
+});
 
 test("left Photo panel keeps upload/assignment and contains no editing controls for cover or gallery", () => {
   for (const slot of ["cover", "gallery"]) {
@@ -135,7 +158,11 @@ test("left slot/asset selection uses the shared photo selector and only right in
   assert.match(navigation, /revealPhotoInCanvas\(slot\)/);
   const click = source.split("function editPhotoFromCanvas(")[1]?.split("function revealPhotoInCanvas(")[0];
   assert.match(click, /selectPhotoVisual\(slot\)/);
-  assert.match(click, /setMobileCanvas\(true\)/);
+  assert.match(click, /activateCanvasEditing\(\)/);
+  const activation = source.split("function activateCanvasEditing(")[1]?.split("function handleCanvasSelection(")[0];
+  assert.match(activation, /setInspectorOpen\(true\)/);
+  assert.match(activation, /setMobileCanvas\(true\)/);
+  assert.match(activation, /isStudioCanvasShortcutTarget/);
   assert.doesNotMatch(click, /setCropModeSlot/);
   const rail = source.split('<nav className="undara-studio-rail"')[1]?.split("</nav>")[0];
   assert.match(rail, /label=\{copy\.photos\}[\s\S]*onClick=\{openPhotoPanel\}/);
@@ -149,6 +176,7 @@ test("left slot/asset selection uses the shared photo selector and only right in
   assert.match(right, /onReorderGallery=\{reorderGalleryPhoto\}/);
   assert.match(right, /photoEditingDisabled=\{!invitation \|\| saving\}/);
   assert.match(right, /onClosePhoto=\{clearCanvasSelection\}/);
+  assert.match(source, /onFinishCrop=\{finishPhotoCrop\}/);
   const panel = readFileSync(new URL("../components/InvitationStudio/PhotoPanel.tsx", import.meta.url), "utf8");
   assert.match(panel, /onActiveSlotChange\(slot\);[\s\S]*onToggleGallery\(photo\.id\)/);
 });

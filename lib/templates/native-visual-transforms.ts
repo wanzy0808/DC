@@ -7,6 +7,7 @@ import {
   type InvitationSectionAnimation,
 } from "@/lib/templates/section-animations";
 import { invitationContentSectionKeys } from "@/lib/templates/section-layout";
+import type { PhotoSlot } from "@/lib/templates/photo-slots";
 
 export type NativeVisualTextAlign = "left" | "center" | "right";
 
@@ -52,6 +53,7 @@ const keys = new Set<string>([
   ...invitationContentSectionKeys.map((section) => `heading:${section}`),
   "heading:envelope",
   "element:location:button", "element:gift:button",
+  "element:wishes:input", "element:wishes:button",
   "rsvp:title", "rsvp:button", "rsvp:inputs",
   "photo:cover", "photo:envelope:cover", "photo:personOne", "photo:personTwo",
 ]);
@@ -100,7 +102,37 @@ export function isNativeVisualKey(key: string) {
   if (parts.length === 3 && parts[0] === "rsvp") {
     return keys.has(`rsvp:${parts[1]}`);
   }
+  if (parts.length === 3 && parts[0] === "photo") {
+    return keys.has(`photo:${parts[1]}`);
+  }
   return false;
+}
+
+export function nativePhotoVisualKey(slot: PhotoSlot, stage: "envelope" | "cover", instanceId?: string, assetId?: string) {
+  const base = slot === "gallery" ? assetId ? `photo:gallery:${assetId}` : ""
+    : slot === "cover" && stage === "envelope" ? "photo:envelope:cover" : `photo:${slot}`;
+  const key = instanceId && base !== "photo:envelope:cover" ? `${base}:${instanceId}` : base;
+  return isNativeVisualKey(key) ? key : null;
+}
+
+export function nativeVisualInstanceId(key: string) {
+  if (!isNativeVisualKey(key)) return null;
+  const parts = key.split(":");
+  if ((parts[0] === "object" || parts[0] === "element") && parts.length === 4) return parts[3];
+  if (["copy", "heading", "rsvp"].includes(parts[0]) && parts.length === 3) return parts[2];
+  if (parts[0] === "photo") {
+    if (parts[1] === "gallery" && parts.length === 4) return parts[3];
+    if (parts[1] !== "gallery" && parts[1] !== "envelope" && parts.length === 3) return parts[2];
+  }
+  return null;
+}
+
+/** Scoped controls start from the same legacy base styles that the public CSS inherits. */
+export function nativeVisualTransformForKey(transforms: NativeVisualTransforms, key: string) {
+  if (!isNativeVisualKey(key)) return undefined;
+  const baseKey = nativeVisualInstanceId(key) ? key.slice(0, key.lastIndexOf(":")) : key;
+  if (!transforms[baseKey] && !transforms[key]) return undefined;
+  return { ...defaultNativeVisualTransform, ...transforms[baseKey], ...transforms[key] };
 }
 
 const removableNativeDecorationId = /(?:^|[-_])(?:art|artwork|atmosphere|block|blossom|border|branch|deco|diamond|divider|flourish|flower|fold|firefly|fireflies|gem|glow|heart|illustration|pearl|leaf|line|lines|mizuhiki|rail|steps|monogram|moon|mountain|mountains|orbit|ornament|paper|ring|seal|shoji|sparkle|sprig|star|starfield|sun|symbol|theme-art)(?:$|[-_])/i;
@@ -169,7 +201,8 @@ export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTran
       transform.scaleY !== 1 || transform.rotation !== 0;
     const hasVisualOverride = Object.keys(transform).some((name) =>
       !["x", "y", "scaleX", "scaleY", "rotation"].includes(name));
-    if (hasTransform || hasVisualOverride) result[key] = transform;
+    // An identity transform on an instance can explicitly neutralize a legacy base transform.
+    if (hasTransform || hasVisualOverride || nativeVisualInstanceId(key)) result[key] = transform;
   }
   return result;
 }
@@ -207,7 +240,8 @@ export function nativeVisualSelector(key: string) {
   if (kind === "photo") {
     const stage = section === "envelope" ? "envelope" : section === "cover" ? "cover" : "identity";
     const slot = section === "envelope" ? element : section;
-    return `[data-invitation-section="${stage}"] [data-invitation-photo-slot="${slot}"]`;
+    const prefix = section !== "envelope" && element ? `[data-section-instance-id="${element}"] ` : "";
+    return `${prefix}[data-invitation-section="${stage}"] [data-invitation-photo-slot="${slot}"]`;
   }
   const instanceId = kind === "element" ? parts[3] : parts[2];
   const prefix = instanceId ? `[data-section-instance-id="${instanceId}"] ` : "";

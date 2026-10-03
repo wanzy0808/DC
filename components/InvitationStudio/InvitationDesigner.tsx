@@ -34,6 +34,9 @@ import {
   defaultNativeVisualTransform,
   isNativeVisualKey,
   nativeVisualCanHide,
+  nativePhotoVisualKey,
+  nativeVisualInstanceId,
+  nativeVisualTransformForKey,
   sanitizeNativeVisualTransforms,
   type NativeVisualTransform,
 } from "@/lib/templates/native-visual-transforms";
@@ -121,15 +124,6 @@ const blankCanvasSections = {
   footer: false,
   music: false,
 };
-
-function nativeVisualInstanceId(key: string) {
-  const parts = key.split(":");
-  if (parts[0] === "object" && parts.length === 4) return parts[3] ?? null;
-  if ((parts[0] === "copy" || parts[0] === "heading" || parts[0] === "rsvp") && parts.length === 3) return parts[2] ?? null;
-  if (parts[0] === "element" && parts.length === 4) return parts[3] ?? null;
-  if (parts[0] === "photo" && parts[1] === "gallery" && parts.length === 4) return parts[3] ?? null;
-  return null;
-}
 
 export default function InvitationDesigner({ mode = "invitation", allowBlankCanvas = false }: { mode?: "invitation" | "template"; allowBlankCanvas?: boolean }) {
   const { locale } = useLanguage();
@@ -780,8 +774,19 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setSelectedNativeKey(null);
   }
 
+  function activateCanvasEditing(afterRender = false, target?: Element) {
+    setInspectorOpen(true);
+    setMobileCanvas(true);
+    // Selecting an input opens its properties without interrupting native typing.
+    if (target && !isStudioCanvasShortcutTarget(canvasScrollRef.current, target)) return;
+    const focus = () => canvasScrollRef.current?.focus({ preventScroll: true });
+    if (afterRender) requestAnimationFrame(focus);
+    else focus();
+  }
+
   function handleCanvasSelection(target: Element, canvasRoot: HTMLElement) {
     const selection = resolveStudioCanvasSelection(target, canvasRoot);
+    if (selection.kind !== "clear" && selection.kind !== "ignore") activateCanvasEditing(false, target);
 
     switch (selection.kind) {
       case "rsvp-element":
@@ -808,10 +813,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         return;
       case "photo":
         selectPhotoVisual(selection.slot);
-        if (selection.slot === "gallery" && selection.assetId) {
-          const key = `photo:gallery:${selection.assetId}${selection.instanceId ? `:${selection.instanceId}` : ""}`;
-          if (isNativeVisualKey(key)) setSelectedNativeKey(key);
-        }
+        setSelectedNativeKey(nativePhotoVisualKey(selection.slot, canvasStage, selection.instanceId, selection.assetId));
         return;
       case "section":
         selectSectionInstance(selection.instanceId, selection.section);
@@ -829,13 +831,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       setPanel("music");
       return;
     }
-    setSelectedLayerIds([]);
-    setSelectedLayerId(null);
-    setSelectedPhotoSlot(null);
-    setSelectedRsvpElementKey(null);
-    setSelectedCopyField(null);
-    setSelectedSectionElement(null);
-    setSelectedNativeKey(null);
+    clearCanvasSelection();
     setSelectedSectionKey(section);
     const instance = design.sectionLayout.find((item) => item.key === section);
     setSelectedSectionInstanceId(instance?.id ?? null);
@@ -846,27 +842,27 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       setCanvasStage("cover");
       requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${section}"]`)?.scrollIntoView({ block: "center" }));
     }
+    activateCanvasEditing(true);
   }
 
   function focusContentElement(section: InvitationSectionKey, kind: StudioSectionElementKind) {
-    setSelectedLayerIds([]);
-    setSelectedLayerId(null);
-    setSelectedPhotoSlot(null);
-    setSelectedSectionKey(null);
-    setSelectedSectionInstanceId(null);
-    setSelectedCopyField(null);
-    setSelectedNativeKey(null);
+    if (section === "music") { setPanel("music"); return; }
+    clearCanvasSelection();
     setCanvasStage(section === "envelope" ? "envelope" : "cover");
+    activateCanvasEditing(true);
+    const instanceId = sectionInstanceFor(section);
 
     if (section === "rsvp") {
-      setSelectedSectionElement(null);
-      setSelectedRsvpElementKey(kind === "input" ? "inputs" : "button");
+      const key = kind === "input" ? "inputs" : "button";
+      setSelectedRsvpElementKey(key);
+      setSelectedNativeKey(`rsvp:${key}:${instanceId}`);
       requestAnimationFrame(() => canvasScrollRef.current?.querySelector('[data-invitation-section="rsvp"]')?.scrollIntoView({ block: "center" }));
       return;
     }
 
-    setSelectedRsvpElementKey(null);
     setSelectedSectionElement({ section, kind });
+    const key = `element:${section}:${kind}:${instanceId}`;
+    if (isNativeVisualKey(key)) setSelectedNativeKey(key);
     requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-studio-section-element="${section}:${kind}"]`)?.scrollIntoView({ block: "center" }));
   }
 
@@ -955,24 +951,15 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function selectPhotoVisual(slot: PhotoSlot) {
+    clearCanvasSelection();
     setActivePhotoSlot(slot);
-    setCropModeSlot(null);
-    setSelectedLayerIds([]);
-    setSelectedLayerId(null);
-    setSelectedSectionKey(null);
-    setSelectedSectionInstanceId(null);
-    setSelectedRsvpElementKey(null);
-    setSelectedCopyField(null);
-    setSelectedSectionElement(null);
-    setSelectedNativeKey(null);
     setSelectedPhotoSlot(slot);
   }
 
   function editPhotoFromCanvas(slot: PhotoSlot) {
     selectPhotoVisual(slot);
     setPanel("decor");
-    setInspectorOpen(true);
-    setMobileCanvas(true);
+    activateCanvasEditing();
   }
 
   function revealPhotoInCanvas(slot: PhotoSlot) {
@@ -986,14 +973,21 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
   function selectPhotoFromPanel(slot: PhotoSlot) {
     selectPhotoVisual(slot);
+    const section = slot === "cover" ? canvasStage : slot === "gallery" ? "gallery" : "identity";
+    setSelectedNativeKey(nativePhotoVisualKey(slot, canvasStage, sectionInstanceFor(section)));
     revealPhotoInCanvas(slot);
+    activateCanvasEditing(true);
   }
 
   function startPhotoCrop(slot: CroppablePhotoSlot) {
-    selectPhotoVisual(slot);
-    revealPhotoInCanvas(slot);
+    if (selectedPhotoSlot !== slot) selectPhotoFromPanel(slot);
     setCropModeSlot(slot);
-    setMobileCanvas(true);
+    activateCanvasEditing(true);
+  }
+
+  function finishPhotoCrop() {
+    setCropModeSlot(null);
+    activateCanvasEditing(true);
   }
 
   function openPhotoPanel() {
@@ -1001,7 +995,10 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setMobileCanvas(false);
     setPanel("decor");
     const slot = photoSlots.includes(activePhotoSlot) ? activePhotoSlot : photoSlots[0];
-    if (template?.usesPhotos && slot) selectPhotoFromPanel(slot);
+    if (template?.usesPhotos && slot) {
+      selectPhotoVisual(slot);
+      revealPhotoInCanvas(slot);
+    }
     else clearCanvasSelection();
   }
 
@@ -1040,10 +1037,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     if (!isTemplateIllustration(src) || assetLayerUsage >= maxAssetLayers || design.sections[section] === false) return;
     const id = crypto.randomUUID().replace(/-/g, "");
     change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, section, sectionInstanceId, width: 28, opacity: 1, customerAccess: templateMode ? "locked" : "customizable" }] });
-    setSelectedPhotoSlot(null);
+    clearCanvasSelection();
+    setSelectedLayerIds([id]);
     setSelectedLayerId(id);
     showDesignSection(section);
-    setInspectorOpen(true);
+    activateCanvasEditing(true);
   }
 
   function addShapeObject(shape: InvitationShapeKind) {
@@ -1082,9 +1080,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setSelectedLayerId(id);
     showDesignSection(section);
     setPanel("assets");
-    setInspectorOpen(true);
-    setMobileCanvas(true);
-    requestAnimationFrame(() => canvasScrollRef.current?.focus({ preventScroll: true }));
+    activateCanvasEditing(true);
   }
 
   function addTextObject(
@@ -1105,13 +1101,12 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       letterSpacing: 0, lineHeight: 1.2, color: palette?.accent ?? "#C07A84", rotation: 0,
       customerAccess: templateMode ? "locked" : "customizable",
     }] });
-    setSelectedPhotoSlot(null);
+    clearCanvasSelection();
     setSelectedLayerIds([id]);
     setSelectedLayerId(id);
     showDesignSection(section);
     setPanel("text");
-    setInspectorOpen(true);
-    requestAnimationFrame(() => canvasScrollRef.current?.focus({ preventScroll: true }));
+    activateCanvasEditing(true);
     return id;
   }
 
@@ -1148,8 +1143,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setSelectedLayerIds(nextIds);
     setSelectedLayerId(nextIds.includes(id) ? id : nextIds.at(-1) ?? null);
     showDesignSection(layer.section ?? "cover");
-    setMobileCanvas(true);
-    if (fromCanvas) canvasScrollRef.current?.focus({ preventScroll: true });
+    activateCanvasEditing(!fromCanvas);
     if (!fromCanvas) requestAnimationFrame(() => {
       const section = layer.section ?? "cover";
       const instanceId = layer.sectionInstanceId ?? section;
@@ -1159,7 +1153,6 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       (instance?.querySelector(`[data-invitation-section="${section}"]`)
         ?? canvasScrollRef.current?.querySelector(`[data-invitation-section="${section}"]`))
         ?.scrollIntoView({ block: "center" });
-      canvasScrollRef.current?.focus({ preventScroll: true });
     });
   }
 
@@ -1422,7 +1415,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     clearCanvasSelection();
     setSelectedSectionKey(key);
     setSelectedSectionInstanceId(id);
-    setInspectorOpen(true);
+    activateCanvasEditing();
   }
 
   function moveSectionInstance(id: string, direction: -1 | 1) {
@@ -1614,12 +1607,14 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     change({ layers: next });
   }
 
-  const activeNativeKey = selectedLayerId || selectedSectionKey ? null
-    : selectedPhotoSlot ? (cropModeSlot || selectedPhotoSlot === "gallery" ? selectedNativeKey : canvasStage === "envelope" && selectedPhotoSlot === "cover" ? "photo:envelope:cover" : `photo:${selectedPhotoSlot}`)
+  const selectedNativeTargetKey = selectedLayerId || selectedSectionKey ? null
+    : selectedPhotoSlot ? (cropModeSlot ? null : selectedNativeKey ?? nativePhotoVisualKey(selectedPhotoSlot, canvasStage))
     : selectedSectionElement ? (selectedNativeKey?.startsWith(`element:${selectedSectionElement.section}:${selectedSectionElement.kind}:`) ? selectedNativeKey : `element:${selectedSectionElement.section}:${selectedSectionElement.kind}`)
     : selectedRsvpElementKey ? (selectedNativeKey?.startsWith(`rsvp:${selectedRsvpElementKey}:`) ? selectedNativeKey : `rsvp:${selectedRsvpElementKey}`)
     : selectedCopyField ? (selectedNativeKey?.startsWith(`copy:${selectedCopyField}:`) ? selectedNativeKey : `copy:${selectedCopyField}`)
     : selectedNativeKey;
+  const activeNativeKey = selectedNativeTargetKey && isNativeVisualKey(selectedNativeTargetKey) ? selectedNativeTargetKey : null;
+  const activeNativeTransform = activeNativeKey ? nativeVisualTransformForKey(design.nativeVisuals, activeNativeKey) : undefined;
 
   function commitNativeVisual(key: string, value: NativeVisualTransform) {
     if (!isNativeVisualKey(key)) return;
@@ -1632,7 +1627,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
   function hideSelectedNativeVisual(key: string) {
     if (!nativeVisualCanHide(key)) return false;
-    const current = { ...defaultNativeVisualTransform, ...design.nativeVisuals[key], hidden: true };
+    const current = { ...defaultNativeVisualTransform, ...nativeVisualTransformForKey(design.nativeVisuals, key), hidden: true };
     commitNativeVisual(key, current);
     setSelectedNativeKey(null);
     return true;
@@ -1668,7 +1663,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
         event.preventDefault();
         const step = event.shiftKey ? 5 : 1;
-        const current = { ...defaultNativeVisualTransform, ...design.nativeVisuals[activeNativeKey] };
+        const current = { ...defaultNativeVisualTransform, ...nativeVisualTransformForKey(design.nativeVisuals, activeNativeKey) };
         commitNativeVisual(activeNativeKey, {
           ...current,
           x: Math.min(2000, Math.max(-2000, current.x + (event.key === "ArrowLeft" ? -step : event.key === "ArrowRight" ? step : 0))),
@@ -2102,10 +2097,18 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           onPointerUp={endCanvasPan}
           onPointerCancel={(event) => { cancelCanvasPan(event.pointerId); setCanvasPanReady(false); }}
           onLostPointerCapture={(event) => cancelCanvasPan(event.pointerId)}
+          onClickCapture={(event) => {
+            const target = event.target;
+            // Some protected actions stop bubbling in preview; their visual remains selectable.
+            if (!(target instanceof Element) || !target.closest("[data-studio-system-action]")) return;
+            if (consumeSuppressedCanvasClick()) { event.preventDefault(); event.stopPropagation(); return; }
+            handleCanvasSelection(target, event.currentTarget);
+          }}
           onClick={(event) => {
-            if (consumeSuppressedCanvasClick()) return;
             const target = event.target;
             if (!(target instanceof Element)) return;
+            if (target.closest("[data-studio-system-action]")) return;
+            if (consumeSuppressedCanvasClick()) return;
 
             handleCanvasSelection(target, event.currentTarget);
           }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
@@ -2164,7 +2167,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                     photoAssignments={design.photos}
                     activeCropSlot={cropModeSlot}
                     onCropPhoto={setPhotoCrop}
-                    onFinishCrop={() => setCropModeSlot(null)}
+                    onFinishCrop={finishPhotoCrop}
                     designKey={designKey}
                     musicUrl={musicUrl}
                     selectedAssetLayerId={selectedLayerId}
@@ -2230,7 +2233,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           <StudioNativeTransformHandles
             canvasRef={canvasScrollRef}
             targetKey={activeNativeKey}
-            transform={activeNativeKey ? design.nativeVisuals[activeNativeKey] : undefined}
+            transform={activeNativeTransform}
             zoom={canvasZoom}
             revision={`${designKey}|${canvasStage}|${previewVersion}`}
             onCommit={commitNativeVisual}

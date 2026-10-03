@@ -653,6 +653,8 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 - [x] Layer ordering: bring to front, forward one, backward one, send to back.
 - [x] Copy/paste selected design layer with keyboard shortcut.
 - [x] Delete selected design layer with Delete/Backspace.
+- [x] Audit jalur seleksi/edit lintas jenis elemen: satukan inspector/fokus untuk aset, teks, shape, foto dan native; perbaiki drag antarsection, resize/reset yang mempertahankan style, frame foto per instance, transform Input/Button Ucapan, dan seleksi tombol protected. Field custom RSVP hanya menampilkan properti yang didukung. Validasi unit/codec/SSR, TypeScript dan build pada batch `fix(studio): unify editing across canvas elements`. (3 Oktober 2026)
+- [ ] QA browser lintas tema untuk seleksi → drag/resize/crop → shortcut → Undo/Redo → Simpan/reload/public, termasuk duplikat section, input typing, mobile/touch, Space-pan dan lock. Audit source/tes/build tidak menutup QA ini.
 - [x] Undo/redo design changes.
 - [x] **Add Cut (`Ctrl/Cmd+X`) for selected design layers.**
 - [x] **Add proper photo crop controls:** free X/Y crop position, zoom, reset crop; persist per photo slot without modifying the original uploaded asset.

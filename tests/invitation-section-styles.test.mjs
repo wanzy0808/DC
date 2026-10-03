@@ -82,7 +82,7 @@ test("Studio section selection opens a right-side inspector and renderers consum
   assert.match(editor, /updateSectionStyle/);
   const sectionSelection = editor.split("function selectSectionInstance(")[1]?.split("function moveSectionInstance(")[0];
   assert.match(sectionSelection, /clearCanvasSelection\(\)/);
-  assert.match(sectionSelection, /setInspectorOpen\(true\)/);
+  assert.match(sectionSelection, /activateCanvasEditing\(\)/);
   assert.ok(inspector.indexOf('"Background" : "Latar"') < inspector.indexOf('"Alignment" : "Perataan"'));
   assert.match(editor, /resetSectionStyle/);
   assert.match(editor, /useStudioCanvasSelectionMarkers\(/);

@@ -6,9 +6,54 @@ import {
   withNativeVisualTransforms, nativeVisualStyleSheet, nativeVisualScopeClass, nativeVisualSelector,
   nativeVisualCapabilities, nativeVisualFontFamilies, nativeVisualSupportsAnimation, nativeVisualUsesSystemContent,
   nativeVisualCanHide,
+  nativePhotoVisualKey, nativeVisualInstanceId, nativeVisualTransformForKey, defaultNativeVisualTransform,
 } from "../lib/templates/native-visual-transforms.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+
+test("Wishes input and button geometry is persisted and scoped without allowing deletion", () => {
+  const transforms = {};
+  for (const kind of ["input", "button"]) {
+    const key = `element:wishes:${kind}:wishes_copy2`;
+    transforms[key] = { ...defaultNativeVisualTransform, x: 14, y: -6, scaleX: 1.3, rotation: 8 };
+    assert.equal(nativeVisualSelector(key), `[data-section-instance-id="wishes_copy2"] [data-studio-section-element="wishes:${kind}"]`);
+    assert.equal(nativeVisualCanHide(key), false);
+  }
+  assert.deepEqual(parseNativeVisualTransforms(withNativeVisualTransforms("serein", transforms)), transforms);
+});
+
+test("cover and partner frame overrides stay independent across duplicated sections", () => {
+  const transforms = {};
+  for (const [slot, section] of [["cover", "cover"], ["personOne", "identity"], ["personTwo", "identity"]]) {
+    for (const [instance, x] of [[section, -16], [`${section}_copy2`, 23]]) {
+      const key = nativePhotoVisualKey(slot, "cover", instance);
+      transforms[key] = { ...defaultNativeVisualTransform, x, rotation: x };
+      assert.equal(nativeVisualInstanceId(key), instance);
+      assert.equal(nativeVisualSelector(key), `[data-section-instance-id="${instance}"] [data-invitation-section="${section}"] [data-invitation-photo-slot="${slot}"]`);
+    }
+  }
+  const design = withNativeVisualTransforms("serein", transforms);
+  assert.deepEqual(parseNativeVisualTransforms(design), transforms);
+  assert.match(nativeVisualStyleSheet(design), /data-section-instance-id="identity_copy2"/);
+  assert.equal(nativePhotoVisualKey("cover", "envelope", "envelope"), "photo:envelope:cover");
+  assert.equal(nativeVisualInstanceId("photo:envelope:cover"), null);
+  assert.equal(nativePhotoVisualKey("gallery", "cover"), null);
+  assert.equal(nativePhotoVisualKey("personOne", "cover", 'bad"]{color:red}'), null);
+});
+
+test("native controls inherit legacy base overrides and scoped identity transforms can reset geometry", () => {
+  const base = { ...defaultNativeVisualTransform, x: 18, scaleX: 1.4, opacity: 0.6 };
+  const transforms = {
+    "photo:personOne": base,
+    "photo:personOne:identity_copy2": { ...defaultNativeVisualTransform },
+  };
+  const persisted = parseNativeVisualTransforms(withNativeVisualTransforms("serein", transforms));
+  assert.deepEqual(persisted, transforms);
+  assert.deepEqual(nativeVisualTransformForKey(persisted, "photo:personOne:identity"), base);
+  assert.deepEqual(nativeVisualTransformForKey(persisted, "photo:personOne:identity_copy2"), { ...defaultNativeVisualTransform, opacity: 0.6 });
+  assert.equal(nativeVisualTransformForKey({}, "photo:personOne:identity"), undefined);
+  assert.equal(nativeVisualInstanceId('photo:personOne:bad"]'), null);
+});
 
 test("built-in transforms round-trip without changing invitation data", () => {
   const base = "botanical-ivory::pearl::cinzelFauna";

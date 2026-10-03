@@ -8,7 +8,7 @@ import SectionElementInspector from "@/components/InvitationStudio/SectionElemen
 import SectionInspector from "@/components/InvitationStudio/SectionInspector";
 import StudioNativeVisualInspector from "@/components/InvitationStudio/StudioNativeVisualInspector";
 import { templatePhotoMotion, templateNativeMotionForKey } from "@/lib/templates/template-motion";
-import { defaultNativeVisualTransform } from "@/lib/templates/native-visual-transforms";
+import { defaultNativeVisualTransform, isNativeVisualKey, nativeVisualTransformForKey } from "@/lib/templates/native-visual-transforms";
 import type { NativeVisualTransform } from "@/lib/templates/native-visual-transforms";
 import TextLayerInspector from "@/components/InvitationStudio/TextLayerInspector";
 import { assetLayerScopePosition, type AssetLayerPosition } from "@/components/InvitationStudio/designer-layer-order";
@@ -106,9 +106,9 @@ export default function StudioSelectionInspector({
   const scopedLayerPosition = selectedAssetLayer
     ? assetLayerScopePosition(design.layers, selectedAssetLayer.id)
     : { index: selectedAssetIndex, count: design.layers.length };
-  const nativeControls = selectedNativeKey ? (
+  const nativeControls = selectedNativeKey && isNativeVisualKey(selectedNativeKey) ? (
     <StudioNativeVisualInspector locale={locale} targetKey={selectedNativeKey}
-      value={{ ...defaultNativeVisualTransform, ...templateNativeMotionForKey(design.template, selectedNativeKey, design.sectionStyles), ...design.nativeVisuals[selectedNativeKey] }}
+      value={{ ...defaultNativeVisualTransform, ...templateNativeMotionForKey(design.template, selectedNativeKey, design.sectionStyles), ...nativeVisualTransformForKey(design.nativeVisuals, selectedNativeKey) }}
       onChange={(value) => onUpdateNative(selectedNativeKey, value)}
       onClose={onCloseNative} />
   ) : null;
