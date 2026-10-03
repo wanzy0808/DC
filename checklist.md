@@ -13,6 +13,8 @@
 
 Kerjakan satu batch kecil → verifikasi → commit sebelum membuka batch berikutnya. Status berikut mengacu ke source repo, bukan salinan PRD/chat lama.
 
+**Arahan owner terbaru:** Studio didahulukan. Lanjutkan item Studio di bawah satu per satu sebelum membuka batch storage/auth/custom atau halaman lain. Checkbox implementasi/tes source tidak menggantikan QA browser.
+
 - [x] Cek prioritas canonical pada `prd.md`: brand Undara, general-event, tanpa limit 3 event, publish/entitlement server-authoritative dan event-scoped, serta private `UNDARA_DATA_DIR`. Ini audit prioritas handoff, bukan klaim seluruh Markdown bebas kontradiksi.
 - [x] Music Asset Library Studio: 14 lagu bundled dari registry bersama, cari judul/artis, dengarkan tanpa mengganti pilihan, radio pilihan aktif/default, upload event terpisah, dan event playback bersama. Jalur Save lama tetap dipakai.
 - [x] Batch musik `1d77985`: 366/366 regression tests, TypeScript dan build produksi 72/72 halaman lulus lokal dan pada GitHub Actions [Build Validation](https://github.com/wanzy0808/Undara/actions/runs/37078220318). [Orphan Audit](https://github.com/wanzy0808/Undara/actions/runs/37078220311) juga success. QA browser terautentikasi tetap terbuka.
@@ -21,12 +23,17 @@ Kerjakan satu batch kecil → verifikasi → commit sebelum membuka batch beriku
 - [x] Lifecycle pan: Space lepas di luar canvas, focus/blur, tab hidden, pointer cancel/lost capture, dan unmount melepas pan; pointer kedua tidak mengambil alih, klik setelah cancel tetap berfungsi, Space pada tombol Amplop/Isi tidak dibajak. 9 regression tests model/lifecycle baru; suite lokal 382/382, TypeScript/build lulus. QA browser pointer/touch masih terbuka.
 - [x] Pan commit [`a85b0ef`](https://github.com/wanzy0808/Undara/commit/a85b0efa5237aaa257cc6ac04fc35d77f5c319e4): [Build Validation](https://github.com/wanzy0808/Undara/actions/runs/37082869495) dan [Orphan Audit](https://github.com/wanzy0808/Undara/actions/runs/37082869490) success.
 - [x] Scope shortcut Amplop/Isi: Delete/clipboard hanya saat target berada di canvas; input/contenteditable/seleksi teks tidak dibajak. Ctrl/Cmd+Z dan Shift+Z serta Ctrl+Y memakai Undo/Redo desain yang sama dengan toolbar. 6 regression tests baru; suite lokal 388/388, TypeScript/build lulus. Interaksi browser nyata tetap perlu QA.
+- [x] Shortcut commit [`fe081a5`](https://github.com/wanzy0808/Undara/commit/fe081a5c2fb1eca1976f22f374580505a3619cad): [Build Validation](https://github.com/wanzy0808/Undara/actions/runs/37083395706) dan [Orphan Audit](https://github.com/wanzy0808/Undara/actions/runs/37083395665) success. Log CI mengonfirmasi 388/388 tes dan build 72/72 halaman.
 - [ ] Uji browser musik: browse → play/pause → pilih → Simpan → reload → preview/public, ID/EN, ganti template, upload/delete, panel ditutup, tab tersembunyi, dan tidak ada dua player berbunyi. Gunakan akun/event yang benar.
+- [ ] Studio resize/rotate: QA delapan handle, sisi/sudut yang tetap, objek berotasi, serta parity Amplop/Isi dan renderer publik.
+- [ ] Studio layer: QA naik/turun satu posisi dan front/back, batas urutan, multi-select serta lock/hide.
+- [ ] Studio pan: QA mouse/touch pada 100% dan rentang zoom, Space/focus/tab interruption, dan klik seleksi setelah cancel.
+- [ ] Studio keyboard: QA Delete/clipboard/Undo/Redo pada Amplop/Isi, fokus input/panel luar, IME dan seleksi teks.
+- [ ] Studio toolbar follow: QA bounding/handle/inspector saat scroll, zoom, resize dan ganti stage.
 - [ ] Production storage: verifikasi volume `UNDARA_DATA_DIR`, dry-run migrasi file legacy, review hasil sebelum apply pada server target.
 - [ ] Backup/restore: uji pemulihan PostgreSQL + private media pada environment terpisah; catat hasil nyata sebelum sign-off.
 - [ ] Authorization: negative E2E Customer A/B dan role matrix; source hardening 2 Oktober sudah ada, full runtime audit masih terbuka.
 - [ ] Custom flow: verifikasi migration deploy dan Owner → assigned Designer → review → handoff/archive dengan file event user.
-- [ ] Studio parity: resize 8 arah, rotate, layer ±1, pan 100%, shortcut Amplop/Isi dan toolbar follow; kerjakan bug yang terkonfirmasi satu per commit.
 - [ ] Template/marketing/dashboard: QA flicker/overlap dan seluruh section, lalu device/Light/Dark/ID/EN secara terlingkup.
 
 Implementasi storage/custom/auth yang sudah ada tidak diulang. Fitur ekspansi menunggu fondasi dan bukti QA di atas. `prd.md` Appendix A menyimpan rationale dan hasil per batch.
