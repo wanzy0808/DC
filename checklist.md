@@ -701,5 +701,5 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 - [x] Tambah satu template ulang tahun `confetti-club` melalui registry tunggal, dengan palette/font dan musik existing.
 - [x] Komposisi amplop/cover/section tersendiri; potret tunggal dan Gallery memakai engine foto shared.
 - [x] Native Studio markers dan empat narasi ID/EN; preview birthday terisolasi dari fixture pernikahan/data pelanggan.
-- [ ] Catat hasil regression suite dan build GitHub Actions pada Appendix A setelah run selesai.
+- [x] GitHub Actions pada feature commit: **428/428 regression tests**, Prisma generate, TypeScript, build **72/72** dan Orphan Audit lulus; hasil/run tercatat di Appendix A.
 - [ ] QA browser desktop/mobile, artwork editing/background/crop, nama panjang, keyboard/Reduced Motion dan Simpan → reload → public.

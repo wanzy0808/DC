@@ -146,10 +146,19 @@ test("birthday palette keeps text and action contrast above accessibility minimu
     assert.ok(contrast(palette.ink, surface) >= 4.5);
     assert.ok(contrast(palette.accent, surface) >= 4.5);
   }
-  const coralInk = "#" + [0, 1, 2].map((index) => {
+  const mix = (a, b, amount) => "#" + [0, 1, 2].map((index) => {
     const start = 1 + index * 2;
-    const value = Math.round(parseInt(palette.soft.slice(start, start + 2), 16) * .65 + parseInt(palette.ink.slice(start, start + 2), 16) * .35);
+    const value = Math.round(parseInt(a.slice(start, start + 2), 16) * amount + parseInt(b.slice(start, start + 2), 16) * (1 - amount));
     return value.toString(16).padStart(2, "0");
   }).join("");
+  const coralInk = mix(palette.soft, palette.ink, .65);
   assert.ok(contrast(coralInk, palette.bg) >= 3, "Coral display type remains readable");
+  const css = read("components/PublicInvitation/confetti-club.css");
+  const borderWeight = Number(css.match(/--cc-input-border: color-mix\(in srgb, var\(--inv-accent\) (\d+)%/)[1]) / 100;
+  const border = mix(palette.accent, palette.bg, borderWeight);
+  for (const surface of [palette.bg, palette.surface]) {
+    assert.ok(contrast(border, surface) >= 3, "Form boundaries remain visible");
+  }
+  const placeholderOpacity = Number(css.match(/::placeholder \{[^}]*opacity: ([\d.]+)/)[1]);
+  assert.ok(contrast(mix(palette.ink, palette.surface, placeholderOpacity), palette.surface) >= 4.5, "Placeholder text stays legible");
 });
