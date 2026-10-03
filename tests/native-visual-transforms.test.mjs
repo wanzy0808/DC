@@ -71,6 +71,19 @@ test("envelope and content photo transforms have separate targets", () => {
 });
 
 
+test("partner frames keep independent saved transforms on the shared identity renderer", () => {
+  const first = { x: -16, y: 7, scaleX: 1.2, scaleY: 0.9, rotation: 8 };
+  const second = { x: 23, y: -5, scaleX: 0.8, scaleY: 1.1, rotation: -12 };
+  const key = withNativeVisualTransforms("garden-light", { "photo:personOne": first, "photo:personTwo": second });
+  assert.deepEqual(parseNativeVisualTransforms(key), { "photo:personOne": first, "photo:personTwo": second });
+  for (const slot of ["personOne", "personTwo"]) {
+    assert.equal(nativeVisualSelector(`photo:${slot}`), `[data-invitation-section="identity"] [data-invitation-photo-slot="${slot}"]`);
+  }
+  const css = nativeVisualStyleSheet(key);
+  assert.match(css, /photo-slot="personOne"\]\{translate:-16% 7%;rotate:8deg;scale:1\.2 0\.9/);
+  assert.match(css, /photo-slot="personTwo"\]\{translate:23% -5%;rotate:-12deg;scale:0\.8 1\.1/);
+});
+
 test("gallery visuals are keyed by one safe photo ID", () => {
   assert.equal(nativeVisualSelector("photo:gallery:photo_123"),
     '[data-invitation-photo-slot="gallery"][data-studio-photo-id="photo_123"]');

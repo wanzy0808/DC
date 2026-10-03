@@ -31,6 +31,7 @@ const renderRight = (slot, assignments, overrides = {}) => renderToStaticMarkup(
   selectedRsvpElementKey: null, selectedSectionElement: null, selectedCopyField: null,
   selectedSectionKey: null, selectedNativeKey: null,
   onSetPhotoFocus: noop, onSetPhotoCrop: noop, onResetPhotoCrop: noop,
+  onStartPhotoCrop: noop,
   onGallerySettings: noop, onReorderGallery: noop, onUpdatePhotoMotion: noop,
   onResetPhotoMotion: noop, onClosePhoto: noop, ...overrides,
 }));
@@ -65,6 +66,24 @@ test("right cover inspector renders saved crop values and aspect ratio alongside
   assert.match(markup, /Parallax/);
   assert.doesNotMatch(markup, /Gaya galeri|Urutan foto|Autoplay galeri/);
   assert.equal(JSON.stringify(assignments), before);
+});
+
+test("both portrait inspectors expose their own frame geometry and an explicit canvas crop action", () => {
+  for (const [slot, x] of [["personOne", -18], ["personTwo", 24]]) {
+    const key = `photo:${slot}`;
+    const markup = renderRight(slot, defaultPhotoAssignments(), {
+      selectedNativeKey: key, onUpdateNative: noop, onCloseNative: noop,
+      design: { template: "garden-light", layers: [], photos: defaultPhotoAssignments(), sectionStyles: {},
+        nativeVisuals: { [key]: { x, y: 7, scaleX: 1.2, scaleY: 0.9, rotation: 12 } } },
+    });
+    assert.match(markup, /aria-label="X"/);
+    assert.match(markup, /aria-label="Y"/);
+    assert.match(markup, new RegExp(`value="${x}"`));
+    assert.match(markup, /value="120"/);
+    assert.match(markup, /value="90"/);
+    assert.match(markup, /value="12"/);
+    assert.match(markup, /aria-label="Crop foto di canvas"/);
+  }
 });
 
 test("right gallery inspector preserves saved order, filters unavailable/non-image IDs and exposes slideshow settings", () => {
@@ -110,7 +129,14 @@ test("left slot/asset selection uses the shared photo selector and only right in
   const source = readFileSync(new URL("../components/InvitationStudio/InvitationDesigner.tsx", import.meta.url), "utf8");
   const left = source.split("<PhotoPanel")[1]?.split("/>")[0];
   assert.ok(left);
-  assert.match(left, /onActiveSlotChange=\{selectPhotoVisual\}/);
+  assert.match(left, /onActiveSlotChange=\{selectPhotoFromPanel\}/);
+  const navigation = source.split("function selectPhotoFromPanel(")[1]?.split("function startPhotoCrop(")[0];
+  assert.match(navigation, /selectPhotoVisual\(slot\)/);
+  assert.match(navigation, /revealPhotoInCanvas\(slot\)/);
+  const click = source.split("function editPhotoFromCanvas(")[1]?.split("function revealPhotoInCanvas(")[0];
+  assert.match(click, /selectPhotoVisual\(slot\)/);
+  assert.match(click, /setMobileCanvas\(true\)/);
+  assert.doesNotMatch(click, /setCropModeSlot/);
   const rail = source.split('<nav className="undara-studio-rail"')[1]?.split("</nav>")[0];
   assert.match(rail, /label=\{copy\.photos\}[\s\S]*onClick=\{openPhotoPanel\}/);
   assert.doesNotMatch(left, /onSetFocus|onSetCrop|onGallerySettings|onReorderGallery|onGalleryMotion/);
@@ -118,6 +144,7 @@ test("left slot/asset selection uses the shared photo selector and only right in
   assert.ok(right);
   assert.match(right, /onSetPhotoFocus=\{setPhotoFocus\}/);
   assert.match(right, /onSetPhotoCrop=\{setPhotoCrop\}/);
+  assert.match(right, /onStartPhotoCrop=\{startPhotoCrop\}/);
   assert.match(right, /onGallerySettings=\{updateGallerySettings\}/);
   assert.match(right, /onReorderGallery=\{reorderGalleryPhoto\}/);
   assert.match(right, /photoEditingDisabled=\{!invitation \|\| saving\}/);

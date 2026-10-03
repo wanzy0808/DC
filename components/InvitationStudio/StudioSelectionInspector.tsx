@@ -33,6 +33,7 @@ export default function StudioSelectionInspector({
   selectedAssetIndex,
   maxAssetLayers,
   selectedPhotoSlot,
+  onStartPhotoCrop,
   photoAssets,
   photoEditingDisabled,
   selectedRsvpElementKey,
@@ -70,6 +71,7 @@ export default function StudioSelectionInspector({
   selectedAssetIndex: number;
   maxAssetLayers: number;
   selectedPhotoSlot: PhotoSlot | null;
+  onStartPhotoCrop: (slot: CroppablePhotoSlot) => void;
   photoAssets: InvitationPhotoAsset[];
   photoEditingDisabled: boolean;
   selectedRsvpElementKey: string | null;
@@ -149,6 +151,7 @@ export default function StudioSelectionInspector({
       <PhotoSlotInspector
         locale={locale}
         slot={selectedPhotoSlot}
+        onStartCrop={onStartPhotoCrop}
         motion={templatePhotoMotion(design.template, design.photos.motion, design.sectionStyles)[selectedPhotoSlot]}
         assignments={design.photos}
         assets={photoAssets}

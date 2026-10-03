@@ -970,10 +970,30 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
   function editPhotoFromCanvas(slot: PhotoSlot) {
     selectPhotoVisual(slot);
-    setCropModeSlot(slot === "gallery" ? null : slot);
     setPanel("decor");
     setInspectorOpen(true);
-    setMobileCanvas(false);
+    setMobileCanvas(true);
+  }
+
+  function revealPhotoInCanvas(slot: PhotoSlot) {
+    const section = slot === "cover" ? canvasStage === "envelope" ? "envelope" : "cover"
+      : slot === "gallery" ? "gallery" : "identity";
+    showDesignSection(section);
+    requestAnimationFrame(() => canvasScrollRef.current
+      ?.querySelector(`[data-invitation-section="${section}"] [data-invitation-photo-slot="${slot}"]`)
+      ?.scrollIntoView({ block: "center", inline: "nearest" }));
+  }
+
+  function selectPhotoFromPanel(slot: PhotoSlot) {
+    selectPhotoVisual(slot);
+    revealPhotoInCanvas(slot);
+  }
+
+  function startPhotoCrop(slot: CroppablePhotoSlot) {
+    selectPhotoVisual(slot);
+    revealPhotoInCanvas(slot);
+    setCropModeSlot(slot);
+    setMobileCanvas(true);
   }
 
   function openPhotoPanel() {
@@ -981,7 +1001,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setMobileCanvas(false);
     setPanel("decor");
     const slot = photoSlots.includes(activePhotoSlot) ? activePhotoSlot : photoSlots[0];
-    if (template?.usesPhotos && slot) selectPhotoVisual(slot);
+    if (template?.usesPhotos && slot) selectPhotoFromPanel(slot);
     else clearCanvasSelection();
   }
 
@@ -1976,7 +1996,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               slots={photoSlots}
               assignments={design.photos}
               activeSlot={activePhotoSlot}
-              onActiveSlotChange={selectPhotoVisual}
+              onActiveSlotChange={selectPhotoFromPanel}
               onSetPhoto={setPhoto}
               onToggleGallery={toggleGalleryPhoto}
               onUpload={templateMode ? undefined : (file) => uploadAsset(file, "IMAGE")}
@@ -2174,6 +2194,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               selectedAssetIndex={selectedAssetIndex}
               maxAssetLayers={maxAssetLayers}
               selectedPhotoSlot={selectedPhotoSlot}
+              onStartPhotoCrop={startPhotoCrop}
               photoAssets={invitation?.assets ?? []}
               photoEditingDisabled={!invitation || saving}
               selectedRsvpElementKey={selectedRsvpElementKey}

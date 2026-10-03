@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
+import { ChevronDown, ChevronUp, Crop, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   resolveGallerySettings,
@@ -15,11 +15,12 @@ import {
 } from "@/lib/templates/photo-slots";
 
 export function PhotoCropControls({
-  locale, slot, assignments, onSetFocus, onSetCrop, onResetCrop,
+  locale, slot, assignments, onStartCrop, onSetFocus, onSetCrop, onResetCrop,
 }: {
   locale: string;
   slot: CroppablePhotoSlot;
   assignments: PhotoAssignments;
+  onStartCrop: (slot: CroppablePhotoSlot) => void;
   onSetFocus: (slot: CroppablePhotoSlot, focus: PhotoFocus) => void;
   onSetCrop: (slot: CroppablePhotoSlot, crop: PhotoCrop) => void;
   onResetCrop: (slot: CroppablePhotoSlot) => void;
@@ -45,6 +46,10 @@ export function PhotoCropControls({
         <h3 className="text-xs font-semibold">{en ? "Crop & position" : "Crop & posisi"}</h3>
         <Button type="button" size="sm" variant="outline" className="min-h-11 px-2 text-xs" onClick={() => onResetCrop(slot)}>Reset</Button>
       </div>
+      <Button type="button" size="sm" className="mt-2 min-h-11 w-full" onClick={() => onStartCrop(slot)}
+        aria-label={en ? "Crop photo in canvas" : "Crop foto di canvas"}>
+        <Crop size={16} aria-hidden="true" /> Crop
+      </Button>
       <p className="mt-2 text-xs text-muted-foreground">{en ? "Aspect ratio" : "Rasio crop"}</p>
       <div className="mt-2 grid grid-cols-3 gap-1" role="group" aria-label={en ? "Aspect ratio" : "Rasio crop"}>
         {(["template", "original", "1:1", "4:5", "3:4", "16:9"] as const).map((aspect) => {

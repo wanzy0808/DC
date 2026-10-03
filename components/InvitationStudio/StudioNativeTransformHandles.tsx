@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, type PointerEvent, type RefObject } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent, type RefObject } from "react";
 import { Lock, RotateCcw, RotateCw } from "lucide-react";
+import { observeStudioNativeTarget } from "./studio-native-target";
 import {
   defaultNativeVisualTransform, nativeVisualSelector, nativeVisualUsesSystemContent,
   type NativeVisualTransform,
@@ -29,12 +30,12 @@ export default function StudioNativeTransformHandles({
     scrollLeft: number; scrollTop: number; initialAngle: number; moved: boolean;
   } | null>(null);
 
-  function target() {
+  const target = useCallback(() => {
     const selector = targetKey && nativeVisualSelector(targetKey);
     return selector ? canvasRef.current?.querySelector<HTMLElement>(`.undara-studio-preview-surface ${selector}`) ?? null : null;
-  }
+  }, [canvasRef, targetKey]);
 
-  function measure() {
+  const measure = useCallback(() => {
     const canvas = canvasRef.current;
     const node = target();
     if (!canvas || !node) { setBox(null); return; }
@@ -47,25 +48,15 @@ export default function StudioNativeTransformHandles({
       width: rect.width,
       height: rect.height,
     });
-  }
+  }, [canvasRef, target, transform?.hidden]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !targetKey) { setBox(null); return; }
-    const node = target();
-    const observer = new ResizeObserver(measure);
-    if (node) observer.observe(node);
-    canvas.addEventListener("scroll", measure, { passive: true });
-    window.addEventListener("resize", measure);
-    const frame = requestAnimationFrame(measure);
-    return () => {
-      observer.disconnect();
-      canvas.removeEventListener("scroll", measure);
-      window.removeEventListener("resize", measure);
-      cancelAnimationFrame(frame);
-    };
+    const selector = targetKey && nativeVisualSelector(targetKey);
+    if (!canvas || !selector) return;
+    return observeStudioNativeTarget(canvas, `.undara-studio-preview-surface ${selector}`, measure);
   // The revision and transform trigger a remeasure when the renderer changes.
-  }, [canvasRef, targetKey, zoom, revision, transform?.x, transform?.y, transform?.scaleX, transform?.scaleY, transform?.rotation, transform?.hidden]);
+  }, [canvasRef, targetKey, measure, zoom, revision, transform?.x, transform?.y, transform?.scaleX, transform?.scaleY, transform?.rotation, transform?.hidden]);
 
   function apply(node: HTMLElement, next: NativeVisualTransform) {
     node.style.translate = `${next.x}% ${next.y}%`;

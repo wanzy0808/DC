@@ -24,6 +24,7 @@ export default function PhotoSlotInspector({
   assignments,
   assets,
   disabled = false,
+  onStartCrop,
   onSetFocus,
   onSetCrop,
   onResetCrop,
@@ -39,6 +40,7 @@ export default function PhotoSlotInspector({
   assignments: PhotoAssignments;
   assets: InvitationPhotoAsset[];
   disabled?: boolean;
+  onStartCrop: (slot: CroppablePhotoSlot) => void;
   onSetFocus: (slot: CroppablePhotoSlot, focus: PhotoFocus) => void;
   onSetCrop: (slot: CroppablePhotoSlot, crop: PhotoCrop) => void;
   onResetCrop: (slot: CroppablePhotoSlot) => void;
@@ -64,6 +66,7 @@ export default function PhotoSlotInspector({
           onGallerySettings={onGallerySettings} onReorderGallery={onReorderGallery} />
       ) : (
         <PhotoCropControls locale={locale} slot={slot} assignments={assignments}
+          onStartCrop={onStartCrop}
           onSetFocus={onSetFocus} onSetCrop={onSetCrop} onResetCrop={onResetCrop} />
       )}
 
