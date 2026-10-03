@@ -96,6 +96,7 @@ import {
 import { useStudioCanvasPan } from "@/components/InvitationStudio/useStudioCanvasPan";
 import { useStudioCanvasSelectionMarkers } from "@/components/InvitationStudio/useStudioCanvasSelectionMarkers";
 import { resolveStudioCanvasSelection } from "@/components/InvitationStudio/studio-canvas-selection";
+import { isStudioCanvasShortcutTarget, resolveStudioHistoryShortcut } from "@/components/InvitationStudio/studio-canvas-shortcuts";
 import type {
   InvitationDesignerInvitation,
   InvitationDesignerPanel,
@@ -1622,7 +1623,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     function handleLayerShortcut(event: KeyboardEvent) {
       if (!invitation || saving || audioBusy || event.defaultPrevented || event.isComposing) return;
       const target = event.target;
-      if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
+      if (!isStudioCanvasShortcutTarget(canvasScrollRef.current, target instanceof Element ? target : null)) return;
       if (!event.ctrlKey && !event.metaKey && !event.altKey && event.key === "Escape" && selectedPhotoSlot) {
         clearCanvasSelection();
         return;
@@ -2043,8 +2044,19 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           />
           <div ref={canvasScrollRef} className="undara-studio-canvas-scroll" onScroll={syncCanvasSectionOnScroll} tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} data-space-pan={canvasPanReady ? "true" : undefined} data-pan-enabled="true" data-panning={canvasPanning ? "true" : undefined}
           onKeyDown={(event) => {
-            if (event.code !== "Space" || event.altKey || event.ctrlKey || event.metaKey) return;
+            if (event.defaultPrevented || event.nativeEvent.isComposing) return;
             const target = event.target;
+            if (!isStudioCanvasShortcutTarget(event.currentTarget, target instanceof Element ? target : null)
+              || window.getSelection()?.toString()) return;
+            const historyAction = resolveStudioHistoryShortcut(event.nativeEvent);
+            if (historyAction) {
+              if (saving || audioBusy) return;
+              event.preventDefault();
+              if (historyAction === "undo") undo();
+              else redo();
+              return;
+            }
+            if (event.code !== "Space" || event.altKey || event.ctrlKey || event.metaKey) return;
             if (target instanceof Element && target.closest('button, a, input, textarea, select, [contenteditable="true"], [role="textbox"], [role="button"]')) return;
             event.preventDefault();
             setCanvasPanReady(true);

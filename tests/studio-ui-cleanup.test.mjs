@@ -538,7 +538,8 @@ test("Studio image layers support flip transforms and quick centering", () => {
 
 
 test("Studio clipboard shortcuts never hijack text editing", () => {
-  assert.match(designer, /closest\('input, textarea, select, \[contenteditable="true"\], \[role="textbox"\]'\)/);
+  assert.match(designer, /isStudioCanvasShortcutTarget\(canvasScrollRef\.current/);
+  assert.match(read("components/InvitationStudio/studio-canvas-shortcuts.ts"), /input, textarea, select, \[contenteditable\]:not\(\[contenteditable="false"\]\), \[role="textbox"\]/);
   assert.match(designer, /window\.getSelection\(\)\?\.toString\(\)/);
   assert.match(designer, /event\.isComposing/);
   assert.match(designer, /shortcutKey === "c"/);
