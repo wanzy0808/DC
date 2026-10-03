@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { invitationTemplatePresets } from "@/components/InvitationStudio/designer-config";
 import { invitationFonts, invitationPalettes, parseDesignKey } from "@/lib/templates/design";
 import { defaultInvitationSections, invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
-import { templateDemoInvitation, templateDemoPhoto } from "@/data/templates/preview-invitation";
+import { getTemplateDemoInvitation } from "@/data/templates/preview-invitation";
 
 const InvitationPreview = dynamic(
   () => import("@/components/InvitationStudio/InvitationPreview").then((module) => module.InvitationPreview),
@@ -25,9 +25,9 @@ export function TemplateCanvas({
   const rendererKey = parsed.template;
   const preset = invitationTemplatePresets[rendererKey] ?? invitationTemplatePresets["botanical-ivory"];
   // Sample names and copy are gallery-only; Studio and published events always use owner data.
-  // A single isolated fixture powers every catalog and full template preview.
+  // Category-aware fixtures power catalog cards and the full template preview.
   // Do not replace or save actual customer invitation names in Studio.
-  const demo = templateDemoInvitation;
+  const demo = getTemplateDemoInvitation(rendererKey);
   return (
     <InvitationPreview
       invitation={{ ...demo, templateKey: designKey || templateKey }}
@@ -35,7 +35,7 @@ export function TemplateCanvas({
       designKey={designKey}
       palette={invitationPalettes[designKey ? parsed.palette : preset.palette]}
       fontPair={invitationFonts[designKey ? parsed.font : preset.font]}
-      decorUrl={templateDemoPhoto}
+      decorUrl={demo.assets.find((asset) => asset.type === "IMAGE")?.url || ""}
       eventTag={demo.weddingHashtag || ""}
       dressCode=""
       sections={sections}

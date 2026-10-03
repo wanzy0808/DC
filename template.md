@@ -304,3 +304,20 @@ Tambahan checklist Gallery:
 - [ ] Filmstrip dan Masonry tetap menampilkan seluruh foto yang dipilih tanpa slicing tersembunyi.
 - [ ] Entrance animation + stagger tidak mengubah visibility slide dan tidak mengganggu selection identity `data-studio-photo-id`.
 
+
+## Confetti Club — birthday production brief (3 October 2026)
+
+- **Stable key / occasion:** `confetti-club`, ulang tahun; satu nama, tanpa asumsi usia.
+- **Art direction:** kertas krem #fff6e5, cobalt #2445ae, coral #f77959 untuk artwork, tinta navy #222c51. Teks coral memakai campuran tinta yang lebih gelap. Syne + Inter; judul besar dan kontrol readable, tanpa microcopy dekoratif.
+- **Visual reference:** tiga referensi terpisah (cover, amplop hadiah, RSVP) dibuat sebelum coding. Komposisi diterjemahkan menjadi SVG/CSS native; gambar referensi tidak menjadi UI raster dengan data acara yang dibakukan.
+- **Journey:** hadiah/amplop cobalt berlipat dan pita coral → cover tipografi/kue → narasi → potret tunggal opsional → detail/jadwal pesta → kolase kenangan → countdown/lokasi → RSVP/ucapan/hadiah → penutup kue kecil.
+- **Media:** `cover` pada Identity dan `gallery` pada album; semua foto berasal dari event. Preview birthday terisolasi memakai portrait demo lokal, bukan pasangan pernikahan. Empty state tidak mengarang foto atau usia.
+- **Editing:** native marker pada judul, nama, lipatan/pita, stand/body/icing/candles kue dan dekorasi section; foto memakai crop/focus/transform shared. Background tetap merupakan surface per section.
+- **Motion:** opening sekali 650 ms melalui transform/opacity; keyboard/Reduced Motion/OFF langsung. Entrance shared dengan override pelanggan didahulukan.
+- **Reusable features:** tidak ada RSVP/Wishes/music/maps/gift/countdown engine kedua dan tidak ada dependency/audio baru.
+
+Release QA yang belum dibuktikan browser:
+- [ ] Desktop 1440px serta mobile 320/390px; nama/alamat pendek dan panjang.
+- [ ] Tanpa foto, satu foto, banyak foto; crop, geser, Gallery Settings, Simpan → reload → public.
+- [ ] Klik/select/resize/delete artwork, edit surface per section, lock dan keyboard/touch.
+- [ ] Opening pointer/keyboard, Reduced Motion, section animation OFF, RSVP/Wishes preview read-only dan musik.

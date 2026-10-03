@@ -25,6 +25,12 @@ export function availableEditableCopyFields(templateKey: string, isWedding = tru
 }
 
 export function invitationCopyDefaults(templateKey: string, eventDescription?: string | null): EditableInvitationCopy {
+  if (templateKey === "confetti-club") return {
+    greeting: eventDescription?.trim() || "Ada satu hari yang ingin kami rayakan bersama orang-orang tersayang. Kamu diundang!",
+    attendanceRequest: "Yuk, datang dan ikut merayakan. Kehadiranmu akan membuat hari ini semakin hangat.",
+    prayerWish: "Semoga tahun yang baru dipenuhi kesehatan, kebahagiaan, dan banyak hal baik.",
+    closing: "Terima kasih untuk doa dan kebersamaannya. Sampai bertemu di pesta!",
+  };
   if (templateKey === "paper-cut-botanical") return {
     greeting: eventDescription?.trim() || "Selembar demi selembar, kami merangkai undangan ini untuk berbagi satu hari yang begitu berarti bagi kami.",
     attendanceRequest: "Kehadiran Anda akan menjadi bagian hangat dari cerita yang sedang kami susun bersama.",

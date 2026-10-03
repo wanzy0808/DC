@@ -40,3 +40,29 @@ export const templateDemoInvitation: InvitationDesignerInvitation = {
     { id: "gallery-demo-fifth", type: "IMAGE", url: "/assets/demo/invitation/couple-03.webp", title: "Foto contoh pasangan" },
   ],
 };
+
+/** Birthday previews have one honoree; the persistence type is a legacy field. */
+export const birthdayTemplateDemoInvitation: InvitationDesignerInvitation = {
+  ...templateDemoInvitation,
+  id: "birthday-gallery-preview-only",
+  slug: "birthday-gallery-preview-only",
+  title: "Ulang Tahun Dara",
+  eventCategory: "BIRTHDAY",
+  groomName: "Dara",
+  brideName: "",
+  venue: "Rumah Cerita",
+  eventDate: "2027-06-12T16:00:00+07:00",
+  ceremonyTime: "16:00",
+  receptionTime: "END",
+  description: null,
+  assets: [
+    { id: "birthday-demo-cover", type: "IMAGE", url: "/assets/demo/invitation/person-two.webp", title: "Potret contoh" },
+    { id: "birthday-demo-memory", type: "IMAGE", url: "/assets/demo/invitation/person-one.webp", title: "Kenangan bersama teman" },
+  ],
+};
+
+export function getTemplateDemoInvitation(templateKey: string): InvitationDesignerInvitation {
+  return templateKey.split("::")[0] === "confetti-club"
+    ? birthdayTemplateDemoInvitation
+    : templateDemoInvitation;
+}

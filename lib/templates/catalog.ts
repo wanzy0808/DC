@@ -221,6 +221,19 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewImage: "/assets/demo/invitation/couple.webp",
     assetPath: "/templates/serein",
   },
+  {
+    key: "confetti-club",
+    category: "Birthday",
+    previewType: "public",
+    usesPhotos: true,
+    photoSlots: ["cover", "gallery"],
+    preset: { layout: "editorial", palette: "confetti", font: "syneInter" },
+    name: "Confetti Club",
+    description: "Undangan ulang tahun ceria dengan amplop hadiah, ilustrasi kue, tipografi besar, dan album kenangan.",
+    descriptionEn: "A cheerful birthday invitation with a gift envelope, cake illustration, bold typography, and a memory album.",
+    previewImage: "/templates/confetti-club/preview.svg",
+    assetPath: "/templates/confetti-club",
+  },
 ];
 
 export function getInvitationTemplate(key: string) {

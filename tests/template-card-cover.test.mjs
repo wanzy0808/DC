@@ -148,7 +148,7 @@ test("Studio stage tracks opening the real envelope for every renderer", () => {
   assert.doesNotMatch(studio, /<Dialog open=\\{preview\\}|setPreview\\(true\\)/);
 });
 
-test("all template previews use the canonical Una & Dara sample names", () => {
+test("wedding previews retain the canonical Una & Dara sample names", () => {
   const fixture = readFileSync(new URL("../data/templates/preview-invitation.ts", import.meta.url), "utf8");
   assert.match(fixture, /title: "Pernikahan Una & Dara"/);
   assert.match(fixture, /groomName: "Una"/);

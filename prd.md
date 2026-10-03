@@ -716,9 +716,9 @@ Menu Musik di Studio menampilkan **Koleksi Undara** dari satu registry audio ber
 
 URL musik warisan yang telah tersimpan tetap dibaca dan dapat didengarkan demi kompatibilitas, tetapi pembuatan aset/audio baru hanya dari URL tanpa binary tidak diperbolehkan sesuai batas upload §7.2.1b. Jangan pasang musik undangan pada halaman Dashboard, landing, guestbook, atau undangan belum terbit. Asset dan lisensi lagu yang digunakan untuk distribusi publik harus dipastikan sesuai hak penggunaan oleh pengelola sebelum rilis komersial.
 
-### 7.2.3b Dua belas tema bawaan: enam dengan foto, enam tanpa foto (audit 24 September 2026)
+### 7.2.3b Katalog tema bawaan: sembilan dengan foto, enam tanpa foto (3 October 2026)
 
-Setiap template READY harus punya komposisi nyata yang dapat dibedakan secara visual sebelum dan setelah membuka amplop, bukan hanya pergantian palette, font, stock photo dan border radius pada satu layout. Manifest tunggal `lib/templates/catalog.ts` menyatakan `usesPhotos: boolean`, `photoSlots`, nama dan preset. Katalog bawaan yang diverifikasi dari `lib/templates/catalog.ts` pada audit 24 September 2026 memiliki **12 template, 6 dengan foto dan 6 tanpa foto** (10 tema awal + Zen Atelier + Pencil Reverie). Jumlah aktual dan daftar key diperiksa terhadap registry, bukan disalin dari riwayat versi lama:
+Setiap template READY harus punya komposisi nyata yang dapat dibedakan secara visual sebelum dan setelah membuka amplop, bukan hanya pergantian palette, font, stock photo dan border radius pada satu layout. Manifest tunggal `lib/templates/catalog.ts` menyatakan `usesPhotos: boolean`, `photoSlots`, nama dan preset. Katalog bawaan yang diverifikasi dari `lib/templates/catalog.ts` pada 3 October 2026 memiliki **15 template, 9 dengan foto dan 6 tanpa foto**. Confetti Club menambah satu tema ulang tahun; Blank Canvas tetap starter terpisah. Jumlah aktual dan daftar key diperiksa terhadap registry, bukan disalin dari riwayat versi lama:
 
 | Mode | Stable key | Identitas visual, bukan sekadar warna |
 | --- | --- | --- |
@@ -734,6 +734,9 @@ Setiap template READY harus punya komposisi nyata yang dapat dibedakan secara vi
 | Tanpa foto | `celestial-ink` | Galaksi tinta, orbit concentric dan konstelasi bulan-bintang tanpa portrait |
 | Tanpa foto | `pencil-reverie` | Sketsa pensil dan kolase ilustratif vintage, bukan foto pengguna |
 | Foto | `zen-atelier` | Amplop/sampul ilustrasi Jepang, potret pasangan editorial dan galeri foto milik event; ensō, sakura, dan pegunungan tinta |
+| Foto | `velvet-horizon` | Senja Mediterranean, arsitektur melengkung, dusty rose, cahaya lilin, dan foto editorial |
+| Foto | `serein` | Stationery ivory/plum, amplop surat bersegel, dan album foto editorial |
+| Foto | `confetti-club` | Undangan ulang tahun dengan amplop hadiah, kue dua tingkat, judul besar, potret tunggal opsional, dan album kenangan |
 
 Untuk setiap theme, amplop digital tetap punya lipatan/flap dan aksi "Buka Undangan" riil; visual envelope, Cover dan section decoration mengikuti identitas theme berbeda. Foto preview berbasis aset `public/` yang sudah ada, tanpa mengambil URL Unsplash. Tanpa-foto bukan sekadar menyembunyikan tag `img`: tutup, Hero, Identity, Gallery/Media dan dekorasi mengutamakan tipografi, ornamen/ilustrasi dan data event, tidak merender media customer walaupun sebelumnya pernah mengupload foto untuk theme lain. Studio tidak memunculkan input slot/upload untuk theme tanpa foto (koleksi event tetap tersimpan dan muncul bila customer beralih kembali ke theme foto). Gallery/media tanpa foto tetap section semantik ke-6 tetapi menjadi surface story/illustration tanpa menciptakan foto/memori personal palsu. Image-preview-only designer submissions tidak otomatis dipaksa masuk hitungan 6/5 dan tidak selectable hingga renderer asli tersedia.
 
@@ -755,6 +758,16 @@ Galeri publik dan pemilih template Studio menampilkan thumbnail scene visual yan
 
 
 **Kontrak palet/font pada Amplop Studio (24 September 2026):** Setiap template baru yang menyediakan kontrol warna/font di Studio **wajib menerapkan nilai yang sama pada Amplop Digital**, bukan hanya Cover dan section isi. Renderer bersama menyuplai `--inv-scene-bg`, `--inv-scene-surface`, `--inv-scene-ink`, `--inv-scene-surface-ink`, `--inv-scene-accent`, `--inv-scene-soft` saat palet custom, plus `--inv-heading` dan font body; implementasi tema memetakannya ke lapis kertas, lipatan, tulisan, segel/ornamen, dan warna tombol yang memang dapat disesuaikan. Preset menggunakan fallback artwork/palet asli; `color-mix` untuk shading, teks kontras untuk palet gelap. Perubahan terlihat langsung pada canvas Amplop, disimpan melalui Simpan Desain lalu identik pada undangan tamu; jangan membuat cache Studio-only/PNG tetap yang tak dapat diwarnai tetapi menampilkan kontrol seolah aktif. Toggle Amplop, pembuka musik lewat gestur, restart/Amplop–Cover, reduced motion, dan slot foto bila didukung tetap memakai sistem bersama. Tema yang **secara jelas mengunci** warna/font (Romantic Rose) tidak perlu pura-pura menyediakan kontrol. Rincian checklist produksi ada di `template.md` bagian Studio. **Zen Atelier:** amplop washi/mizuhiki yang sebelumnya memiliki banyak warna hardcode telah diperbaiki memakai enam token `--jp-*` dengan fallback preset Zen, termasuk lapis kertas, bayangan/lipatan, tulisan surat, ornamen vektor dan warna simpul mizuhiki. Cover dan section lain tidak ikut dirombak.
+
+### Confetti Club — tema ulang tahun (3 October 2026)
+
+Stable key `confetti-club` memakai kertas krem, cobalt/coral, Syne + Inter, amplop hadiah berlipat dengan pita, dan ilustrasi kue dua tingkat. Tema ini mengutamakan kategori `BIRTHDAY` yang sudah ada dengan satu nama. Usia tidak diasumsikan dan tidak ada nama, tanggal, lokasi atau foto pelanggan yang dibakukan dalam artwork. Preset palette/font tetap dapat diganti dari Studio.
+
+Cover bersifat ilustratif; foto customer opsional memakai role `cover` pada Identity, lengkap dengan crop/focus/geser shared. Gallery memakai media event dan kolase default melalui engine Masonry bersama; pilihan Gallery Settings lain tetap didahulukan. Marker native tersedia pada heading, pita, lipatan amplop, bagian kue, nama, detail dan grup komposisi. Narasi greeting/attendanceRequest/prayerWish/closing dapat diedit melalui Isi; RSVP/Wishes, maps, gift, countdown dan musik tetap memakai engine shared.
+
+Animasi membuka amplop berjalan sekali selama 650 ms; keyboard, Reduced Motion dan motion OFF membuka langsung. Entrance native/foto memakai preset shared, mendahulukan override tersimpan dan OFF per section. Tidak ada confetti loop atau dependency baru. Lagu bawaan memakai file DayFox — They Say... yang sudah tersedia.
+
+Kartu katalog dan full preview memakai fixture birthday terisolasi dengan satu nama; fixture pernikahan Una & Dara tetap dipakai tema lain. Preview boleh membuka amplop tetapi tetap tidak menulis RSVP/Wishes atau data pelanggan. QA browser semua variasi tetap merupakan release check terpisah dari CI.
 
 ### Serein — tema foto editorial (30 September 2026)
 
@@ -894,7 +907,7 @@ Penambahan template baru idealnya tidak menyentuh Prisma schema, core RSVP/Wishe
 
 ### 7.2.9 Standard template preview and QA data
 
-Undara harus memiliki standard demo/dummy invitation data yang reusable untuk preview dan QA template baru. Demo data tidak boleh bercampur dengan production customer data.
+Undara harus memiliki standard demo/dummy invitation data yang reusable untuk preview dan QA template baru. Demo data tidak boleh bercampur dengan production customer data. Fixture dipilih sesuai kategori tema: tema pernikahan memakai Una & Dara, sedangkan Confetti Club memakai fixture birthday dengan satu nama melalui `getTemplateDemoInvitation`; fixture tidak mengubah data acara ketika pemilik memilih template.
 
 Template baru minimal diuji terhadap variasi:
 - identity pendek dan panjang;
@@ -2743,3 +2756,15 @@ Follow-up commits include `8c64ee0eb259f1f9bf6644b8948fc004e16f3f20`, `6672a8463
 **Observed validation:** **419/419** tes lulus, mencakup dispatch kategori/priority seleksi, key/codec/selector frame foto per instance, transform Ucapan, geometri delapan handle (anchor/zoom/bounds), retensi style/motion serta render inspector yang hanya menawarkan kontrol didukung. Suite compliance source untuk 14 tema ready tetap lulus. Prisma generate, TypeScript dan Next.js build **72/72** halaman lulus. ESLint pada file implementasi dibanding source parent mempunyai **0 temuan baru**; baseline tetap Designer 4 error/6 warning, asset renderer 3 error, Crop 1 error/1 warning, sedangkan file implementasi lainnya bersih. Lint penuh tidak diklaim lulus. `git diff --check` lulus.
 
 **Not established:** fixture ancestor/geometry dan SSR inspector bukan QA browser. Hit testing/render semua artwork, gesture desktop/touch, fokus keyboard nyata, lock, reduced-motion, semua variasi tema dan Simpan → reload → public tetap memerlukan QA browser. Internal protected component tetap diedit lewat properti grup/komponen; editor seluruh node bebas tidak dinyatakan selesai.
+
+## 3 October 2026 — Confetti Club birthday invitation
+
+**Request / rationale:** Owner meminta satu template undangan ulang tahun tambahan. Menambah komposisi birthday tersendiri sambil mempertahankan engine dan hasil perbaikan editability Studio.
+
+**Implementation:** Satu entry registry `confetti-club`, palette Confetti + Syne/Inter; lazy scene/artwork dan CSS scoped. Amplop hadiah membuka ke cover kue; Identity memiliki potret tunggal opsional dan Gallery kolase shared. Empat narasi default khusus ulang tahun dilokalisasi ID/EN dan tetap mendahulukan teks pelanggan. Seluruh fitur publik dan 15 kontrol Studio memakai kontrak yang sama. Fixture birthday terisolasi menggantikan pasangan hanya pada preview tema ini. Musik memakai audio existing tanpa perubahan file audio.
+
+**Area / files:** `lib/templates/{catalog,design,music,editable-copy,template-motion}.ts`, `lib/invitations/language.ts`, `data/templates/preview-invitation.ts`, `TemplateGalleryCanvas.tsx`, shared scene/Universal renderer, `ConfettiClub{Scene,Artwork}.tsx`, `confetti-club.css`, `public/templates/confetti-club/`, template regression/compliance tests, `template.md` dan `checklist.md`.
+
+**Commit:** `feat(templates): add Confetti Club birthday invitation`.
+
+**Validation status:** Source integration and fixture isolation inspected. Nine new regression tests cover registry, birthday fixture, narrative/localization, native artwork markers, motion overrides, preview/keyboard guards, readable controls, bundled music precedence, and palette contrast. Test/build execution is pending GitHub Actions for this commit; local execution is unavailable because the supplied environment cannot connect. Browser/E2E and real mobile/desktop editing have not been run.

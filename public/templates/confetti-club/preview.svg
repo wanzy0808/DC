@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="760" viewBox="0 0 390 760" role="img" aria-labelledby="title desc">
+  <title id="title">Confetti Club</title>
+  <desc id="desc">Sampul undangan ulang tahun dengan kue, tinta biru, coral, dan kertas krem.</desc>
+  <rect width="390" height="760" fill="#fff6e5"/>
+  <g font-family="Syne, Arial, sans-serif">
+    <text x="28" y="70" font-size="16" fill="#2445ae">Ulang Tahun</text>
+    <text x="25" y="156" font-size="66" font-weight="800" letter-spacing="-2" fill="#2445ae">Rayakan</text>
+    <text x="28" y="213" font-size="38" font-weight="700" fill="#ac5e56">hari spesialmu.</text>
+  </g>
+  <path d="M63 354c-42 24-35 57-10 39 27-20 13-44-9-19s-14 45 7 39" fill="none" stroke="#f77959" stroke-width="9" stroke-linecap="round"/>
+  <g transform="translate(20 295) scale(.94)">
+    <g fill="#2445ae"><path d="M171 284h38v31h-38zM139 320c0-8 19-15 51-15s51 7 51 15v6H139z"/><ellipse cx="190" cy="280" rx="153" ry="17"/></g>
+    <path d="M71 191h238v79c0 11-53 20-119 20S71 281 71 270z" fill="#f77959"/>
+    <ellipse cx="190" cy="191" rx="119" ry="19" fill="#fffcf5"/>
+    <path d="M116 108h148v80c0 9-33 16-74 16s-74-7-74-16z" fill="#fcd2be"/>
+    <ellipse cx="190" cy="108" rx="74" ry="15" fill="#fffcf5"/>
+    <path d="M116 109c17 12 46 15 74 15s57-3 74-15v20c-4 0-6-7-10-7s-5 19-11 19-7-10-12-10-6 6-10 6-5-14-10-14-6 12-12 12-5-8-10-8-7 18-14 18-6-16-12-16-6 8-11 8-6-14-11-14-8 9-15 5z" fill="#fffcf5"/>
+    <path d="M71 193c31 16 77 20 119 20s88-4 119-20v22c-8 10-16-4-24-4s-9 18-17 18-9-12-16-12-10 8-17 8-9-16-17-16-7 19-15 19-8-9-15-9-10 13-19 13-8-19-16-19-9 8-17 8-9-11-16-11-12 8-17-2-9-15-15-15-10 8-17-2z" fill="#fffcf5"/>
+    <path d="M151 56h10v49h-10zM185 44h10v58h-10zM220 56h10v49h-10z" fill="#2445ae"/>
+    <path d="m151 68 10-5m-10 19 10-5m-10 19 10-5m24-34 10-5m-10 19 10-5m-10 19 10-5m25-9 10-5m-10 19 10-5m-10 19 10-5" stroke="#fffcf5" stroke-width="4"/>
+    <path d="M156 51c-12-5-7-19 0-27 7 8 12 22 0 27Zm34-12c-12-5-7-19 0-27 7 8 12 22 0 27Zm35 12c-12-5-7-19 0-27 7 8 12 22 0 27Z" fill="#f77959"/>
+  </g>
+  <circle cx="348" cy="98" r="5" fill="#f77959"/>
+  <path d="m44 622 10 5-7 17-10-5z" fill="#2445ae"/>
+  <text x="28" y="708" font-family="Inter, Arial, sans-serif" font-size="14" fill="#222c51">Gulir untuk merayakan</text>
+  <path d="M350 694v15m-5-5 5 5 5-5" fill="none" stroke="#222c51" stroke-width="2" stroke-linecap="round"/>
+</svg>

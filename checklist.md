@@ -695,3 +695,11 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
   - [x] Shared runtimes mematikan entrance/parallax/premium timeline pada `prefers-reduced-motion`; budget terpusat membatasi choreography teks 96 motion parts, premium timeline 10 item, dan parallax 12 target. Gallery assignment sendiri tetap dibatasi maksimal 30 foto. Ini code-level guard; profiling device nyata tetap bagian QA/E2E. (26 September 2026)
 
 **Priority rule:** baseline Studio editing (crop/cut/selection/layers/locking/snapping) wins over adding more animation presets until the editor feels dependable for normal designer work.
+
+### Confetti Club — birthday template (3 October 2026)
+
+- [x] Tambah satu template ulang tahun `confetti-club` melalui registry tunggal, dengan palette/font dan musik existing.
+- [x] Komposisi amplop/cover/section tersendiri; potret tunggal dan Gallery memakai engine foto shared.
+- [x] Native Studio markers dan empat narasi ID/EN; preview birthday terisolasi dari fixture pernikahan/data pelanggan.
+- [ ] Catat hasil regression suite dan build GitHub Actions pada Appendix A setelah run selesai.
+- [ ] QA browser desktop/mobile, artwork editing/background/crop, nama panjang, keyboard/Reduced Motion dan Simpan → reload → public.

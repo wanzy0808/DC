@@ -59,7 +59,13 @@ const velvetHorizonPhotos: PhotoMotionMap = {
   gallery: { animation: "rise", animationDuration: .66, animationStagger: .045 },
 };
 
+const confettiClubPhotos: PhotoMotionMap = {
+  cover: { animation: "rise", animationDuration: .55 },
+  gallery: { animation: "rise", animationDuration: .55, animationStagger: .04 },
+};
+
 const photoDefaults: Record<string, PhotoMotionMap> = {
+  "confetti-club": confettiClubPhotos,
   "romantic-rose": romanticRosePhotos,
   serein: sereinPhotos,
   "eternal-blossom": blossomPhotos,
@@ -875,7 +881,21 @@ const romanticRoseNative: Record<string, TemplateNativeMotion> = {
   "object:closing:names": { animation: "soft-scale", animationDuration: .7, animationDelay: .11 },
 };
 
+const confettiClubNative: Record<string, TemplateNativeMotion> = {
+  "heading:envelope": { animation: "fade", animationDuration: .55 },
+  "object:envelope:invitation-title": { animation: "rise", animationDuration: .55 },
+  "object:envelope:gift-group": { animation: "fade", animationDuration: .6 },
+  "object:envelope:address": { animation: "fade", animationDuration: .45 },
+  "heading:cover": { animation: "rise", animationDuration: .6 },
+  "object:cover:date-group": { animation: "fade", animationDuration: .5 },
+  "object:cover:cake-art": { animation: "soft-scale", animationDuration: .65 },
+  "object:identity:event-name": { animation: "rise", animationDuration: .55 },
+  "object:gallery:grid": { animation: "fade", animationDuration: .55 },
+  "object:closing:cake-art": { animation: "soft-scale", animationDuration: .55 },
+};
+
 const nativeDefaults: Record<string, Record<string, TemplateNativeMotion>> = {
+  "confetti-club": confettiClubNative,
   "romantic-rose": romanticRoseNative,
   serein: sereinNative,
   "botanical-ivory": botanicalNative,

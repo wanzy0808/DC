@@ -42,6 +42,7 @@ export const invitationDefaultTracks: Record<string, { title: string; file: stri
   "zen-atelier": bundledTracks.jikan,
   "velvet-horizon": bundledTracks.eternalLove,
   "serein": bundledTracks.untilWeMeetAgain,
+  "confetti-club": bundledTracks.theySay,
 };
 
 export function getInvitationDefaultMusic(templateKey: string) {
