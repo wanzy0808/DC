@@ -1,0 +1,71 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { LanguageProvider } from "../components/I18n/LanguageProvider.tsx";
+import MenuModule from "../components/Dashboard/InvitationQrMenu.tsx";
+import PreviewModule from "../components/Dashboard/InvitationQrPreview.tsx";
+import { invitationQrImageUrl, paidInvitationQrOptions } from "../components/Dashboard/invitation-qr.ts";
+
+const InvitationQrMenu = MenuModule.default ?? MenuModule;
+const InvitationQrPreview = PreviewModule.default ?? PreviewModule;
+const render = (element, locale = "id") => renderToStaticMarkup(createElement(LanguageProvider, { initialLocale: locale }, element));
+
+test("QR choices follow each invitation payment, including paid drafts but excluding account-only access", () => {
+  const invitations = [
+    { id: "paid-draft", title: "Draft", isPublished: false, eventConfigured: false, payment: { packageKey: "INVITATION_BASIC", status: "PAID" } },
+    { id: "paid-guestbook", title: "Guestbook", isPublished: true, payment: { packageKey: "GUESTBOOK_DIGITAL", status: "PAID" } },
+    { id: "paid-bundle", title: "Bundle", isPublished: true, payment: { packageKey: "INVITATION_GUESTBOOK", status: "PAID" } },
+    { id: "unpaid", title: "Unpaid", isPublished: false, payment: { packageKey: "INVITATION_BASIC", status: "PENDING" } },
+    { id: "wrong-package", title: "WA", isPublished: true, payment: { packageKey: "WA_BLAST", status: "PAID" } },
+    { id: "account-grant", title: "Grant", isPublished: false, accessPaid: true, payment: null },
+    { id: "no-payment", title: "Missing", isPublished: false },
+  ];
+  const original = structuredClone(invitations);
+  assert.deepEqual(paidInvitationQrOptions(invitations).map(({ id }) => id), ["paid-draft", "paid-guestbook", "paid-bundle"]);
+  assert.deepEqual(invitations, original);
+  assert.deepEqual(paidInvitationQrOptions([]), []);
+});
+
+test("preview and download stay on the app and identify the same selected invitation", () => {
+  for (const id of ["invitation-a", "invitation-b", "id&download=1?x=2"]) {
+    const preview = new URL(invitationQrImageUrl(id), "https://undara.example.test");
+    const download = new URL(invitationQrImageUrl(id, true), preview.origin);
+    assert.equal(preview.origin, "https://undara.example.test");
+    assert.equal(preview.pathname, "/api/invitations/qr");
+    assert.equal(preview.searchParams.get("invitationId"), id);
+    assert.equal(preview.searchParams.has("download"), false);
+    assert.equal(download.searchParams.get("invitationId"), id);
+    assert.equal(download.searchParams.get("download"), "1");
+    assert.equal(download.searchParams.size, 2);
+  }
+  assert.notEqual(invitationQrImageUrl("invitation-a"), invitationQrImageUrl("invitation-b"));
+});
+
+test("Beranda QR menu renders a localized dialog trigger without loading an invitation automatically", () => {
+  for (const [locale, label] of [["id", "QR Undangan"], ["en", "Invitation QR"]]) {
+    const html = render(createElement(InvitationQrMenu, { onManageInvitations() {} }), locale);
+    assert.ok(html.includes(label));
+    assert.match(html, /aria-haspopup="dialog"/);
+    assert.match(html, /data-slot="dialog-trigger"/);
+    assert.doesNotMatch(html, /<img|invitationId=/);
+  }
+});
+
+test("QR preview loads the selected invitation and disables download until the image is ready", () => {
+  const html = render(createElement(InvitationQrPreview, { invitationId: "paid-draft", title: "Acara Keluarga", isPublished: false }));
+  assert.match(html, /src="\/api\/invitations\/qr\?invitationId=paid-draft"/);
+  assert.match(html, /alt="QR Undangan · Acara Keluarga"/);
+  assert.match(html, /role="status"/);
+  assert.ok(html.includes("Tautan terbuka setelah Publish."));
+  assert.match(html, /<button[^>]*disabled/);
+  assert.doesNotMatch(html, /<a[^>]*download/);
+});
+
+test("published QR preview uses English feedback and escapes the invitation title", () => {
+  const html = render(createElement(InvitationQrPreview, { invitationId: "paid-public", title: '<script>alert("x")</script>', isPublished: true }), "en");
+  assert.ok(html.includes("Loading QR..."));
+  assert.ok(html.includes("Invitation QR"));
+  assert.doesNotMatch(html, /The link opens after publishing|<script>/);
+  assert.match(html, /&lt;script&gt;/);
+});

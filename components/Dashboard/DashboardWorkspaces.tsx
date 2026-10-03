@@ -36,6 +36,7 @@ import type {
   DashboardTab,
 } from "@/components/Dashboard/dashboard-types";
 import ReferralCodePanel from "@/components/Dashboard/ReferralCodePanel";
+import InvitationQrMenu from "@/components/Dashboard/InvitationQrMenu";
 
 function formatEventDate(value: string, locale: "id" | "en" = "id") {
   const date = new Date(value);
@@ -86,10 +87,13 @@ export function WorkspaceOverview({
             {d("Halo")}, {ctx?.profile.displayName?.trim() || d("Akun")}
           </h1>
         </div>
-        <Button type="button" size="lg" onClick={() => onGo("events")} className="dc-dashboard-overview-cta relative z-[1] shrink-0 self-start sm:self-auto">
-          <CalendarDays className="size-4" />
-          {d("Tambah acara")}
-        </Button>
+        <div className="relative z-[1] flex max-w-full flex-wrap gap-2 self-start sm:self-auto sm:justify-end">
+          <InvitationQrMenu onManageInvitations={() => onGo("invitation")} />
+          <Button type="button" size="lg" onClick={() => onGo("events")} className="dc-dashboard-overview-cta">
+            <CalendarDays className="size-4" />
+            {d("Tambah acara")}
+          </Button>
+        </div>
       </section>
 
       <DashboardMetricGrid className="mt-5">

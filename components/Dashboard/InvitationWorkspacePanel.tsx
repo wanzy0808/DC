@@ -10,12 +10,12 @@ import {
   Plus,
   RefreshCw,
   QrCode,
-  Download,
   Send,
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import InvitationQrPreview from "@/components/Dashboard/InvitationQrPreview";
 import {
   DashboardEmptyState,
   DashboardMetricCard,
@@ -79,7 +79,6 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [qrOpenId, setQrOpenId] = useState<string | null>(null);
-  const [qrErrorId, setQrErrorId] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
 
   const load = useCallback(async () => {
@@ -191,8 +190,6 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
               const hasDesign = Boolean(invitation.templateKey?.trim());
               const studioHref = `/dashboard/editor?type=${invitation.type}&invitationId=${encodeURIComponent(invitation.id)}`;
               const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(invitation.id)}`;
-              const qrImageHref = `/api/invitations/qr?invitationId=${encodeURIComponent(invitation.id)}`;
-              const qrDownloadHref = `${qrImageHref}&download=1`;
               const status = invitation.isPublished
                 ? d("Terbit · terkunci")
                 : !invitation.eventConfigured
@@ -228,7 +225,6 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                           aria-expanded={qrOpenId === invitation.id}
                           aria-controls={"invitation-qr-" + invitation.id}
                           onClick={() => {
-                            setQrErrorId(null);
                             setQrOpenId((current) => current === invitation.id ? null : invitation.id);
                           }}
                         >
@@ -250,44 +246,9 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                   {invitation.accessPaid && qrOpenId === invitation.id && (
                     <div
                       id={"invitation-qr-" + invitation.id}
-                      className="mt-4 flex flex-col gap-4 border-t border-primary/15 pt-4 sm:flex-row sm:items-center"
+                      className="mt-4 border-t border-primary/15 pt-4"
                     >
-                      <div className="shrink-0 self-start bg-white p-2">
-                        {qrErrorId === invitation.id ? (
-                          <div role="alert" className="flex h-[208px] w-[208px] items-center justify-center p-3 text-center text-sm text-[#7A1C25]">
-                            {d("QR belum berhasil dibuat. Tutup dan coba lagi.")}
-                          </div>
-                        ) : (
-                          <img
-                            src={qrImageHref}
-                            alt={d("QR Undangan") + " · " + title}
-                            width={208}
-                            height={208}
-                            loading="lazy"
-                            onError={() => setQrErrorId(invitation.id)}
-                            className="block h-[208px] w-[208px]"
-                          />
-                        )}
-                      </div>
-                      <div className="min-w-0 space-y-3">
-                        <div>
-                          <h4 className="undara-ui-title text-base font-semibold text-primary">{d("QR Undangan")}</h4>
-                          <p className="mt-1 max-w-lg text-sm leading-6 text-muted-foreground">
-                            {d("Satu QR untuk undangan ini. Bisa dibagikan kepada tamu, bukan tiket QR check-in per tamu.")}
-                          </p>
-                          {!invitation.isPublished && (
-                            <p className="mt-1 text-sm text-muted-foreground">
-                              {d("QR sudah bisa diunduh, tetapi undangan baru bisa dibuka setelah Publish.")}
-                            </p>
-                          )}
-                        </div>
-                        <Button asChild size="sm">
-                          <a href={qrDownloadHref} download={"undara-undangan-" + invitation.id + "-qr.png"}>
-                            <Download className="size-4" aria-hidden="true" />
-                            {d("Download QR PNG")}
-                          </a>
-                        </Button>
-                      </div>
+                      <InvitationQrPreview invitationId={invitation.id} title={title} isPublished={invitation.isPublished} />
                     </div>
                   )}
                 </article>
