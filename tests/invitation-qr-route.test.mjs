@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import ts from "typescript";
 import QRCode from "qrcode";
-import { invitationQrTarget } from "../lib/invitations/qr.ts";
+import { invitationQrFilename, invitationQrTarget } from "../lib/invitations/qr.ts";
 import { loadPackageAccess } from "./helpers/package-access.mjs";
 
 const source = readFileSync(new URL("../app/api/invitations/qr/route.ts", import.meta.url), "utf8");
@@ -15,7 +15,7 @@ const compiled = ts.transpileModule(source, {
 // the PNG encoder and entitlement/target helpers remain the production code.
 function loadHandler({ user = { id: "owner-a" }, invitation, appUrl = "https://undara.example.test/base", render = QRCode.toBuffer, grants, grantError } = {}) {
   const record = invitation === undefined
-    ? { id: "invitation-a", ownerId: "owner-a", payment: { packageKey: "INVITATION_BASIC", status: "PAID" } }
+    ? { id: "invitation-a", ownerId: "owner-a", title: "Acara Keluarga", payment: { packageKey: "INVITATION_BASIC", status: "PAID" } }
     : invitation;
   const calls = { queries: [], renders: [], fetches: [], errors: [] };
   const packageAccess = loadPackageAccess({ grants, grantError });
@@ -28,7 +28,7 @@ function loadHandler({ user = { id: "owner-a" }, invitation, appUrl = "https://u
       calls.queries.push(query);
       return record?.id === query.where.id && record?.ownerId === query.where.ownerId ? record : null;
     } } } },
-    "@/lib/invitations/qr": { invitationQrTarget },
+    "@/lib/invitations/qr": { invitationQrFilename, invitationQrTarget },
     "@/lib/packages/server-access": packageAccess.access,
   };
   const routeModule = { exports: {} };
@@ -81,19 +81,38 @@ test("paid owner gets a real 640px PNG for the stable app URL without a provider
       assert.equal(response.headers.get("content-type"), "image/png");
       assert.equal(response.headers.get("cache-control"), "private, no-store");
       assert.equal(response.headers.get("x-content-type-options"), "nosniff");
-      assert.equal(response.headers.get("content-disposition"), `${download ? "attachment" : "inline"}; filename="undara-undangan-invitation-a-qr.png"`);
+      assert.equal(response.headers.get("content-disposition"), `${download ? "attachment" : "inline"}; filename="undara-undangan-acara-keluarga-qr.png"`);
       const png = Buffer.from(await response.arrayBuffer());
       assert.equal(png.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
       assert.equal(png.readUInt32BE(16), 640);
       assert.equal(png.readUInt32BE(20), 640);
       assert.equal(Number(response.headers.get("content-length")), png.byteLength);
       assert.deepEqual(calls.queries[0].where, { id: "invitation-a", ownerId: "owner-a" });
+      assert.equal(calls.queries[0].select.title, true);
       assert.deepEqual(calls.renders, [["https://undara.example.test/q/invitation-a", {
         type: "png", width: 640, margin: 4, errorCorrectionLevel: "M",
       }]]);
       assert.equal(calls.fetches.length, 0);
       assert.equal(calls.errors.length, 0);
     });
+  }
+});
+
+test("QR download follows the saved event title while keeping unsafe characters out of response headers", async () => {
+  const invitation = { id: "invitation-a", ownerId: "owner-a", title: "Ulang Tahun Naya", payment: { packageKey: "INVITATION_BASIC", status: "PAID" } };
+  const { GET, calls } = loadHandler({ invitation });
+  const request = () => new Request("https://undara.example.test/api/invitations/qr?invitationId=invitation-a&download=1");
+  for (const [title, name] of [
+    ["Ulang Tahun Naya", "ulang-tahun-naya"],
+    ['Fête / Naya "B"\r\n', "fete-naya-b"],
+    [" ", "acara"],
+    ["a".repeat(200), "a".repeat(80)],
+  ]) {
+    invitation.title = title;
+    const response = await GET(request());
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("content-disposition"), `attachment; filename="undara-undangan-${name}-qr.png"`);
+    assert.equal(calls.renders.at(-1)[0], "https://undara.example.test/q/invitation-a");
   }
 });
 

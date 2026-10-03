@@ -51,7 +51,7 @@ export default function InvitationQrPreview({
             {!isPublished && <p className="text-sm text-muted-foreground">{d("Tautan terbuka setelah Publish.")}</p>}
             {status === "ready" ? (
               <Button asChild>
-                <a href={invitationQrImageUrl(invitationId, true)} download={`undara-undangan-${invitationId}-qr.png`}>
+                <a href={invitationQrImageUrl(invitationId, true)} download>
                   {downloadLabel}
                 </a>
               </Button>

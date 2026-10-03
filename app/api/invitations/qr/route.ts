@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import QRCode from "qrcode";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { invitationQrTarget } from "@/lib/invitations/qr";
+import { invitationQrFilename, invitationQrTarget } from "@/lib/invitations/qr";
 import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 
 const PRIVATE_HEADERS = { "Cache-Control": "private, no-store" };
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
   try {
     const invitation = await prisma.invitation.findFirst({
       where: { id: invitationId, ownerId: user.id },
-      select: { id: true, payment: { select: { packageKey: true, status: true } } },
+      select: { id: true, title: true, payment: { select: { packageKey: true, status: true } } },
     });
     if (!invitation) {
       return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404, headers: PRIVATE_HEADERS });
@@ -57,7 +57,7 @@ export async function GET(request: Request) {
       headers: {
         ...PRIVATE_HEADERS,
         "Content-Type": "image/png",
-        "Content-Disposition": `${download ? "attachment" : "inline"}; filename="undara-undangan-${invitation.id}-qr.png"`,
+        "Content-Disposition": `${download ? "attachment" : "inline"}; filename="${invitationQrFilename(invitation.title)}"`,
         "Content-Length": String(bytes.byteLength),
         "X-Content-Type-Options": "nosniff",
       },
