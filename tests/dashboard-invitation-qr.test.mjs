@@ -55,19 +55,18 @@ test("Beranda QR menu renders a localized dialog trigger without loading an invi
 });
 
 test("QR preview loads the selected invitation and disables download until the image is ready", () => {
-  const html = render(createElement(InvitationQrPreview, { invitationId: "paid-draft", title: "Acara Keluarga", isPublished: false }));
+  const html = render(createElement(InvitationQrPreview, { invitationId: "paid-draft", title: "Acara Keluarga" }));
   assert.match(html, /src="\/api\/invitations\/qr\?invitationId=paid-draft"/);
   assert.match(html, /alt="QR Undangan · Acara Keluarga"/);
   assert.match(html, /role="status"/);
-  assert.ok(html.includes("Tautan terbuka setelah Publish."));
   assert.match(html, /<button[^>]*disabled/);
   assert.doesNotMatch(html, /<a[^>]*download/);
 });
 
-test("published QR preview uses English feedback and escapes the invitation title", () => {
-  const html = render(createElement(InvitationQrPreview, { invitationId: "paid-public", title: '<script>alert("x")</script>', isPublished: true }), "en");
+test("QR preview uses English feedback and escapes the invitation title", () => {
+  const html = render(createElement(InvitationQrPreview, { invitationId: "paid-public", title: '<script>alert("x")</script>' }), "en");
   assert.ok(html.includes("Loading QR..."));
   assert.ok(html.includes("Invitation QR"));
-  assert.doesNotMatch(html, /The link opens after publishing|<script>/);
+  assert.doesNotMatch(html, /<script>/);
   assert.match(html, /&lt;script&gt;/);
 });

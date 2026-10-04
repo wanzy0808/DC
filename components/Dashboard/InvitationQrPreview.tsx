@@ -9,11 +9,9 @@ import { invitationQrImageUrl } from "@/components/Dashboard/invitation-qr";
 export default function InvitationQrPreview({
   invitationId,
   title,
-  isPublished,
 }: {
   invitationId: string;
   title: string;
-  isPublished: boolean;
 }) {
   const { d } = useDashboardI18n();
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
@@ -48,7 +46,6 @@ export default function InvitationQrPreview({
           </>
         ) : (
           <>
-            {!isPublished && <p className="text-sm text-muted-foreground">{d("Tautan terbuka setelah Publish.")}</p>}
             {status === "ready" ? (
               <Button asChild>
                 <a href={invitationQrImageUrl(invitationId, true)} download>

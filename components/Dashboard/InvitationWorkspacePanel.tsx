@@ -248,7 +248,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                       id={"invitation-qr-" + invitation.id}
                       className="mt-4 border-t border-primary/15 pt-4"
                     >
-                      <InvitationQrPreview invitationId={invitation.id} title={title} isPublished={invitation.isPublished} />
+                      <InvitationQrPreview invitationId={invitation.id} title={title} />
                     </div>
                   )}
                 </article>

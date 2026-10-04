@@ -10,7 +10,6 @@ const english: Record<string, string> = {
   "Memuat QR...": "Loading QR...",
   "QR belum dapat dimuat.": "The QR code could not be loaded.",
   "Coba lagi": "Try again",
-  "Tautan terbuka setelah Publish.": "The link opens after publishing.",
   "Aktifkan akses Undangan Digital untuk melihat QR.": "Activate Digital Invitation access to view QR codes.",
   "Lihat undangan": "View invitations",
   "Download QR PNG": "Download QR PNG",

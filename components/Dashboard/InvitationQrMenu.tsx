@@ -93,7 +93,7 @@ export default function InvitationQrMenu({ onManageInvitations }: { onManageInvi
                 <ChevronDown className="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-primary" aria-hidden="true" />
               </span>
             </label>
-            {selected && <InvitationQrPreview key={selected.id} invitationId={selected.id} title={selected.title} isPublished={selected.isPublished} />}
+            {selected && <InvitationQrPreview key={selected.id} invitationId={selected.id} title={selected.title} />}
           </>
         )}
       </DialogContent>
