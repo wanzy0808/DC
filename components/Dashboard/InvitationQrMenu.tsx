@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronDown, QrCode, RefreshCw, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { controlStyles } from "@/components/ui/control-styles";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import InvitationQrPreview from "@/components/Dashboard/InvitationQrPreview";
 import { accessibleInvitationQrOptions, type InvitationQrOption } from "@/components/Dashboard/invitation-qr";
@@ -56,7 +56,6 @@ export default function InvitationQrMenu({ onManageInvitations }: { onManageInvi
       <DialogContent showCloseButton={false} overlayClassName="z-[100]" className="z-[101] max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-lg">
         <DialogHeader className="pr-12">
           <DialogTitle className="font-[family-name:var(--font-undara-heading)] text-xl font-semibold text-primary">{d("QR Undangan")}</DialogTitle>
-          <DialogDescription>{d("Satu QR untuk setiap undangan.")}</DialogDescription>
         </DialogHeader>
         <DialogClose render={<Button size="icon-sm" className="absolute right-4 top-4" aria-label={d("Tutup QR")} />}>
           <X className="size-4" aria-hidden="true" />
