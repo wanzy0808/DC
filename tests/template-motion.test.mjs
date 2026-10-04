@@ -6,6 +6,47 @@ import { invitationTemplates } from "../lib/templates/catalog.ts";
 import { defaultPhotoAssignments, withPhotoAssignments, parsePhotoAssignments } from "../lib/templates/photo-slots.ts";
 import { defaultNativeVisualTransform, withNativeVisualTransforms, parseNativeVisualTransforms } from "../lib/templates/native-visual-transforms.ts";
 import { observeInvitationEntrances, observeInvitationEntranceRoot } from "../components/PublicInvitation/entrance-animation-runtime.ts";
+import { observePhotoParallax } from "../components/PublicInvitation/photo-parallax-runtime.ts";
+
+test("photo parallax OFF survives saving and reload over an active theme default", () => {
+  for (const template of ["romantic-rose", "modern-maroon", "midnight-romance", "zen-atelier"]) {
+    const defaults = templatePhotoMotion(template).gallery;
+    assert.ok(defaults.parallax > 0);
+    const assignments = { ...defaultPhotoAssignments(), motion: { gallery: { ...defaults, parallax: 0 } } };
+    const restored = parsePhotoAssignments(withPhotoAssignments(template, assignments));
+    assert.equal(restored.motion.gallery.parallax, 0);
+    assert.equal(templatePhotoMotion(template, restored.motion).gallery.parallax, 0);
+    assert.ok(templatePhotoMotion(template, {}).gallery.parallax > 0, "Reset restores the theme value");
+  }
+  for (const parallax of [NaN, Infinity, "0"]) {
+    const restored = parsePhotoAssignments(withPhotoAssignments("romantic-rose", {
+      ...defaultPhotoAssignments(), motion: { gallery: { animation: "fade", parallax } },
+    }));
+    assert.equal(restored.motion.gallery.parallax, undefined, "Malformed values must not become an OFF override");
+  }
+});
+
+test("theme parallax defaults produce visible pixel movement and clean up without altering frame transforms", (t) => {
+  environment(t);
+  const frames = [];
+  Object.assign(globalThis.window, {
+    innerHeight: 800,
+    requestAnimationFrame(callback) { frames.push(callback); return frames.length; },
+    cancelAnimationFrame() {}, addEventListener() {}, removeEventListener() {},
+  });
+  for (const template of ["romantic-rose", "modern-maroon", "midnight-romance", "zen-atelier"]) {
+    const strength = templatePhotoMotion(template).gallery.parallax;
+    const node = { style: { translate: "0 7px", transform: "rotate(12deg)" },
+      closest: () => null, getBoundingClientRect: () => ({ top: 100, width: 100, height: 100 }) };
+    const stop = observePhotoParallax([{ node, strength }]);
+    frames.at(-1)();
+    const offset = parseFloat(node.style.translate.split(" ")[1]);
+    assert.ok(offset > 0 && offset <= strength && strength <= 20, `${template} must move within its pixel budget`);
+    assert.equal(node.style.transform, "rotate(12deg)");
+    stop();
+    assert.equal(node.style.translate, "0 7px");
+  }
+});
 
 test("Serein defaults use opposite portrait entrances and persisted photo OFF wins after reload", () => {
   const defaults = templatePhotoMotion("serein");

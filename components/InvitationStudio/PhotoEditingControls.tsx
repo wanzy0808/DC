@@ -15,11 +15,12 @@ import {
 } from "@/lib/templates/photo-slots";
 
 export function PhotoCropControls({
-  locale, slot, assignments, onStartCrop, onSetFocus, onSetCrop, onResetCrop,
+  locale, slot, assignments, allowAspectRatio = false, onStartCrop, onSetFocus, onSetCrop, onResetCrop,
 }: {
   locale: string;
   slot: CroppablePhotoSlot;
   assignments: PhotoAssignments;
+  allowAspectRatio?: boolean;
   onStartCrop: (slot: CroppablePhotoSlot) => void;
   onSetFocus: (slot: CroppablePhotoSlot, focus: PhotoFocus) => void;
   onSetCrop: (slot: CroppablePhotoSlot, crop: PhotoCrop) => void;
@@ -50,22 +51,26 @@ export function PhotoCropControls({
         aria-label={en ? "Crop photo in canvas" : "Crop foto di canvas"}>
         <Crop size={16} aria-hidden="true" /> Crop
       </Button>
-      <p className="mt-2 text-xs text-muted-foreground">{en ? "Aspect ratio" : "Rasio crop"}</p>
-      <div className="mt-2 grid grid-cols-3 gap-1" role="group" aria-label={en ? "Aspect ratio" : "Rasio crop"}>
-        {(["template", "original", "1:1", "4:5", "3:4", "16:9"] as const).map((aspect) => {
-          const active = (crop.aspect ?? "template") === aspect;
-          return (
-            <Button key={aspect} type="button" size="sm" variant={active ? "default" : "outline"}
-              className="min-h-11 px-1 text-xs" aria-pressed={active} onClick={() => onSetCrop(slot, { ...crop, aspect })}>
-              {aspect === "template" ? "Template" : aspect === "original" ? (en ? "Original" : "Asli") : aspect}
-            </Button>
-          );
-        })}
-      </div>
+      {allowAspectRatio && (
+        <>
+          <p className="mt-2 text-xs text-muted-foreground">{en ? "Aspect ratio" : "Rasio crop"}</p>
+          <div className="mt-2 grid grid-cols-3 gap-1" role="group" aria-label={en ? "Aspect ratio" : "Rasio crop"}>
+            {(["template", "original", "1:1", "4:5", "3:4", "16:9"] as const).map((aspect) => {
+              const active = (crop.aspect ?? "template") === aspect;
+              return (
+                <Button key={aspect} type="button" size="sm" variant={active ? "default" : "outline"}
+                  className="min-h-11 px-1 text-xs" aria-pressed={active} onClick={() => onSetCrop(slot, { ...crop, aspect })}>
+                  {aspect === "template" ? "Template" : aspect === "original" ? (en ? "Original" : "Asli") : aspect}
+                </Button>
+              );
+            })}
+          </div>
+        </>
+      )}
       {([
         ["x", "Horizontal", 0, 100, 1, "%"],
         ["y", en ? "Vertical" : "Vertikal", 0, 100, 1, "%"],
-        ["zoom", "Zoom", 1, 3, 0.05, "×"],
+        ["zoom", en ? "Photo zoom" : "Perbesaran foto", 1, 3, 0.05, "×"],
       ] as const).map(([key, label, min, max, step, suffix]) => (
         <label key={key} className="undara-studio-layer-opacity">
           <span><span>{label}</span><output>{key === "zoom" ? crop.zoom.toFixed(2) : Math.round(crop[key])}{suffix}</output></span>

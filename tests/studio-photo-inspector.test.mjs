@@ -74,7 +74,7 @@ test("left Photo panel keeps upload/assignment and contains no editing controls 
   assert.match(renderLeft("cover", "en"), /aria-label="Back to default: Main Cover"[^>]*>Back to default<\/button>/);
 });
 
-test("right cover inspector renders saved crop values and aspect ratio alongside photo motion", () => {
+test("right cover inspector preserves saved crop values without offering an unsupported aspect ratio", () => {
   const assignments = defaultPhotoAssignments();
   assignments.cover = "photo-a";
   assignments.crop.cover = { x: 24, y: 83, zoom: 1.7, aspect: "4:5" };
@@ -82,8 +82,7 @@ test("right cover inspector renders saved crop values and aspect ratio alongside
   const markup = renderRight("cover", assignments);
   assert.match(markup, /aria-label="Properti foto"/);
   assert.match(markup, /Fokus foto/);
-  assert.match(markup, /Rasio crop/);
-  assert.match(markup, /aria-pressed="true"[^>]*>4:5<\/button>/);
+  assert.doesNotMatch(markup, /Rasio crop|aria-pressed="true"[^>]*>4:5<\/button>/);
   for (const value of ["24", "83", "1.7"]) assert.match(markup, new RegExp(`value="${value}"`));
   assert.match(markup, /Animasi saat muncul/);
   assert.match(markup, /Parallax/);
@@ -107,6 +106,27 @@ test("both portrait inspectors expose their own frame geometry and an explicit c
     assert.match(markup, /value="12"/);
     assert.match(markup, /aria-label="Crop foto di canvas"/);
   }
+});
+
+test("crop ratios are available only on templates whose portrait image sizing supports them", () => {
+  const assignments = defaultPhotoAssignments();
+  assignments.crop.personOne = { x: 20, y: 65, zoom: 1.75, aspect: "4:5" };
+  const original = JSON.stringify(assignments);
+  for (const template of ["romantic-rose", "eternal-blossom", "garden-light", "midnight-romance", "velvet-horizon"]) {
+    const markup = renderRight("personOne", assignments, {
+      design: { template, layers: [], photos: assignments, sectionStyles: {} },
+    });
+    assert.match(markup, /Rasio crop/);
+    assert.match(markup, /aria-pressed="true"[^>]*>4:5<\/button>/);
+  }
+  for (const template of ["modern-maroon", "serein", "zen-atelier", "confetti-club", "blank-canvas", "unknown-template"]) {
+    const markup = renderRight("personOne", assignments, {
+      design: { template, layers: [], photos: assignments, sectionStyles: {} },
+    });
+    assert.doesNotMatch(markup, /Rasio crop/);
+    assert.match(markup, /value="1.75"/);
+  }
+  assert.equal(JSON.stringify(assignments), original);
 });
 
 test("right gallery inspector preserves saved order, filters unavailable/non-image IDs and exposes slideshow settings", () => {

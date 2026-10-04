@@ -8,6 +8,7 @@ import SectionElementInspector from "@/components/InvitationStudio/SectionElemen
 import SectionInspector from "@/components/InvitationStudio/SectionInspector";
 import StudioNativeVisualInspector from "@/components/InvitationStudio/StudioNativeVisualInspector";
 import { templatePhotoMotion, templateNativeMotionForKey } from "@/lib/templates/template-motion";
+import { supportsPhotoCropAspect } from "@/lib/templates/catalog";
 import { defaultNativeVisualTransform, isNativeVisualKey, nativeVisualTransformForKey } from "@/lib/templates/native-visual-transforms";
 import type { NativeVisualTransform } from "@/lib/templates/native-visual-transforms";
 import TextLayerInspector from "@/components/InvitationStudio/TextLayerInspector";
@@ -151,6 +152,7 @@ export default function StudioSelectionInspector({
       <PhotoSlotInspector
         locale={locale}
         slot={selectedPhotoSlot}
+        allowAspectRatio={supportsPhotoCropAspect(design.template, selectedPhotoSlot)}
         onStartCrop={onStartPhotoCrop}
         motion={templatePhotoMotion(design.template, design.photos.motion, design.sectionStyles)[selectedPhotoSlot]}
         assignments={design.photos}

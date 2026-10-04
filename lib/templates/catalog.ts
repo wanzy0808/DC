@@ -1,4 +1,4 @@
-import type { PhotoSlot } from "@/lib/templates/photo-slots";
+import type { CroppablePhotoSlot, PhotoSlot } from "@/lib/templates/photo-slots";
 import type { FontKey, PaletteKey } from "@/lib/templates/design";
 import type { InvitationTemplateLayout } from "@/components/InvitationStudio/designer-types";
 
@@ -12,6 +12,8 @@ export type InvitationTemplate = {
   category: string;
   previewType: "public" | "studio";
   photoSlots: PhotoSlot[];
+  /** Slots whose image sizing actually responds to a custom crop aspect ratio. */
+  photoCropAspectSlots?: CroppablePhotoSlot[];
   usesPhotos: boolean;
   preset: { layout: InvitationTemplateLayout; palette: PaletteKey; font: FontKey };
 };
@@ -37,6 +39,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
+    photoCropAspectSlots: ["personOne", "personTwo"],
     preset: { layout: "editorial", palette: "blush", font: "cinzelFauna" },
     name: "Romantic Rose",
     description: "Rose garden klasik dengan blush pink, kelopak lembut, garis ornamental, dan sentuhan romantis yang anggun.",
@@ -66,6 +69,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
+    photoCropAspectSlots: ["personOne", "personTwo"],
     preset: { layout: "editorial", palette: "blossom", font: "playfairLora" },
     name: "Eternal Blossom",
     description: "Bunga blush, bingkai scallop, tekstur lembut, dan ritme visual romantis dengan gerak yang halus.",
@@ -94,6 +98,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
+    photoCropAspectSlots: ["personOne", "personTwo"],
     preset: { layout: "garden", palette: "gardenGlow", font: "youngInstrument" },
     name: "Garden Light",
     description: "Nuansa pesta taman dari golden hour menuju senja, dengan wedding arch bercahaya, lentera, ayunan, fountain, dan atmosfer hangat.",
@@ -108,6 +113,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
+    photoCropAspectSlots: ["personOne", "personTwo"],
     preset: { layout: "midnight", palette: "midnightVelvet", font: "bodoniManrope" },
     name: "Midnight Romance",
     description: "Salon malam yang intim dengan navy velvet, burgundy, cahaya lilin, detail baroque, dan komposisi editorial dramatis.",
@@ -188,6 +194,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
+    photoCropAspectSlots: ["personOne", "personTwo"],
     preset: { layout: "editorial", palette: "velvetHorizon", font: "cormorantManrope" },
     name: "Velvet Horizon",
     description: "Senja Mediterranean yang hangat dengan dusty rose velvet, lengkung arsitektur klasik, cahaya lilin, florals lembut, dan komposisi editorial romantis.",
@@ -235,6 +242,12 @@ export const invitationTemplates: InvitationTemplate[] = [
     assetPath: "/templates/confetti-club",
   },
 ];
+
+export function supportsPhotoCropAspect(key: string, slot: PhotoSlot) {
+  if (slot === "gallery") return false;
+  const template = invitationTemplates.find((item) => item.key === key.split("::")[0]);
+  return template?.photoCropAspectSlots?.includes(slot) ?? false;
+}
 
 export function getInvitationTemplate(key: string) {
   const baseKey = key.split("::")[0];

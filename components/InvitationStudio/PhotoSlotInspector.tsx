@@ -24,6 +24,7 @@ export default function PhotoSlotInspector({
   assignments,
   assets,
   disabled = false,
+  allowAspectRatio = false,
   onStartCrop,
   onSetFocus,
   onSetCrop,
@@ -40,6 +41,7 @@ export default function PhotoSlotInspector({
   assignments: PhotoAssignments;
   assets: InvitationPhotoAsset[];
   disabled?: boolean;
+  allowAspectRatio?: boolean;
   onStartCrop: (slot: CroppablePhotoSlot) => void;
   onSetFocus: (slot: CroppablePhotoSlot, focus: PhotoFocus) => void;
   onSetCrop: (slot: CroppablePhotoSlot, crop: PhotoCrop) => void;
@@ -65,7 +67,7 @@ export default function PhotoSlotInspector({
         <GalleryPhotoControls locale={locale} assets={assets} assignments={assignments}
           onGallerySettings={onGallerySettings} onReorderGallery={onReorderGallery} />
       ) : (
-        <PhotoCropControls locale={locale} slot={slot} assignments={assignments}
+        <PhotoCropControls locale={locale} slot={slot} assignments={assignments} allowAspectRatio={allowAspectRatio}
           onStartCrop={onStartCrop}
           onSetFocus={onSetFocus} onSetCrop={onSetCrop} onResetCrop={onResetCrop} />
       )}
@@ -181,17 +183,17 @@ export default function PhotoSlotInspector({
       <label className="undara-studio-layer-opacity">
         <span className="flex items-center justify-between gap-2">
           <span>{en ? "Parallax" : "Parallax"}</span>
-          <output>{Math.round(motion?.parallax ?? 0)}px</output>
+          <output>{motion?.parallax ?? 0}px</output>
         </span>
         <input
           type="range"
           min="0"
           max="20"
-          step="1"
+          step="0.5"
           value={motion?.parallax ?? 0}
           onChange={(event) => {
             const parallax = Number(event.target.value);
-            onUpdate({ parallax: parallax > 0 ? parallax : undefined });
+            onUpdate({ parallax });
           }}
         />
       </label>

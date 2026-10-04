@@ -112,6 +112,8 @@ Artwork dari Library Saya masuk canvas melalui drag-and-drop yang sama dengan as
 
 ### Arsitektur menu kiri vs panel kanan — aturan final
 
+**Audit kontrol Foto (4 Oktober 2026):** Perbesaran foto 1–3× mengubah gambar di dalam bingkai; kelompok Bingkai foto mengatur frame, dan Zoom kanvas tetap hanya viewport. Rasio crop mengikuti capability `photoCropAspectSlots` pada registry; jangan menawarkan rasio pada cover/fixed-size image yang tidak meresponsnya. Crop drag/zoom mempertahankan rasio tersimpan, kehilangan pointer capture membatalkan gesture, dan tombol zoom di batas disabled tanpa history kosong. Parallax memakai piksel (0–20); override 0 berarti OFF dan harus bertahan setelah Simpan/reload. Reset motion mengembalikan default tema.
+
 **Panel Musik (3 Oktober 2026):** Customer dan Template Mode memakai **Koleksi Undara** yang sama dari `lib/templates/music.ts`, dengan pencarian judul/artis dan penanda Bawaan Tema. **Unggahan** tetap milik event dan memakai kuota 2 file × 3 MB; koleksi bersama tidak memakai kuota. Default aktif ditentukan resolver yang sama dengan renderer publik. Dengarkan memakai satu player tanpa mengganti pilihan; radio mengganti draft, dan Simpan tetap lewat jalur event/template yang sesuai role. Tidak autoplay; pause saat panel keluar/tab tersembunyi, dan playback eksklusif terhadap player undangan/marketing. Audio customer tidak disalin ke Library Designer. Browser Save/reload/public round-trip tetap harus diuji pada environment terautentikasi.
 
 **Label stage canvas:** toggle di atas canvas memakai **Amplop / Isi** (EN: **Envelope / Content**). 

@@ -17,7 +17,7 @@ Elemen dekoratif dan visual bawaan boleh bebas dikomposisikan serta diberi edge 
 Setiap elemen visual yang terlihat pada master template harus memiliki ownership Studio yang jelas; jangan meninggalkan visual penting sebagai markup hardcoded yang tidak bisa dipilih. Gunakan salah satu kontrak berikut sesuai jenisnya:
 
 - **native object** untuk ornamen, panel, divider, icon, decorative group, visual text, dan elemen presentasi bawaan;
-- **photo slot** untuk foto customer/template yang memang dapat diganti atau dicrop;
+- **photo slot** untuk foto customer/template yang memang dapat diganti atau dicrop; deklarasikan `photoCropAspectSlots` pada registry hanya untuk slot yang sizing gambarnya benar-benar merespons rasio crop. Frame cover atau gambar dengan lebar dan tinggi dipaksa tetap tidak membuka kontrol rasio palsu; crop posisi/zoom tetap tersedia.
 - **editable copy** untuk narasi yang pemilik boleh ubah dari menu Isi;
 - **protected native/system content** untuk data event seperti nama, tanggal, venue, rekening, countdown dan recipient line: isinya tetap dari data, tetapi styling/transform visualnya boleh diedit;
 - **protected functional element** untuk RSVP, Wishes, Gift, Maps, Music dan CTA sistem: fungsi/validasi/API tetap dikunci, tetapi presentation yang di-whitelist boleh diedit;

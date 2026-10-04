@@ -116,9 +116,8 @@ function sanitizePhotoMotion(value: unknown, gallery = false): PhotoMotion | und
     if (source.animationDelay !== undefined) motion.animationDelay = bounded(source.animationDelay, 0, 2, 0);
     if (gallery && source.animationStagger !== undefined) motion.animationStagger = bounded(source.animationStagger, 0.01, 0.2, 0.08);
   }
-  if (source.parallax !== undefined) {
-    const parallax = bounded(source.parallax, 0, 20, 0);
-    if (parallax > 0) motion.parallax = parallax;
+  if (typeof source.parallax === "number" && Number.isFinite(source.parallax)) {
+    motion.parallax = bounded(source.parallax, 0, 20, 0);
   }
   return Object.keys(motion).length ? motion : undefined;
 }

@@ -9,7 +9,7 @@ const romanticRosePhotos: PhotoMotionMap = {
   cover: { animation: "fade", animationDuration: .72, animationDelay: .04 },
   personOne: { animation: "glide-left", animationDuration: .82 },
   personTwo: { animation: "glide-right", animationDuration: .82, animationDelay: .08 },
-  gallery: { animation: "tilt-in", animationDuration: .72, animationStagger: .06, parallax: .02 },
+  gallery: { animation: "tilt-in", animationDuration: .72, animationStagger: .06, parallax: 2 },
 };
 
 const sereinPhotos: PhotoMotionMap = {
@@ -30,7 +30,7 @@ const modernMaroonPhotos: PhotoMotionMap = {
   cover: { animation: "reveal-left", animationDuration: .9, animationDelay: .08 },
   personOne: { animation: "glide-left", animationDuration: .82 },
   personTwo: { animation: "glide-right", animationDuration: .82, animationDelay: .08 },
-  gallery: { animation: "tilt-in", animationDuration: .72, animationStagger: .055, parallax: .045 },
+  gallery: { animation: "tilt-in", animationDuration: .72, animationStagger: .055, parallax: 4.5 },
 };
 
 const gardenLightPhotos: PhotoMotionMap = {
@@ -44,13 +44,13 @@ const midnightRomancePhotos: PhotoMotionMap = {
   cover: { animation: "reveal-up", animationDuration: .92, animationDelay: .08 },
   personOne: { animation: "glide-left", animationDuration: .86 },
   personTwo: { animation: "glide-right", animationDuration: .86, animationDelay: .08 },
-  gallery: { animation: "tilt-in", animationDuration: .76, animationStagger: .065, parallax: .03 },
+  gallery: { animation: "tilt-in", animationDuration: .76, animationStagger: .065, parallax: 3 },
 };
 
 const zenAtelierPhotos: PhotoMotionMap = {
   // The cover photo sits inside an already animated kakemono scroll group.
   // Keep one transform owner there to avoid nested entrance repaints/flicker.
-  gallery: { animation: "tilt-in", animationDuration: .7, animationStagger: .055, parallax: .02 },
+  gallery: { animation: "tilt-in", animationDuration: .7, animationStagger: .055, parallax: 2 },
 };
 
 const velvetHorizonPhotos: PhotoMotionMap = {

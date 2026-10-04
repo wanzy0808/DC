@@ -42,7 +42,9 @@ export default function StudioNativeVisualInspector({
   const section = targetKey.split(":")[1] ?? "";
   const title = targetKey.startsWith("heading:")
     ? (en ? `${section} heading` : `Judul ${section}`)
-    : (en ? "Visual element" : "Elemen visual");
+    : targetKey.startsWith("photo:")
+      ? (en ? "Photo frame" : "Bingkai foto")
+      : (en ? "Visual element" : "Elemen visual");
   const fields = [
     { key: "x", label: "X", unit: "%", min: -2000, max: 2000, factor: 1 },
     { key: "y", label: "Y", unit: "%", min: -2000, max: 2000, factor: 1 },
